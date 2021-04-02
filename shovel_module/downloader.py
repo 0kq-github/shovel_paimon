@@ -1,6 +1,5 @@
 import urllib
-from pydub import AudioSegment
-from pydub.utils import ratio_to_db
+import time
 
 def download(url:str,path:str):
   '''ファイルのダウンロード
@@ -15,3 +14,4 @@ def download(url:str,path:str):
   request = urllib.request.Request(url=url,headers=header)
   with urllib.request.urlopen(request) as web_file, open(path,'wb') as local_file:
       local_file.write(web_file.read())
+  time.sleep(1)

@@ -16,7 +16,7 @@ from shovel_module import downloader
 from shovel_module import sound_controller
 import shutil
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='?')
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get('BOT','BOT_TOKEN')
@@ -55,12 +55,12 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
-    await bot.change_presence(activity=discord.Game(name=f"!sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
 
 @bot.event
 async def on_guild_join(guild):
     print("joined " + str(guild.id))
-    await bot.change_presence(activity=discord.Game(name=f"!sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
 
 @bot.event
@@ -72,7 +72,7 @@ async def on_message(message):
     initdirs(message.guild.id)
   config.read(config_path, encoding='utf-8')
   read_channel = config['ID']['CHANNEL']
-  if not message.content.startswith('!sh0'):
+  if not message.content.startswith('?sh0'):
     if (
       config['READ']['ENABLE'] == 'TRUE' and
       message.channel.id == int(read_channel) and
@@ -129,34 +129,34 @@ async def on_message(message):
 @bot.group()
 async def sh0(ctx):
   if ctx.invoked_subcommand is None:
-    embed = discord.Embed(title="コマンド",color=discord.Colour.red(),description="そのコマンドは存在しません。")
+    embed = discord.Embed(title="コマンド",color=discord.Colour.red(),description="そんなコマンドは無いよ！")
     await ctx.send(embed=embed)
 
 @sh0.command()
 async def help(ctx,*args):
-  embed = discord.Embed(title="コマンド",color=discord.Colour.blue(),description="コマンド一覧")
-  embed.add_field(name="!sh0 s",value="読み上げを開始します。",inline=False)
-  embed.add_field(name="!sh0 e",value="読み上げを終了します。",inline=False)
-  embed.add_field(name="!sh0 link <音量倍率>",value="添付ファイルを登録します\n対応拡張子 mp3",inline=False)
-  embed.add_field(name="!sh0 show",value="登録音声一覧を表示します")
+  embed = discord.Embed(title="コマンド",color=discord.Colour.blue(),description="こんなコマンドがあるよ！")
+  embed.add_field(name="?sh0 s",value="おしゃべり開始！",inline=False)
+  embed.add_field(name="?sh0 e",value="さいなら～",inline=False)
+  embed.add_field(name="?sh0 link <音量倍率>",value="新しい音声を追加できるってよ！\nmp3ファイルを添付してね！",inline=False)
+  embed.add_field(name="?sh0 show",value="どんな音声があるか教えてあげる！")
   await ctx.send(embed=embed)
 
 @sh0.command()
 async def s(ctx,*args):
   if ctx.author.voice is None:
-    embed = discord.Embed(title="読み上げ",color=discord.Colour.orange(),description="読み上げを開始することができませんでした。ボイスチャンネルに参加して、再度`!sh0 s`を実行してください。")
+    embed = discord.Embed(title="読み上げ",color=discord.Colour.orange(),description="あっれれ～？誰か呼んだ～？")
     embed.add_field(name="Tips",value="ボイスチャンネルに接続せずに読み上げを開始する機能はありません。",inline=False)
     await ctx.channel.send(embed=embed)
     return
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
   if config['READ']['ENABLE'] == 'TRUE':
-    embed = discord.Embed(title="読み上げ",color=discord.Colour.red(),description="既に読み上げを開始しています。")
+    embed = discord.Embed(title="読み上げ",color=discord.Colour.red(),description="おしゃべり中だよ！")
     await ctx.channel.send(embed=embed)
     config.clear
     return
   await ctx.author.voice.channel.connect()
-  embed = discord.Embed(title="ボイスチャット接続",color=discord.Colour.blue(),description="接続に成功しました。読み上げを開始します。")
+  embed = discord.Embed(title="ボイスチャット接続",color=discord.Colour.blue(),description="ヤッホー！往生堂77代目、胡桃だよ！")
   embed.add_field(name="読み上げ対象",value=ctx.channel.mention)
   embed.add_field(name="読み上げボイスチャンネル",value=ctx.author.voice.channel.name)
   await ctx.channel.send(embed=embed)
@@ -175,11 +175,11 @@ async def e(ctx,*args):
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
     if ctx.guild.voice_client is None:
-      await ctx.channel.send("参加しているボイスチャンネルはありません")
+      await ctx.channel.send("ん～？誰か呼んだ～？")
       return
     await ctx.guild.voice_client.disconnect()
-    embed = discord.Embed(title="ボイスチャット終了",color=discord.Colour.blue(),description="読み上げを終了しました。")
-    embed.add_field(name="ヒント",value="読み上げがうまくいかないときや、読み上げ終了後shovel-0kqがボイスチャンネルに残ったときは、!sh0 eで退出させてください。",inline=False)
+    embed = discord.Embed(title="ボイスチャット終了",color=discord.Colour.blue(),description="お疲れ様～ まったね～！")
+    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 eで追い払ってください",inline=False)
     embed.add_field(name="各種リンク",value="[作者Twitter](https://twitter.com/_0kq_/)",inline=False)
     await ctx.channel.send(embed=embed)
     config.read(config_path)
@@ -197,14 +197,14 @@ async def aw(ctx,*args):
   辞書追加コマンド
   '''
   if len(args) != 2:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="登録に失敗しました。引数が不正です。")
+    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="それってどういう意味？")
     await ctx.send(embed=embed)
     return
   u_dict = {}
   u_dict = dict.reader(ctx.guild.id)
   u_dict[args[0]] = args[1]
   dict.writer(ctx.guild.id,u_dict)
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="登録に成功しました。")
+  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="教えてくれてありがとう！旅人さん！")
   embed = embed.add_field(name="単語",value=args[0])
   embed = embed.add_field(name="読み",value=args[1])
   await ctx.send(embed=embed)
@@ -215,7 +215,7 @@ async def dw(ctx,*args):
   辞書削除コマンド
   '''
   if len(args) != 1:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="削除に失敗しました。引数が不正です。")
+    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="なんか変じゃない？")
     await ctx.send(embed=embed)
     return
   u_dict = {}
@@ -223,11 +223,11 @@ async def dw(ctx,*args):
   try:
     u_dict.pop(args[0])
   except:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="削除に失敗しました。不明な辞書です。")
+    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="そんな言葉知らないよ？")
     await ctx.send(embed=embed)
     return
   dict.writer(ctx.guild.id, u_dict)
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="削除に成功しました。")
+  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="これってどんな意味だったっけ...")
   embed = embed.add_field(name="単語",value=args[0])
   await ctx.send(embed=embed)
 
@@ -241,7 +241,7 @@ async def link(ctx,*args):
   if args:
     volume = args[0]
   if not ctx.message.attachments:
-    embed = discord.Embed(title="音声登録",color=discord.Colour.red(),description="登録に失敗しました。ファイルを添付してください。")
+    embed = discord.Embed(title="音声登録",color=discord.Colour.red(),description="ファイルが無いよ！")
     await ctx.send(embed=embed)
     return
   url = ctx.message.attachments[0].url
@@ -250,13 +250,13 @@ async def link(ctx,*args):
   if os.path.exists(path):
     downloader.download(url,path)
     sound_controller.convert_volume(path,volume)
-    embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="ファイルの更新に成功しました。")
+    embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="やったー！更新できたー！")
     await ctx.send(embed=embed)
     return
   await asyncio.sleep(0.1)
   downloader.download(url,path)
   sound_controller.convert_volume(path,volume)
-  embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="登録に成功しました。")
+  embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="ら～ら～ら～♪ 水煮魚にエビ蒸し餃子～")
   await ctx.send(embed=embed)
 
 @sh0.command()
@@ -285,7 +285,7 @@ async def show(ctx):
 @sh0.command()
 async def import_word(ctx,*args):
   if not ctx.message.attachments:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="インポートに失敗しました。ファイルを添付してください。")
+    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="ファイルが無いよ！")
     await ctx.send(embed=embed)
     return
   url = ctx.message.attachments[0].url
@@ -296,13 +296,13 @@ async def import_word(ctx,*args):
   with urllib.request.urlopen(request) as web_file, open(path,'wb') as local_file:
     local_file.write(web_file.read())
   os.rename(path, "./config/guild/" + str(ctx.guild.id) + "/dict.csv")
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Color.blue(),description="インポートに成功しました。")
+  embed = discord.Embed(title="ユーザー辞書",color=discord.Color.blue(),description="インポート成功！初めて聞く言葉がたくさん！")
   await ctx.send(embed=embed)
 
 @sh0.command()
 async def init(ctx):
   initdirs(ctx.guild.id)
-  await ctx.send("初期化しました")
+  await ctx.send("お掃除完了！")
 
 
 

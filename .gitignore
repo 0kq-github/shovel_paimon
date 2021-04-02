@@ -1,3 +1,4 @@
 config/
 global_wav/
+__pycache__
 config.ini
