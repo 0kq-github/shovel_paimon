@@ -9,18 +9,23 @@ import configparser
 import urllib.request
 from pydub import AudioSegment
 from pydub.utils import ratio_to_db
-import csv
+import json
 from shovel_module import jtalk
 from shovel_module import dict
 from shovel_module import downloader
 from shovel_module import sound_controller
 import shutil
 
+
 bot = commands.Bot(command_prefix='?')
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get('BOT','BOT_TOKEN')
 config.clear
+
+lang = {}
+with open("./hutao.json",mode="r") as f:
+  lang = json.load(f)
 
 def make_wav(id, word_wav, voice):
   datime_now = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
@@ -54,6 +59,7 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
+    print(lang["hello"])
     print('------')
     await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
 
@@ -175,11 +181,13 @@ async def e(ctx,*args):
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
     if ctx.guild.voice_client is None:
-      await ctx.channel.send("ん～？誰か呼んだ～？")
+      embed = discord.Embed(title="読み上げ",color=discord.Colour.orange(),description="あっれれ～？誰か呼んだ～？")
+      embed.add_field(name="Tips",value="現在接続中のボイスチャットはありません",inline=False)
+      await ctx.channel.send(embed=embed)
       return
     await ctx.guild.voice_client.disconnect()
     embed = discord.Embed(title="ボイスチャット終了",color=discord.Colour.blue(),description="お疲れ様～ まったね～！")
-    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 eで追い払ってください",inline=False)
+    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",inline=False)
     embed.add_field(name="各種リンク",value="[作者Twitter](https://twitter.com/_0kq_/)",inline=False)
     await ctx.channel.send(embed=embed)
     config.read(config_path)
@@ -189,6 +197,26 @@ async def e(ctx,*args):
       config.clear
       f.close()
   config.clear
+
+
+@sh0.command()
+async def fe(ctx,*args):
+  config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
+  config.read(config_path, encoding='utf-8')
+  if ctx.channel.id == int(config['ID']['CHANNEL']):
+    await ctx.guild.voice_client.disconnect()
+    embed = discord.Embed(title="強☆制☆終☆了☆",color=discord.Colour.blue(),description="燎原の蝶！")
+    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",inline=False)
+    embed.add_field(name="各種リンク",value="[作者Twitter](https://twitter.com/_0kq_/)",inline=False)
+    await ctx.channel.send(embed=embed)
+    config.read(config_path)
+    config['READ']['ENABLE'] = 'FALSE'
+    with open(config_path, 'w') as f:
+      config.write(f)
+      config.clear
+      f.close()
+  config.clear
+
 
 
 @sh0.command()
