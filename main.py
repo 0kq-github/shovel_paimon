@@ -135,36 +135,44 @@ async def on_message(message):
 @bot.group()
 async def sh0(ctx):
   if ctx.invoked_subcommand is None:
-    embed = discord.Embed(title="コマンド",color=discord.Colour.red(),description="そんなコマンドは無いよ！")
+    langs = lang["unknown"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
 
 @sh0.command()
 async def help(ctx,*args):
-  embed = discord.Embed(title="コマンド",color=discord.Colour.blue(),description="こんなコマンドがあるよ！")
-  embed.add_field(name="?sh0 s",value="おしゃべり開始！",inline=False)
-  embed.add_field(name="?sh0 e",value="さいなら～",inline=False)
-  embed.add_field(name="?sh0 link <音量倍率>",value="新しい音声を追加できるってよ！\nmp3ファイルを添付してね！",inline=False)
-  embed.add_field(name="?sh0 show",value="どんな音声があるか教えてあげる！")
+  langs = lang["help"]
+  fields = langs["field"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+  embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
+  embed.add_field(name=fields["2"]["name"],value=fields["2"]["value"],inline=fields["2"]["inline"])
+  embed.add_field(name=fields["3"]["name"],value=fields["3"]["value"],inline=fields["3"]["inline"])
   await ctx.send(embed=embed)
 
 @sh0.command()
 async def s(ctx,*args):
   if ctx.author.voice is None:
-    embed = discord.Embed(title="読み上げ",color=discord.Colour.orange(),description="あっれれ～？誰か呼んだ～？")
-    embed.add_field(name="Tips",value="ボイスチャンネルに接続せずに読み上げを開始する機能はありません。",inline=False)
+    langs = lang["s.notfound"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
+    embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     await ctx.channel.send(embed=embed)
     return
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
   if config['READ']['ENABLE'] == 'TRUE':
-    embed = discord.Embed(title="読み上げ",color=discord.Colour.red(),description="おしゃべり中だよ！")
+    langs = lang["s.already"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.channel.send(embed=embed)
     config.clear
     return
   await ctx.author.voice.channel.connect()
-  embed = discord.Embed(title="ボイスチャット接続",color=discord.Colour.blue(),description="ヤッホー！往生堂77代目、胡桃だよ！")
-  embed.add_field(name="読み上げ対象",value=ctx.channel.mention)
-  embed.add_field(name="読み上げボイスチャンネル",value=ctx.author.voice.channel.name)
+  langs = lang["s.connect"]
+  fields = langs["field"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + ctx.channel.mention,inline=fields["0"]["inline"])
+  embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + ctx.author.voice.channel.name,inline=fields["1"]["inline"])
   await ctx.channel.send(embed=embed)
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
@@ -181,14 +189,18 @@ async def e(ctx,*args):
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
     if ctx.guild.voice_client is None:
-      embed = discord.Embed(title="読み上げ",color=discord.Colour.orange(),description="あっれれ～？誰か呼んだ～？")
-      embed.add_field(name="Tips",value="現在接続中のボイスチャットはありません",inline=False)
+      langs = lang["e.notfound"]
+      fields = langs["field"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
+      embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
       await ctx.channel.send(embed=embed)
       return
     await ctx.guild.voice_client.disconnect()
-    embed = discord.Embed(title="ボイスチャット終了",color=discord.Colour.blue(),description="お疲れ様～ まったね～！")
-    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",inline=False)
-    embed.add_field(name="各種リンク",value="[作者Twitter](https://twitter.com/_0kq_/)",inline=False)
+    langs = lang["e.disconnect"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+    embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+    embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     config.read(config_path)
     config['READ']['ENABLE'] = 'FALSE'
@@ -204,10 +216,12 @@ async def fe(ctx,*args):
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
-    await ctx.guild.voice_client.disconnect()
-    embed = discord.Embed(title="強☆制☆終☆了☆",color=discord.Colour.blue(),description="燎原の蝶！")
-    embed.add_field(name="ヒント",value="喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",inline=False)
-    embed.add_field(name="各種リンク",value="[作者Twitter](https://twitter.com/_0kq_/)",inline=False)
+    #await ctx.guild.voice_client.disconnect()
+    langs = lang["fe.disconnect"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
+    embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+    embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     config.read(config_path)
     config['READ']['ENABLE'] = 'FALSE'
@@ -225,16 +239,19 @@ async def aw(ctx,*args):
   辞書追加コマンド
   '''
   if len(args) != 2:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="それってどういう意味？")
+    langs = lang["aw.unknown"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   u_dict = {}
   u_dict = dict.reader(ctx.guild.id)
   u_dict[args[0]] = args[1]
   dict.writer(ctx.guild.id,u_dict)
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="教えてくれてありがとう！旅人さん！")
-  embed = embed.add_field(name="単語",value=args[0])
-  embed = embed.add_field(name="読み",value=args[1])
+  langs = lang["aw.success"]
+  fields = langs["field"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
+  embed = embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + args[1],inline=fields["1"]["inline"])
   await ctx.send(embed=embed)
 
 @sh0.command()
@@ -243,7 +260,8 @@ async def dw(ctx,*args):
   辞書削除コマンド
   '''
   if len(args) != 1:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="なんか変じゃない？")
+    langs = lang["dw.wrong"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   u_dict = {}
@@ -251,12 +269,15 @@ async def dw(ctx,*args):
   try:
     u_dict.pop(args[0])
   except:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="そんな言葉知らないよ？")
+    langs = lang["dw.unknown"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   dict.writer(ctx.guild.id, u_dict)
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.blue(),description="これってどんな意味だったっけ...")
-  embed = embed.add_field(name="単語",value=args[0])
+  langs = lang["dw.success"]
+  fields = langs["field"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
   await ctx.send(embed=embed)
 
 
@@ -265,11 +286,13 @@ async def link(ctx,*args):
   '''
   音声登録コマンド
   '''
-  volume = 1.0
-  if args:
+  try:
     volume = args[0]
+  except:
+    volume = 1.0
   if not ctx.message.attachments:
-    embed = discord.Embed(title="音声登録",color=discord.Colour.red(),description="ファイルが無いよ！")
+    langs = lang["link.notfound"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   url = ctx.message.attachments[0].url
@@ -278,13 +301,15 @@ async def link(ctx,*args):
   if os.path.exists(path):
     downloader.download(url,path)
     sound_controller.convert_volume(path,volume)
-    embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="やったー！更新できたー！")
+    langs = lang["link.update"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   await asyncio.sleep(0.1)
   downloader.download(url,path)
   sound_controller.convert_volume(path,volume)
-  embed = discord.Embed(title="音声登録",color=discord.Colour.blue(),description="ら～ら～ら～♪ 水煮魚にエビ蒸し餃子～")
+  langs = lang["link.success"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   await ctx.send(embed=embed)
 
 @sh0.command()
@@ -298,22 +323,27 @@ async def show(ctx):
     if count <= 30:
       files += i + "\n"
     if count >= 31:
-      embed = discord.Embed(title="音声一覧",color=discord.Colour.blue())
-      embed.add_field(name="登録数 " + str(filecount),value=files)
+      langs = lang["show"]
+      fields = langs["field"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.blue())
+      embed.add_field(name=fields["name"] + str(filecount),value=fields["value"] + files)
       await ctx.send(embed=embed)
       embed.clear_fields
       files = ""
       count = 0
     count += 1
   if count <= 31:
-    embed = discord.Embed(title="音声一覧",color=discord.Colour.blue())
-    embed.add_field(name="登録数 " + str(filecount),value=files)
+    langs = lang["show"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue())
+    embed.add_field(name=fields["name"] + str(filecount),value=fields["value"] + files)
     await ctx.send(embed=embed)
 
 @sh0.command()
 async def import_word(ctx,*args):
   if not ctx.message.attachments:
-    embed = discord.Embed(title="ユーザー辞書",color=discord.Colour.red(),description="ファイルが無いよ！")
+    langs = lang["import_word.notfound"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
   url = ctx.message.attachments[0].url
@@ -324,13 +354,14 @@ async def import_word(ctx,*args):
   with urllib.request.urlopen(request) as web_file, open(path,'wb') as local_file:
     local_file.write(web_file.read())
   os.rename(path, "./config/guild/" + str(ctx.guild.id) + "/dict.csv")
-  embed = discord.Embed(title="ユーザー辞書",color=discord.Color.blue(),description="インポート成功！初めて聞く言葉がたくさん！")
+  langs = lang["import_word.success"]
+  embed = discord.Embed(title=langs["title"],color=discord.Color.blue(),description=langs["description"])
   await ctx.send(embed=embed)
 
 @sh0.command()
 async def init(ctx):
   initdirs(ctx.guild.id)
-  await ctx.send("お掃除完了！")
+  await ctx.send(lang["init"]["title"])
 
 
 

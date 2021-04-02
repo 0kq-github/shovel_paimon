@@ -1,5 +1,5 @@
 {
-  "hello":"胡桃だよ！",
+  "hello": "胡桃だよ！",
   "unknown": {
     "title": "コマンド",
     "description": "そんなコマンドは無いよ！"
@@ -34,9 +34,11 @@
     "title": "読み上げ",
     "description": "あっれれ～？誰か呼んだ～？",
     "field": {
-      "name": "Tips",
-      "value": "ボイスチャンネルに接続せずに読み上げを開始する機能はありません",
-      "inline": false
+      "0": {
+        "name": "Tips",
+        "value": "ボイスチャンネルに接続せずに読み上げを開始する機能はありません",
+        "inline": false
+      }
     }
   },
   "s.already": {
@@ -45,7 +47,7 @@
   },
   "s.connect": {
     "title": "ボイスチャット接続",
-    "description": "ヤッホー！往生堂77代目、胡桃だよ！",
+    "description": "ヤッホー！往生堂77代目堂主、胡桃だよ！",
     "field": {
       "0": {
         "name": "読み上げ対象",
@@ -87,8 +89,8 @@
     }
   },
   "fe.disconnect": {
-    "title": "強☆制☆終☆了☆",
-    "description": "燎原の蝶！",
+    "title": "燎原の蝶！",
+    "description": "うわ！びっくりした！",
     "field": {
       "0": {
         "name": "ヒント",
@@ -117,7 +119,8 @@
       },
       "1": {
         "name": "読み",
-        "value": ""
+        "value": "",
+        "inline": true
       }
     }
   },
@@ -161,15 +164,15 @@
       "inline": false
     }
   },
-  "import_word.notfound":{
-    "title":"ユーザー辞書",
-    "description":"ファイルが無いよ！"
+  "import_word.notfound": {
+    "title": "ユーザー辞書",
+    "description": "ファイルが無いよ！"
   },
-  "import_word.success":{
-    "title":"ユーザー辞書",
-    "description":"インポート成功！初めて聞く言葉がたくさん！"
+  "import_word.success": {
+    "title": "ユーザー辞書",
+    "description": "インポート成功！初めて聞く言葉がたくさん！"
   },
-  "init":{
-    "title":"お掃除完了！"
+  "init": {
+    "title": "お掃除完了！"
   }
 }
