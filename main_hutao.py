@@ -239,8 +239,8 @@ async def fe(ctx,*args):
   if ctx.channel.id == int(config['ID']['CHANNEL']):
     try:
       await ctx.guild.voice_client.disconnect()
-    finally:
       shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+    finally:
       langs = lang["fe.disconnect"]
       fields = langs["field"]
       embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
