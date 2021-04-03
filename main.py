@@ -148,6 +148,10 @@ async def help(ctx,*args):
   embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
   embed.add_field(name=fields["2"]["name"],value=fields["2"]["value"],inline=fields["2"]["inline"])
   embed.add_field(name=fields["3"]["name"],value=fields["3"]["value"],inline=fields["3"]["inline"])
+  embed.add_field(name=fields["4"]["name"],value=fields["4"]["value"],inline=fields["4"]["inline"])
+  embed.add_field(name=fields["5"]["name"],value=fields["5"]["value"],inline=fields["5"]["inline"])
+  embed.add_field(name=fields["6"]["name"],value=fields["6"]["value"],inline=fields["6"]["inline"])
+  embed.add_field(name=fields["7"]["name"],value=fields["7"]["value"],inline=fields["7"]["inline"])
   await ctx.send(embed=embed)
 
 @sh0.command()
@@ -168,6 +172,7 @@ async def s(ctx,*args):
     config.clear
     return
   await ctx.author.voice.channel.connect()
+  os.makedirs("./config/guild/" + str(ctx.guild.id) + "/wav",exist_ok=True)
   langs = lang["s.connect"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -196,6 +201,7 @@ async def e(ctx,*args):
       await ctx.channel.send(embed=embed)
       return
     await ctx.guild.voice_client.disconnect()
+    shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
     langs = lang["e.disconnect"]
     fields = langs["field"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -216,20 +222,23 @@ async def fe(ctx,*args):
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
-    #await ctx.guild.voice_client.disconnect()
-    langs = lang["fe.disconnect"]
-    fields = langs["field"]
-    embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
-    embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
-    embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-    await ctx.channel.send(embed=embed)
-    config.read(config_path)
-    config['READ']['ENABLE'] = 'FALSE'
-    with open(config_path, 'w') as f:
-      config.write(f)
-      config.clear
-      f.close()
-  config.clear
+    try:
+      await ctx.guild.voice_client.disconnect()
+    finally:
+      shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+      langs = lang["fe.disconnect"]
+      fields = langs["field"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
+      embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+      embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
+      await ctx.channel.send(embed=embed)
+      config.read(config_path)
+      config['READ']['ENABLE'] = 'FALSE'
+      with open(config_path, 'w') as f:
+        config.write(f)
+        config.clear
+        f.close()
+    config.clear
 
 
 
