@@ -2,37 +2,37 @@
   "hello":"オイラだぞ！",
   "unknown": {
     "title": "コマンド",
-    "description": "そんなコマンドは無いよ！"
+    "description": "そのコマンドは存在しません。"
   },
   "help": {
     "title": "コマンド",
-    "description": "こんなコマンドがあるよ！",
+    "description": "コマンド一覧",
     "field": {
       "0": {
-        "name": "?sh0 s",
-        "value": "おしゃべり開始！",
+        "name": "!sh0 s",
+        "value": "読み上げを開始します。",
         "inline": false
       },
       "1": {
-        "name": "?sh0 e",
-        "value": "さいなら～",
+        "name": "!sh0 e",
+        "value": "読み上げを終了します。",
         "inline": false
       },
       "2": {
-        "name": "?sh0 link <音量倍率>",
-        "value": "新しい音声を追加できるってよ！\nmp3ファイルを添付してね！",
+        "name": "!sh0 link <音量倍率>",
+        "value": "添付ファイルを登録します\n対応拡張子 mp3",
         "inline": false
       },
       "3": {
-        "name": "?sh0 show",
-        "value": "どんな音声があるか教えてあげる！",
+        "name": "!sh0 show",
+        "value": "登録音声一覧を表示します",
         "inline": false
       }
     }
   },
   "s.notfound": {
     "title": "読み上げ",
-    "description": "あっれれ～？誰か呼んだ～？",
+    "description": "読み上げを開始することができませんでした。ボイスチャンネルに参加して、再度`!sh0 s`を実行してください。",
     "field": {
       "name": "Tips",
       "value": "ボイスチャンネルに接続せずに読み上げを開始する機能はありません",
@@ -41,11 +41,11 @@
   },
   "s.already": {
     "title": "読み上げ",
-    "description": "おしゃべり中だよ！"
+    "description": "既に読み上げを開始しています。"
   },
   "s.connect": {
     "title": "ボイスチャット接続",
-    "description": "ヤッホー！往生堂77代目、胡桃だよ！",
+    "description": "接続に成功しました。読み上げを開始します。",
     "field": {
       "0": {
         "name": "読み上げ対象",
@@ -61,22 +61,22 @@
   },
   "e.notfound": {
     "title": "読み上げ",
-    "description": "あっれれ～？誰か呼んだ～？",
+    "description": "参加しているボイスチャンネルはありません。",
     "field": {
       "0": {
         "name": "Tips",
-        "value": "現在接続中のボイスチャンネルはありません",
+        "value": "現在接続中のボイスチャンネルはありません。",
         "inline": false
       }
     }
   },
   "e.disconnect": {
     "title": "ボイスチャット終了",
-    "description": "お疲れ様～ まったね～！",
+    "description": "読み上げを終了しました。",
     "field": {
       "0": {
         "name": "ヒント",
-        "value": "喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
         "inline": false
       },
       "1": {
@@ -87,12 +87,12 @@
     }
   },
   "fe.disconnect": {
-    "title": "強☆制☆終☆了☆",
-    "description": "燎原の蝶！",
+    "title": "強制終了",
+    "description": "強制終了しました。",
     "field": {
       "0": {
         "name": "ヒント",
-        "value": "喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
         "inline": false
       },
       "1": {
@@ -104,11 +104,11 @@
   },
   "aw.unknown": {
     "title": "ユーザー辞書",
-    "description": "それってどういう意味？"
+    "description": "登録に失敗しました。引数が不正です。"
   },
   "aw.success": {
     "title": "ユーザー辞書",
-    "description": "教えてくれてありがとう！旅人さん！",
+    "description": "登録に成功しました。",
     "field": {
       "0": {
         "name": "単語",
@@ -123,15 +123,15 @@
   },
   "dw.wrong": {
     "title": "ユーザー辞書",
-    "description": "なんか変じゃない？"
+    "description": "削除に失敗しました。引数が不正です。"
   },
   "dw.unknown": {
     "title": "ユーザー辞書",
-    "description": "そんな言葉知らないよ？"
+    "description": "削除に失敗しました。不明な辞書です。"
   },
   "dw.success": {
     "title": "ユーザー辞書",
-    "description": "これってどんな意味だったっけ...",
+    "description": "削除に成功しました。",
     "field": {
       "0": {
         "name": "単語",
@@ -142,15 +142,15 @@
   },
   "link.notfound": {
     "title": "音声登録",
-    "description": "ファイルが無いよ！"
+    "description": "登録に失敗しました。ファイルを添付してください。"
   },
   "link.update": {
     "title": "音声登録",
-    "description": "やったー！更新できたー！"
+    "description": "ファイルの更新に成功しました。"
   },
   "link.success": {
     "title": "音声登録",
-    "description": "ら～ら～ら～♪ 水煮魚にエビ蒸し餃子～"
+    "description": "登録に成功しました。"
   },
   "show": {
     "title": "音声一覧",
@@ -163,13 +163,13 @@
   },
   "import_word.notfound":{
     "title":"ユーザー辞書",
-    "description":"ファイルが無いよ！"
+    "description":"インポートに失敗しました。ファイルを添付してください。"
   },
   "import_word.success":{
     "title":"ユーザー辞書",
-    "description":"インポート成功！初めて聞く言葉がたくさん！"
+    "description":"インポートに成功しました。"
   },
   "init":{
-    "title":"お掃除完了！"
+    "title":"初期化しました"
   }
 }
