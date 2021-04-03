@@ -19,13 +19,33 @@
         "inline": false
       },
       "2": {
+        "name": "!sh0 fe",
+        "value": "読み上げを強制終了します。",
+        "inline": false
+      },
+      "3": {
         "name": "!sh0 link <音量倍率>",
         "value": "添付ファイルを登録します\n対応拡張子 mp3",
         "inline": false
       },
-      "3": {
+      "4": {
         "name": "!sh0 show",
         "value": "登録音声一覧を表示します",
+        "inline": false
+      },
+      "5": {
+        "name": "!sh0 aw <単語> <読み>",
+        "value": "新しい単語を登録します",
+        "inline": false
+      },
+      "6": {
+        "name": "!sh0 dw <単語>",
+        "value": "単語を削除します",
+        "inline": false
+      },
+      "7": {
+        "name": "!sh0 import_word",
+        "value": "辞書をインポートします",
         "inline": false
       }
     }

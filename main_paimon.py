@@ -17,14 +17,14 @@ from shovel_module import sound_controller
 import shutil
 
 
-bot = commands.Bot(command_prefix='?')
+bot = commands.Bot(command_prefix='1')
 config = configparser.ConfigParser()
 config.read('./config.ini')
-BOT_TOKEN = config.get('BOT','BOT_TOKEN')
+BOT_TOKEN = config.get('PAIMON','BOT_TOKEN')
 config.clear
 
 lang = {}
-with open("./hutao.json",mode="r") as f:
+with open("./paimon.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice):
@@ -134,6 +134,9 @@ async def on_message(message):
 
 @bot.group()
 async def sh0(ctx):
+  '''
+  メイン
+  '''
   if ctx.invoked_subcommand is None:
     langs = lang["unknown"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
@@ -141,6 +144,9 @@ async def sh0(ctx):
 
 @sh0.command()
 async def help(ctx,*args):
+  '''
+  helpコマンド
+  '''
   langs = lang["help"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -156,6 +162,9 @@ async def help(ctx,*args):
 
 @sh0.command()
 async def s(ctx,*args):
+  '''
+  読み上げ開始コマンド
+  '''
   if ctx.author.voice is None:
     langs = lang["s.notfound"]
     fields = langs["field"]
@@ -190,6 +199,9 @@ async def s(ctx,*args):
 
 @sh0.command()
 async def e(ctx,*args):
+  '''
+  読み上げ終了コマンド
+  '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
@@ -219,6 +231,9 @@ async def e(ctx,*args):
 
 @sh0.command()
 async def fe(ctx,*args):
+  '''
+  強制終了コマンド
+  '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config['ID']['CHANNEL']):
@@ -323,6 +338,9 @@ async def link(ctx,*args):
 
 @sh0.command()
 async def show(ctx):
+  '''
+  音声一覧表示コマンド
+  '''
   path = "./global_wav/"
   filelist = os.listdir(path=path)
   filecount = len(filelist)
@@ -350,6 +368,9 @@ async def show(ctx):
 
 @sh0.command()
 async def import_word(ctx,*args):
+  '''
+  辞書インポートコマンド
+  '''
   if not ctx.message.attachments:
     langs = lang["import_word.notfound"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
@@ -369,8 +390,12 @@ async def import_word(ctx,*args):
 
 @sh0.command()
 async def init(ctx):
-  initdirs(ctx.guild.id)
-  await ctx.send(lang["init"]["title"])
+  '''
+  初期化コマンド
+  '''
+  if ctx.author.id == 262132823895441409:
+    initdirs(ctx.guild.id)
+    await ctx.send(lang["init"]["title"])
 
 
 
