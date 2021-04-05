@@ -75,9 +75,9 @@ async def on_guild_join(guild):
 @bot.event
 async def on_voice_state_update(member,before,after):
   try:
-    client = discord.Client()
-    voicech = client.get_channel(before.channel.id)
-    print(voicech)
+    dclient = discord.Client()
+    voicech = dclient.get_channel(before.channel.id)
+    print(voicech.members)
 #    voicemember = voicech.members
 #    print(str(member) + " left " + before.channel.name)
 #    if len(voicemember) <= 1:
@@ -259,6 +259,8 @@ async def fe(ctx,*args):
     try:
       await ctx.guild.voice_client.disconnect()
       shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+    except:
+      None
     finally:
       langs = lang["fe.disconnect"]
       fields = langs["field"]
