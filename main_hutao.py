@@ -77,7 +77,7 @@ async def on_voice_state_update(member,before,after):
   try:
     voicemember = discord.Client.get_channel(self=bot,id=before.channel.id).members
     print(len(voicemember))
-    print(member + "left" + before.channel.name)
+    print(str(member) + "left" + before.channel.name)
     if len(voicemember) <= 1:
       for user in voicemember:
         if voicemember.id == 827466877167992832:
