@@ -194,5 +194,21 @@
   },
   "init": {
     "title": "お掃除完了！"
+  },
+  "auto.disconnect": {
+    "title":"ボイスチャット終了",
+    "description":"あれれ？誰もいなくなってる！？",
+    "field": {
+      "0": {
+        "name": "ヒント",
+        "value": "喋ってくれない時や、読み上げ終了後胡桃が帰らない場合は、?sh0 feで追い払ってください",
+        "inline": false
+      },
+      "1": {
+        "name": "各種リンク",
+        "value": "[作者Twitter](https://twitter.com/_0kq_/)",
+        "inline": false
+      }
+    }
   }
 }

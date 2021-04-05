@@ -93,6 +93,19 @@ async def on_voice_state_update(member,before,after):
         for user in voicemember:
           if user.id == 827466877167992832:
             await voicech.guild.voice_client.disconnect()
+            langs = lang["auto.disconnect"]
+            fields = langs["field"]
+            embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+            embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+            embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
+            config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
+            config.read(config_path)
+            config['READ']['ENABLE'] = 'FALSE'
+            with open(config_path, 'w') as f:
+              config.write(f)
+              config.clear
+              f.close()
+            config.clear
     except Exception as e:
       print(e)
       return
