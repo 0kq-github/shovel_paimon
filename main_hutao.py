@@ -80,9 +80,7 @@ async def on_voice_state_update(member,before,after):
     voicemember = voicech.members
     print(str(member) + " left " + before.channel.name)
     if len(voicemember) <= 1:
-      for mem in voicemember:
-        print(voicemember)
-        print(mem)
+      print(voicemember)
   except Exception as e:
     print(e)
     return
