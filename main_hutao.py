@@ -4,6 +4,7 @@ import asyncio
 import time
 import discord
 import re
+from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
 import urllib.request
@@ -68,6 +69,15 @@ async def on_guild_join(guild):
     print("joined " + str(guild.id))
     await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
+
+@bot.event
+async def on_voice_state_update(guild):
+  voicemember = VoiceChannel.voice_states.keys()
+  print(voicemember)
+  print(guild)
+#  if len(voicemember) <= 1:
+#    await guild.voice_client.disconnect()
+
 
 @bot.event
 async def on_message(message):
