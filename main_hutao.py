@@ -5,6 +5,7 @@ import time
 import discord
 import re
 from discord import voice_client
+from discord import client
 from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
@@ -74,7 +75,7 @@ async def on_guild_join(guild):
 @bot.event
 async def on_voice_state_update(member,before,after):
   try:
-    voicemember = VoiceChannel(id=before.channel.id).members
+    voicemember = client.get_channel(before.channel.id).members
     print(voicemember)
     print(member)
     print(before.channel.id)
