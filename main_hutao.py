@@ -74,20 +74,28 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_voice_state_update(member,before,after):
-  if before.channel == None:
-    return
+  #自動切断
   try:
-    voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
-    voicemember = voicech.members
-    print(str(member) + " left " + before.channel.name)
-    if len(voicemember) == 1:
-      for user in voicemember:
-        print(user.id)
-        if user.id == 827466877167992832:
-          await voicech.guild.voice_client.disconnect()
-  except Exception as e:
-    print(e)
-    return
+    #VC入室ログ
+    print(str(member) + " joined " + after.channel.name)
+  except Exception:
+    None
+  finally:
+    if before.channel == None:
+      return
+    try:
+      #VC退出ログ
+      voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
+      voicemember = voicech.members
+      print(str(member) + " left " + before.channel.name)
+      #VC退出処理
+      if len(voicemember) == 1:
+        for user in voicemember:
+          if user.id == 827466877167992832:
+            await voicech.guild.voice_client.disconnect()
+    except Exception as e:
+      print(e)
+      return
 
 
 
