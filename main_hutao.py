@@ -76,11 +76,13 @@ async def on_guild_join(guild):
 async def on_voice_state_update(member,before,after):
   try:
     voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
-    print(voicech.members)
-#    voicemember = voicech.members
-#    print(str(member) + " left " + before.channel.name)
-#    if len(voicemember) <= 1:
-#      print(voicemember)
+    voicemember = voicech.members
+    print(voicemember)
+    print(str(member) + " left " + before.channel.name)
+    if len(voicemember) <= 1:
+      for mem in voicemember:
+        if mem == "shovel Hutao#9577":
+          voicemember.move_to(None)
   except Exception as e:
     print(e)
     return
