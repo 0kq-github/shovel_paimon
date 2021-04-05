@@ -76,7 +76,7 @@ async def on_guild_join(guild):
 async def on_voice_state_update(member,before,after):
   try:
     voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
-    print(voicech)
+    print(voicech.members)
 #    voicemember = voicech.members
 #    print(str(member) + " left " + before.channel.name)
 #    if len(voicemember) <= 1:
