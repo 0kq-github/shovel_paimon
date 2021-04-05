@@ -77,10 +77,11 @@ async def on_voice_state_update(member,before,after):
   try:
     client = discord.Client()
     voicech = client.get_channel(id=before.channel.id)
-    voicemember = voicech.members
-    print(str(member) + " left " + before.channel.name)
-    if len(voicemember) <= 1:
-      print(voicemember)
+    print(voicech)
+#    voicemember = voicech.members
+#    print(str(member) + " left " + before.channel.name)
+#    if len(voicemember) <= 1:
+#      print(voicemember)
   except Exception as e:
     print(e)
     return
