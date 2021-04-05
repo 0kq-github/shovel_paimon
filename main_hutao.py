@@ -71,10 +71,12 @@ async def on_guild_join(guild):
     initdirs(guild.id)
 
 @bot.event
-async def on_voice_state_update(guild):
+async def on_voice_state_update(member,before,after):
   voicemember = VoiceChannel.voice_states.keys()
   print(voicemember)
-  print(guild)
+  print(member)
+  print(before)
+  print(after)
 #  if len(voicemember) <= 1:
 #    await guild.voice_client.disconnect()
 
