@@ -76,7 +76,7 @@ async def on_voice_state_update(member,before,after):
   voicemember = VoiceChannel.voice_states
   print(voicemember)
   print(member)
-  print(before.id)
+  print(before.guild.id)
   discord.VoiceClient.disconnect()
 
 
