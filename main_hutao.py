@@ -83,7 +83,7 @@ async def on_voice_state_update(member,before,after):
       for user in voicemember:
         print(user.id)
         if user.id == 827466877167992832:
-          await user.move_to(None)
+          await user.voice_client.disconnect()
   except Exception as e:
     print(e)
     return
