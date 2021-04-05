@@ -82,6 +82,8 @@ async def on_voice_state_update(member,before,after):
     if len(voicemember) == 1:
       for user in voicemember:
         print(user.id)
+        if user.id == 827466877167992832:
+          user.move_to(None)
   except Exception as e:
     print(e)
     return
