@@ -78,7 +78,8 @@ async def on_voice_state_update(member,before,after):
     print(voicemember)
     print(member)
     print(before.channel.id)
-  except:
+  except Exception as e:
+    print(e)
     return
 
 
