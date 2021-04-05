@@ -72,7 +72,7 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_voice_state_update(member,before,after):
-  voicemember = VoiceChannel.voice_states.key()
+  voicemember = VoiceChannel.voice_states
   print(voicemember)
   print(member)
   print(before)
