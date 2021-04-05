@@ -75,7 +75,7 @@ async def on_guild_join(guild):
 @bot.event
 async def on_voice_state_update(member,before,after):
   try:
-    voicemember = client.get_channel(before.channel.id).members
+    voicemember = discord.Client.get_channel(before.channel.id).members
     print(voicemember)
     print(member)
     print(before.channel.id)
