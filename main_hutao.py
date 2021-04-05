@@ -101,7 +101,8 @@ async def on_voice_state_update(member,before,after):
             config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
             config.read(config_path)
             read_channel = config['ID']['CHANNEL']
-            await read_channel.send(embed=embed)
+            readch = discord.Client.get_channel(self=bot,id=int(read_channel))
+            await readch.send(embed=embed)
             config['READ']['ENABLE'] = 'FALSE'
             with open(config_path, 'w') as f:
               config.write(f)
