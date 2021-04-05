@@ -77,6 +77,7 @@ async def on_voice_state_update(member,before,after):
   try:
     voicemember = discord.Client.get_channel(self=bot,id=before.channel.id).members
     print(voicemember)
+    print(len(voicemember))
     print(member)
     print(before.channel.id)
   except Exception as e:
