@@ -79,8 +79,7 @@ async def on_voice_state_update(member,before,after):
     print(len(voicemember))
     print(str(member) + "left" + before.channel.name)
     if len(voicemember) <= 1:
-      for user in voicemember:
-        print(voicemember)
+      for user in voicemember["id"]:
         print(user)
         if user == 827466877167992832:
           await discord.VoiceClient.disconnect(self=bot,id=before.channel.id)
