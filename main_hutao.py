@@ -79,10 +79,9 @@ async def on_voice_state_update(member,before,after):
     voicemember = voicech.members
     print(voicemember)
     print(str(member) + " left " + before.channel.name)
-    if len(voicemember) <= 1:
-      for mem in voicemember:
-        if mem == "shovel Hutao#9577":
-          voicemember.move_to(None)
+    if len(voicemember) == 1:
+      if voicemember.Member.id == 827466877167992832:
+        print(voicemember.Member.id)
   except Exception as e:
     print(e)
     return
