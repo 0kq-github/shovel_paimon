@@ -80,7 +80,7 @@ async def on_voice_state_update(member,before,after):
     print(voicemember)
     print(str(member) + " left " + before.channel.name)
     if len(voicemember) == 1:
-      print(voicemember["Member"])
+      print(voicemember.id)
   except Exception as e:
     print(e)
     return
