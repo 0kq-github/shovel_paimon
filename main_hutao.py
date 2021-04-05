@@ -79,10 +79,9 @@ async def on_voice_state_update(member,before,after):
     voicemember = client.get_channel(id=before.channel.id)
     print(str(member) + " left " + before.channel.name)
     if len(voicemember.members) <= 1:
-      for ch in voicemember.guild.voice_channels:
-        for mem in ch.members:
-          await mem.move_to(None)
-          
+      for mem in voicemember.members:
+        if mem.id == 827466877167992832:
+          await mem.move_to(None) 
   except Exception as e:
     print(e)
     return
