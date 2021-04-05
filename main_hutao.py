@@ -74,15 +74,18 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_voice_state_update(member,before,after):
+  if before is None:
+    return
+  print(str(member) + " joined " + after.channel.name)
   try:
     client = discord.Client()
-    voicemember = client.get_channel(id=before.channel.id)
+    voicech = client.get_channel(id=before.channel.id)
+    voicemember = voicech.members
     print(str(member) + " left " + before.channel.name)
     if len(voicemember) <= 1:
       for mem in voicemember:
         print(voicemember)
         print(mem)
-        print(mem.id)
 #        if mem.id == 827466877167992832:
 #          await mem.move_to(None) 
   except Exception as e:
