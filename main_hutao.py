@@ -72,11 +72,13 @@ async def on_guild_join(guild):
     initdirs(guild.id)
 
 @bot.event
-async def on_voice_state_update(member,before,after):
+async def on_voice_server_update(member,before,after):
   voicemember = VoiceChannel.voice_states
   print(voicemember)
   print(member)
-  print(before.channel.id)
+  if before.channel.id:
+    print(before.channel.id)
+    
 
 
 @bot.event
