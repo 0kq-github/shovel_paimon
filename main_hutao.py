@@ -4,6 +4,7 @@ import asyncio
 import time
 import discord
 import re
+from discord import voice_client
 from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
@@ -75,10 +76,9 @@ async def on_voice_state_update(member,before,after):
   voicemember = VoiceChannel.voice_states
   print(voicemember)
   print(member)
-  print(before)
+  print(before.VoicecChannel.id)
   print(after)
-#  if len(voicemember) <= 1:
-#    await guild.voice_client.disconnect()
+  discord.VoiceClient.disconnect()
 
 
 @bot.event
