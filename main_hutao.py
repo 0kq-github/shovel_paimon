@@ -80,8 +80,11 @@ async def on_voice_state_update(member,before,after):
     print(str(member) + " left " + before.channel.name)
     if len(voicemember) <= 1:
       for mem in voicemember:
-        if mem.id == 827466877167992832:
-          await mem.move_to(None) 
+        print(voicemember)
+        print(mem)
+        print(mem.id)
+#        if mem.id == 827466877167992832:
+#          await mem.move_to(None) 
   except Exception as e:
     print(e)
     return
