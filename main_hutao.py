@@ -100,7 +100,7 @@ async def on_voice_state_update(member,before,after):
       #VC退出処理
       if len(voicemember) == 1:
         for user in voicemember:
-          if user.id == 827466877167992832:
+          if user.id == bot.user.id:
             await voicech.guild.voice_client.disconnect()
             shutil.rmtree("./config/guild/" + str(voicech.guild.id) + "/wav/")
             langs = lang["auto.disconnect"]
