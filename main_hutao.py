@@ -28,6 +28,7 @@ try:
       prefix = "!"
     else:
      print(f" {sys.argv[2]} というモードはありません")
+     exit()
   else:
     print(f" {sys.argv[1]} という引数はありません")
     print(" コマンド一覧")
