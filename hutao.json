@@ -45,8 +45,13 @@
       },
       "7":{
         "name":"?sh0 import_word",
-        "value":"言葉がたくさん！！",
-        "inline":false
+        "value":"言葉がたくさん！",
+        "inline": false
+      },
+      "8":{
+        "name":"?sh0 export_word",
+        "value":"辞書を送るよ！",
+        "inline": false
       }
     }
   },
@@ -191,6 +196,10 @@
   "import_word.success": {
     "title": "ユーザー辞書",
     "description": "インポート成功！初めて聞く言葉がたくさん！"
+  },
+  "export_word": {
+    "title":"ユーザー辞書",
+    "description":"辞書を送るよ！"
   },
   "init": {
     "title": "お掃除完了！"

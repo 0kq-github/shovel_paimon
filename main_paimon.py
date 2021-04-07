@@ -4,11 +4,13 @@ import asyncio
 import time
 import discord
 import re
+import sys
+from discord import voice_client
+from discord import client
+from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
 import urllib.request
-from pydub import AudioSegment
-from pydub.utils import ratio_to_db
 import json
 from shovel_module import jtalk
 from shovel_module import dict
@@ -16,15 +18,37 @@ from shovel_module import downloader
 from shovel_module import sound_controller
 import shutil
 
+try:
+  if sys.argv[1] == "--mode":
+    if sys.argv[2] == "hutao":
+      mode = "hutao"
+      prefix = "?"
+    elif sys.argv[2] == "paimon":
+      mode = "paimon"
+      prefix = "!"
+    else:
+     print(f" {sys.argv[2]} というモードはありません")
+     exit()
+  else:
+    print(f" {sys.argv[1]} という引数はありません")
+    print(" コマンド一覧")
+    print(" --mode  動作モード選択")
+    print("  hutao  胡桃")
+    print("  paimon パイモン")
+    exit()
+except:
+  if len(sys.argv) == 1:
+    print(" 引数が必要です")
+  exit()
 
-bot = commands.Bot(command_prefix='1')
+bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
 config.read('./config.ini')
-BOT_TOKEN = config.get('PAIMON','BOT_TOKEN')
+BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
 
 lang = {}
-with open("./paimon.json",mode="r") as f:
+with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice):
@@ -61,13 +85,56 @@ async def on_ready():
     print(bot.user.id)
     print(lang["hello"])
     print('------')
-    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
 
 @bot.event
 async def on_guild_join(guild):
     print("joined " + str(guild.id))
-    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
+
+@bot.event
+async def on_voice_state_update(member,before,after):
+  #自動切断
+  try:
+    #VC入室ログ
+    print(str(member) + " joined " + after.channel.name)
+  except Exception:
+    None
+  finally:
+    if before.channel == None:
+      return
+    try:
+      #VC退出ログ
+      voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
+      voicemember = voicech.members
+      print(str(member) + " left " + before.channel.name)
+      #VC退出処理
+      if len(voicemember) == 1:
+        for user in voicemember:
+          if user.id == bot.user.id:
+            await voicech.guild.voice_client.disconnect()
+            shutil.rmtree("./config/guild/" + str(voicech.guild.id) + "/wav/")
+            langs = lang["auto.disconnect"]
+            fields = langs["field"]
+            embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+            embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+            embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
+            config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
+            config.read(config_path)
+            read_channel = config[mode.upper()]['CHANNEL']
+            readch = discord.Client.get_channel(self=bot,id=int(read_channel))
+            await readch.send(embed=embed)
+            config[mode.upper()]['ENABLE'] = 'FALSE'
+            with open(config_path, 'w') as f:
+              config.write(f)
+              config.clear
+              f.close()
+            config.clear
+    except Exception as e:
+      print(e)
+      return
+
 
 @bot.event
 async def on_message(message):
@@ -77,10 +144,10 @@ async def on_message(message):
   if not os.path.exists(config_path):
     initdirs(message.guild.id)
   config.read(config_path, encoding='utf-8')
-  read_channel = config['ID']['CHANNEL']
-  if not message.content.startswith('?sh0'):
+  read_channel = config[mode.upper()]['CHANNEL']
+  if not message.content.startswith(f'{prefix}sh0'):
     if (
-      config['READ']['ENABLE'] == 'TRUE' and
+      config[mode.upper()]['ENABLE'] == 'TRUE' and
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
@@ -123,6 +190,7 @@ async def on_message(message):
         message_read = message.author.name + "。" + message.content
       else:
         message_read = message.author.nick + "。" + message.content
+      message_read = re.sub("www+","わらわら",message_read,0)
       message_read = dict.dict(message.guild.id,message_read)
       print(str(message.guild.id) + ' ' + message_read)
       path_wav = make_wav(message.guild.id , message_read, voice="normal")
@@ -174,7 +242,7 @@ async def s(ctx,*args):
     return
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
-  if config['READ']['ENABLE'] == 'TRUE':
+  if config[mode.upper()]['ENABLE'] == 'TRUE':
     langs = lang["s.already"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.channel.send(embed=embed)
@@ -190,8 +258,8 @@ async def s(ctx,*args):
   await ctx.channel.send(embed=embed)
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
-  config['ID']['CHANNEL'] = str(ctx.channel.id)
-  config['READ']['ENABLE'] = 'TRUE'
+  config[mode.upper()]['CHANNEL'] = str(ctx.channel.id)
+  config[mode.upper()]['ENABLE'] = 'TRUE'
   with open(config_path, 'w') as f:
     config.write(f)
     config.clear
@@ -204,7 +272,7 @@ async def e(ctx,*args):
   '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config['ID']['CHANNEL']):
+  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     if ctx.guild.voice_client is None:
       langs = lang["e.notfound"]
       fields = langs["field"]
@@ -221,7 +289,7 @@ async def e(ctx,*args):
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     config.read(config_path)
-    config['READ']['ENABLE'] = 'FALSE'
+    config[mode.upper()]['ENABLE'] = 'FALSE'
     with open(config_path, 'w') as f:
       config.write(f)
       config.clear
@@ -236,11 +304,13 @@ async def fe(ctx,*args):
   '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config['ID']['CHANNEL']):
+  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     try:
       await ctx.guild.voice_client.disconnect()
-    finally:
       shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+    except:
+      None
+    finally:
       langs = lang["fe.disconnect"]
       fields = langs["field"]
       embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
@@ -248,7 +318,7 @@ async def fe(ctx,*args):
       embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
       await ctx.channel.send(embed=embed)
       config.read(config_path)
-      config['READ']['ENABLE'] = 'FALSE'
+      config[mode.upper()]['ENABLE'] = 'FALSE'
       with open(config_path, 'w') as f:
         config.write(f)
         config.clear
@@ -387,6 +457,18 @@ async def import_word(ctx,*args):
   langs = lang["import_word.success"]
   embed = discord.Embed(title=langs["title"],color=discord.Color.blue(),description=langs["description"])
   await ctx.send(embed=embed)
+
+@sh0.command()
+async def export_word(ctx,*args):
+  '''
+  辞書エクスポートコマンド
+  '''
+  langs = lang["export_word"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  await ctx.send(embed=embed)
+  dictpath = "./config/guild/" + str(ctx.guild.id) + "/" + "dict.csv"
+  await ctx.send(file=discord.File(dictpath))
+
 
 @sh0.command()
 async def init(ctx):

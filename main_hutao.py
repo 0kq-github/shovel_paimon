@@ -226,6 +226,7 @@ async def help(ctx,*args):
   embed.add_field(name=fields["5"]["name"],value=fields["5"]["value"],inline=fields["5"]["inline"])
   embed.add_field(name=fields["6"]["name"],value=fields["6"]["value"],inline=fields["6"]["inline"])
   embed.add_field(name=fields["7"]["name"],value=fields["7"]["value"],inline=fields["7"]["inline"])
+  embed.add_field(name=fields["8"]["name"],value=fields["8"]["value"],inline=fields["8"]["inline"])
   await ctx.send(embed=embed)
 
 @sh0.command()
@@ -457,6 +458,18 @@ async def import_word(ctx,*args):
   langs = lang["import_word.success"]
   embed = discord.Embed(title=langs["title"],color=discord.Color.blue(),description=langs["description"])
   await ctx.send(embed=embed)
+
+@sh0.command()
+async def export_word(ctx,*args):
+  '''
+  辞書エクスポートコマンド
+  '''
+  langs = lang["export_word"]
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  await ctx.send(embed=embed)
+  dictpath = "./config/guild/" + str(ctx.guild.id) + "/" + "dict.csv"
+  await ctx.send(file=discord.File(dictpath))
+
 
 @sh0.command()
 async def init(ctx):

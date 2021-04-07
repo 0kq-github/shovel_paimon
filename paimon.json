@@ -47,6 +47,11 @@
         "name": "!sh0 import_word",
         "value": "辞書をインポートします",
         "inline": false
+      },
+      "8": {
+        "name":"!sh0 export_word",
+        "value": "辞書をエクスポートします",
+        "inline": false
       }
     }
   },
@@ -188,6 +193,10 @@
   "import_word.success":{
     "title":"ユーザー辞書",
     "description":"インポートに成功しました。"
+  },
+  "export_word": {
+    "title":"ユーザー辞書",
+    "description":"辞書を送信します。"
   },
   "init":{
     "title":"初期化しました"
