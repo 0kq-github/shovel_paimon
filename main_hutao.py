@@ -22,12 +22,14 @@ try:
   if sys.argv[1] == "--mode":
     if sys.argv[2] == "hutao":
       mode = "hutao"
+      prefix = "?"
     if sys.argv[2] == "paimon":
       mode = "paimon"
+      prefix = "!"
 except:
   mode = "paimon"
 
-bot = commands.Bot(command_prefix='?')
+bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
