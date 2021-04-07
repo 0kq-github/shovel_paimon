@@ -23,9 +23,11 @@ try:
     if sys.argv[2] == "hutao":
       mode = "hutao"
       prefix = "?"
-    if sys.argv[2] == "paimon":
+    elif sys.argv[2] == "paimon":
       mode = "paimon"
       prefix = "!"
+    else:
+     print(f" {sys.argv[2]} というモードはありません")
   else:
     print(f" {sys.argv[1]} という引数はありません")
     print(" コマンド一覧")
