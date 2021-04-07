@@ -93,6 +93,7 @@ async def on_voice_state_update(member,before,after):
         for user in voicemember:
           if user.id == 827466877167992832:
             await voicech.guild.voice_client.disconnect()
+            shutil.rmtree("./config/guild/" + str(voicech.guild.id) + "/wav/")
             langs = lang["auto.disconnect"]
             fields = langs["field"]
             embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -112,7 +113,6 @@ async def on_voice_state_update(member,before,after):
     except Exception as e:
       print(e)
       return
-
 
 
 @bot.event
@@ -169,6 +169,7 @@ async def on_message(message):
         message_read = message.author.name + "。" + message.content
       else:
         message_read = message.author.nick + "。" + message.content
+      message_read = re.sub("www+","わらわら",message_read,0)
       message_read = dict.dict(message.guild.id,message_read)
       print(str(message.guild.id) + ' ' + message_read)
       path_wav = make_wav(message.guild.id , message_read, voice="normal")
