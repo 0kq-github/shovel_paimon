@@ -133,7 +133,7 @@ async def on_message(message):
     initdirs(message.guild.id)
   config.read(config_path, encoding='utf-8')
   read_channel = config[mode.upper()]['CHANNEL']
-  if not message.content.startswith('?sh0'):
+  if not message.content.startswith(f'{prefix}sh0'):
     if (
       config[mode.upper()]['ENABLE'] == 'TRUE' and
       message.channel.id == int(read_channel) and
