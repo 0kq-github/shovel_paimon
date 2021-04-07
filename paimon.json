@@ -191,5 +191,21 @@
   },
   "init":{
     "title":"初期化しました"
+  },
+  "auto.disconnect": {
+    "title":"ボイスチャット終了",
+    "description":"誰もいなくなったため、読み上げを終了しました。",
+    "field": {
+      "0": {
+        "name": "ヒント",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
+        "inline": false
+      },
+      "1": {
+        "name": "各種リンク",
+        "value": "[作者Twitter](https://twitter.com/_0kq_/)",
+        "inline": false
+      }
+    }
   }
 }
