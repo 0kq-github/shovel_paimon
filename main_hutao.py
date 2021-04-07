@@ -36,7 +36,7 @@ try:
 except:
   if len(sys.argv) == 1:
     print(" 引数が必要です")
-    exit()
+  exit()
 
 bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
