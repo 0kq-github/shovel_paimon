@@ -32,6 +32,7 @@ try:
     print("--mode  動作モード選択")
     print(" hutao  胡桃")
     print(" paimon パイモン")
+    exit()
 except:
   print("引数が必要です。")
   exit()
