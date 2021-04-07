@@ -73,12 +73,12 @@ async def on_ready():
     print(bot.user.id)
     print(lang["hello"])
     print('------')
-    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
 
 @bot.event
 async def on_guild_join(guild):
     print("joined " + str(guild.id))
-    await bot.change_presence(activity=discord.Game(name=f"?sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
 
 @bot.event
