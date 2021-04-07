@@ -4,14 +4,13 @@ import asyncio
 import time
 import discord
 import re
+import sys
 from discord import voice_client
 from discord import client
 from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
 import urllib.request
-from pydub import AudioSegment
-from pydub.utils import ratio_to_db
 import json
 from shovel_module import jtalk
 from shovel_module import dict
@@ -19,15 +18,23 @@ from shovel_module import downloader
 from shovel_module import sound_controller
 import shutil
 
+try:
+  if sys.argv[1] == "--mode":
+    if sys.argv[2] == "hutao":
+      mode = "hutao"
+    if sys.argv[2] == "paimon":
+      mode = "paimon"
+except:
+  mode = "paimon"
 
 bot = commands.Bot(command_prefix='?')
 config = configparser.ConfigParser()
 config.read('./config.ini')
-BOT_TOKEN = config.get('HUTAO','BOT_TOKEN')
+BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
 
 lang = {}
-with open("./hutao.json",mode="r") as f:
+with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice):
@@ -101,10 +108,10 @@ async def on_voice_state_update(member,before,after):
             embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
             config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
             config.read(config_path)
-            read_channel = config['ID']['CHANNEL']
+            read_channel = config[mode.upper()]['CHANNEL']
             readch = discord.Client.get_channel(self=bot,id=int(read_channel))
             await readch.send(embed=embed)
-            config['READ']['ENABLE'] = 'FALSE'
+            config[mode.upper()]['ENABLE'] = 'FALSE'
             with open(config_path, 'w') as f:
               config.write(f)
               config.clear
@@ -123,10 +130,10 @@ async def on_message(message):
   if not os.path.exists(config_path):
     initdirs(message.guild.id)
   config.read(config_path, encoding='utf-8')
-  read_channel = config['ID']['CHANNEL']
+  read_channel = config[mode.upper()]['CHANNEL']
   if not message.content.startswith('?sh0'):
     if (
-      config['READ']['ENABLE'] == 'TRUE' and
+      config[mode.upper()]['ENABLE'] == 'TRUE' and
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
@@ -221,7 +228,7 @@ async def s(ctx,*args):
     return
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
-  if config['READ']['ENABLE'] == 'TRUE':
+  if config[mode.upper()]['ENABLE'] == 'TRUE':
     langs = lang["s.already"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.channel.send(embed=embed)
@@ -237,8 +244,8 @@ async def s(ctx,*args):
   await ctx.channel.send(embed=embed)
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
-  config['ID']['CHANNEL'] = str(ctx.channel.id)
-  config['READ']['ENABLE'] = 'TRUE'
+  config[mode.upper()]['CHANNEL'] = str(ctx.channel.id)
+  config[mode.upper()]['ENABLE'] = 'TRUE'
   with open(config_path, 'w') as f:
     config.write(f)
     config.clear
@@ -251,7 +258,7 @@ async def e(ctx,*args):
   '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config['ID']['CHANNEL']):
+  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     if ctx.guild.voice_client is None:
       langs = lang["e.notfound"]
       fields = langs["field"]
@@ -268,7 +275,7 @@ async def e(ctx,*args):
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     config.read(config_path)
-    config['READ']['ENABLE'] = 'FALSE'
+    config[mode.upper()]['ENABLE'] = 'FALSE'
     with open(config_path, 'w') as f:
       config.write(f)
       config.clear
@@ -283,7 +290,7 @@ async def fe(ctx,*args):
   '''
   config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config['ID']['CHANNEL']):
+  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     try:
       await ctx.guild.voice_client.disconnect()
       shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
@@ -297,7 +304,7 @@ async def fe(ctx,*args):
       embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
       await ctx.channel.send(embed=embed)
       config.read(config_path)
-      config['READ']['ENABLE'] = 'FALSE'
+      config[mode.upper()]['ENABLE'] = 'FALSE'
       with open(config_path, 'w') as f:
         config.write(f)
         config.clear

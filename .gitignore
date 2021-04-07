@@ -1,4 +1,7 @@
-config/
 global_wav/
 __pycache__
-config.ini
+/config/guild/*
+!/config/guild/default/
+
+
+
