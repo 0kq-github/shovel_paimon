@@ -27,15 +27,16 @@ try:
       mode = "paimon"
       prefix = "!"
   else:
-    print(f"{sys.argv[1]} というコマンドはありません")
-    print("コマンド一覧")
-    print("--mode  動作モード選択")
-    print(" hutao  胡桃")
-    print(" paimon パイモン")
+    print(f" {sys.argv[1]} という引数はありません")
+    print(" コマンド一覧")
+    print(" --mode  動作モード選択")
+    print("  hutao  胡桃")
+    print("  paimon パイモン")
     exit()
 except:
-  print("引数が必要です。")
-  exit()
+  if len(sys.argv) == 1:
+    print(" 引数が必要です")
+    exit()
 
 bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
