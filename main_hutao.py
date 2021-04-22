@@ -175,7 +175,7 @@ async def on_message(message):
         try:
           mention = bot.get_user(id=int(mention)).display_name
         except Exception:
-          mention = bot.get_user(id=int(mention)).name
+          mention = bot.get_user(id=int(mention)).id
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
