@@ -3,6 +3,7 @@ jtalk 音声生成
 '''
 
 import subprocess
+import os
 
 def jtalk(t,voice,n):
     open_jtalk=['open_jtalk']
@@ -12,7 +13,7 @@ def jtalk(t,voice,n):
     jm=['-jm','1.0']
     outwav=['-ow',n+'.wav']
     cmd=open_jtalk+mech+htsvoice+speed+jm+outwav
-    c = subprocess.Popen(cmd,stdin=subprocess.PIPE)
+    c = subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=open(os.devnull, 'wb'))
     c.stdin.write(t.encode())
     c.stdin.close()
     c.wait()
