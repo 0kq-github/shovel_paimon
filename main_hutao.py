@@ -384,7 +384,7 @@ async def dw(ctx,*args):
 
 @sh0.command()
 async def link(ctx,*args):
-  if not ctx.author.id == 262132823895441409 or ctx.author.guild_permissions.administrator:
+  if not ctx.author.id == 262132823895441409 and ctx.author.guild_permissions.administrator:
     return
   '''
   音声登録コマンド
