@@ -92,10 +92,14 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_voice_state_update(member,before,after):
+  if before.channel.id == after.channel.id:
+    return
+  datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
   #自動切断
   try:
     #VC入室ログ
-    print(str(member) + " joined " + after.channel.name)
+    voicech = bot.get_channel(id=after.channel.id)
+    print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {after.channel.name} に参加しました")
   except Exception:
     None
   finally:
@@ -103,9 +107,9 @@ async def on_voice_state_update(member,before,after):
       return
     try:
       #VC退出ログ
-      voicech = discord.Client.get_channel(self=bot,id=before.channel.id)
+      voicech = bot.get_channel(id=before.channel.id)
       voicemember = voicech.members
-      print(str(member) + " left " + before.channel.name)
+      print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {before.channel.name} から退出しました")
       #VC退出処理
       if len(voicemember) == 1:
         for user in voicemember:
@@ -120,7 +124,7 @@ async def on_voice_state_update(member,before,after):
             config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
             config.read(config_path)
             read_channel = config[mode.upper()]['CHANNEL']
-            readch = discord.Client.get_channel(self=bot,id=int(read_channel))
+            readch = bot.get_channel(id=int(read_channel))
             await readch.send(embed=embed)
             config[mode.upper()]['ENABLE'] = 'FALSE'
             with open(config_path, 'w') as f:
@@ -190,8 +194,8 @@ async def on_message(message):
         message_read = message.author.nick + "。" + message.content
       message_read = re.sub("www+","わらわら",message_read,0)
       message_read = dict.dict(message.guild.id,message_read)
-      datime_now = datetime.datetime.now().strftime('%Y/%m/%d/%H:%M:%S')
-      print(f"[{datime_now}][{message.guild.name}]<{message.author.name}>: {message.content} -> {message_read}")
+      datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+      print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
       path_wav = make_wav(message.guild.id , message_read, voice="normal")
       source = discord.FFmpegPCMAudio(path_wav,before_options="-guess_layout_max 0")
       source_half = discord.PCMVolumeTransformer(source, volume=0.7)
