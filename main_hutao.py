@@ -176,9 +176,9 @@ async def on_message(message):
         mention = mention.replace("<@!","")
         mention = mention.replace(">","")
         try:
-          mention = discord.Client(self=bot).get_user(id=int(mention)).display_name
+          mention = discord.Client.get_user(self=bot,id=int(mention)).display_name
         except Exception:
-          mention = discord.Client(self=bot).get_user(id=int(mention)).name
+          mention = discord.Client.get_user(self=bot,id=int(mention)).name
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
@@ -196,7 +196,7 @@ async def on_message(message):
       message_read = re.sub("www+","わらわら",message_read,0)
       message_read = dict.dict(message.guild.id,message_read)
       datime_now = datetime.datetime.now().strftime('%Y/%m/%d/%H:%M:%S')
-      print(f"[{datime_now}][{message.guild.name}]< {message.author.name} >: {message.content} -> {message_read}")
+      print(f"[{datime_now}][{message.guild.name}]<{message.author.name}>: {message.content} -> {message_read}")
       path_wav = make_wav(message.guild.id , message_read, voice="normal")
       source = discord.FFmpegPCMAudio(path_wav,before_options="-guess_layout_max 0")
       source_half = discord.PCMVolumeTransformer(source, volume=0.7)
