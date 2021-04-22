@@ -5,9 +5,6 @@ import time
 import discord
 import re
 import sys
-from discord import voice_client
-from discord import client
-from discord.channel import VoiceChannel
 from discord.ext import commands
 import configparser
 import urllib.request
@@ -176,9 +173,9 @@ async def on_message(message):
         mention = mention.replace("<@!","")
         mention = mention.replace(">","")
         try:
-          mention = discord.Client.get_user(self=bot,id=int(mention)).display_name
+          mention = bot.get_user(id=int(mention)).display_name
         except Exception:
-          mention = discord.Client.get_user(self=bot,id=int(mention)).name
+          mention = bot.get_user(id=int(mention)).name
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
