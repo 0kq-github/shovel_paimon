@@ -172,9 +172,8 @@ async def on_message(message):
         mention = re.search("<@!..................>", message.content).group()
         mention = mention.replace("<@!","")
         mention = mention.replace(">","")
-        #mention_user = await bot.fetch_user(int(mention))
-        mention_user = discord.utils.get(message.guild.members, int(mention))
-        mention = mention_user.nick
+        mention_user = await bot.fetch_user(int(mention))
+        mention = mention_user.display_name
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
