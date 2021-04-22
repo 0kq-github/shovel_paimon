@@ -92,8 +92,11 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_voice_state_update(member,before,after):
-  if before.channel.id == after.channel.id:
-    return
+  try:
+    if before.channel.id == after.channel.id:
+      return
+  except Exception:
+    None
   datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
   #自動切断
   try:
