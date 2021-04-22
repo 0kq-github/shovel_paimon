@@ -172,7 +172,7 @@ async def on_message(message):
         mention = re.search("<@!..................>", message.content).group()
         mention = mention.replace("<@!","")
         mention = mention.replace(">","")
-        mention = bot.get_user(id=int(mention)).display_name
+        mention = bot.fetch_user(id=int(mention)).display_name
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
