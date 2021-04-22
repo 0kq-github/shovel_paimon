@@ -194,7 +194,7 @@ async def on_message(message):
       message_read = dict.dict(message.guild.id,message_read)
       print(str(message.guild.id) + ' ' + message_read)
       path_wav = make_wav(message.guild.id , message_read, voice="normal")
-      source = discord.FFmpegPCMAudio(path_wav)
+      source = discord.FFmpegPCMAudio(path_wav,before_options="-guess_layout_max 0")
       source_half = discord.PCMVolumeTransformer(source, volume=0.7)
       message.guild.voice_client.play(source_half)
   config.clear()
@@ -378,6 +378,8 @@ async def dw(ctx,*args):
 
 @sh0.command()
 async def link(ctx,*args):
+  if not ctx.author.id == 262132823895441409 or ctx.guild_permissions.administrator:
+    return
   '''
   音声登録コマンド
   '''
