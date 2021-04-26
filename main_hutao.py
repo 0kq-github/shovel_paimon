@@ -427,7 +427,7 @@ async def show(ctx):
   count = 1
   for i in filelist:
     if count <= 30:
-      files += i + "\n"
+      files += i + ","
     if count >= 31:
       langs = lang["show"]
       fields = langs["field"]
