@@ -157,14 +157,14 @@ async def on_message(message):
       ):
       while message.guild.voice_client.is_playing():
         await asyncio.sleep(0.1)
-      if os.path.exists("./global_wav/" + message.content + '.mp3'):
-        sozai_wav = "./global_wav/" + message.content + '.mp3'
+      if os.path.exists(f"./global_wav/{message.content}.mp3"):
+        sozai_wav = f"./global_wav/{message.content}.mp3"
         sozai_source = discord.FFmpegPCMAudio(sozai_wav)
         sozai_source_half = discord.PCMVolumeTransformer(sozai_source, volume=0.1)
         message.guild.voice_client.play(sozai_source_half)
         return
-      if os.path.exists("./global_wav/" + message.content + '.wav'):
-        sozai_wav = "./global_wav/" + message.content + '.wav'
+      if os.path.exists(f"./global_wav/{message.content}.wav"):
+        sozai_wav = f"./global_wav/{message.content}.wav"
         sozai_source = discord.FFmpegPCMAudio(sozai_wav)
         sozai_source_half = discord.PCMVolumeTransformer(sozai_source, volume=0.1)
         message.guild.voice_client.play(sozai_source_half)
@@ -186,7 +186,7 @@ async def on_message(message):
         mention_channel = re.search("<#..................>", message.content).group()
         mention_channel = mention_channel.replace("<#","")
         mention_channel = mention_channel.replace(">","")
-        mention_channel = discord.Client.get_channel(self=bot,id=int(mention_channel)).name
+        mention_channel = bot.get_channel(id=int(mention_channel)).name
         message.content = re.sub("<#..................>", mention_channel + "。", message.content)
       message.content = message.content.replace("\n","。")
       if len(message.content) > 100:
@@ -427,6 +427,7 @@ async def show(ctx):
   count = 1
   for i in filelist:
     if count <= 30:
+      i = i[:-4]
       files += i + ","
     if count >= 31:
       langs = lang["show"]
