@@ -5,10 +5,13 @@ import time
 import discord
 import re
 import sys
+from discord.errors import InvalidData
 from discord.ext import commands
 import configparser
 import urllib.request
 import json
+
+from discord.player import FFmpegPCMAudio, PCMAudio, PCMVolumeTransformer
 from shovel_module import jtalk
 from shovel_module import dict
 from shovel_module import downloader
@@ -78,10 +81,18 @@ def send_voice(message, path, volume):
     time.sleep(0.1)
   while os.path.isfile(path) == False:
     time.sleep(0.1)
-  time.sleep(1)
-  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
-  wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
-  message.guild.voice_client.play(wav_source_half)
+  failcount = 0
+  while failcount <= 5:
+    try:
+      wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
+      wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
+      message.guild.voice_client.play(wav_source_half)
+      failcount += 1
+      time.sleep(1)
+    except InvalidData:
+      pass
+    except Exception:
+      failcount = 5
 
 @bot.event
 async def on_ready():
