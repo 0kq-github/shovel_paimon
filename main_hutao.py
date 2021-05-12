@@ -75,6 +75,8 @@ def initdirs(guild_id):
   shutil.copy("./config/guild/default/config.ini",config_path)
 
 def send_voice(message, path, volume):
+  while message.guild.voice_client.is_playing():
+    time.sleep(0.1)
   while not os.path.exists:
     time.sleep(0.1)
   wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
@@ -162,8 +164,6 @@ async def on_message(message):
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
-      while message.guild.voice_client.is_playing():
-        await asyncio.sleep(0.1)
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
         play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
