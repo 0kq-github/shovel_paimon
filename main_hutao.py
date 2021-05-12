@@ -53,8 +53,7 @@ with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice, datime):
-  datime_now = datime
-  path_wav = "./config/guild/" + str(id) + "/wav/" + datime_now
+  path_wav = "./config/guild/" + str(id) + "/wav/" + datime
   jtalk.jtalk(word_wav,voice,path_wav)
 
 
@@ -168,7 +167,7 @@ async def on_message(message):
         play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
-        play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
+        play.submit(send_voice, message, f"./global_wav/{message.content}.wav", 0.1)
         return
       if "http" in message.content:
         message.content = re.sub("(?<=http).*$","",message.content)
