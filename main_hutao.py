@@ -56,8 +56,10 @@ with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice, datime):
-  path_wav = "./config/guild/" + str(id) + "/wav/" + datime
+  path_wav = f"./config/guild/{str(id)}/temp/{datime}"
   jtalk.jtalk(word_wav,voice,path_wav)
+  shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
+
 
 
 def truncate(string, length, ellipsis='、以下省略'):
@@ -81,17 +83,10 @@ def send_voice(message, path, volume):
     time.sleep(0.1)
   while os.path.isfile(path) == False:
     time.sleep(0.1)
-  failcount = 0
-  while failcount <= 5:
-    try:
-      wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
-      wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
-      message.guild.voice_client.play(wav_source_half)
-      break
-    except Exception:
-      failcount += 1
-      time.sleep(1)
-      pass
+  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
+  wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
+  message.guild.voice_client.play(wav_source_half)
+
 
 @bot.event
 async def on_ready():
@@ -265,7 +260,8 @@ async def s(ctx,*args):
     config.clear
     return
   await ctx.author.voice.channel.connect()
-  os.makedirs("./config/guild/" + str(ctx.guild.id) + "/wav",exist_ok=True)
+  os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
+  os.makedirs(f"./config/guild/{str(ctx.guild.id)}/temp",exist_ok=True)
   langs = lang["s.connect"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -297,7 +293,8 @@ async def e(ctx,*args):
       await ctx.channel.send(embed=embed)
       return
     await ctx.guild.voice_client.disconnect()
-    shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+    shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/")
+    shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/temp/")
     langs = lang["e.disconnect"]
     fields = langs["field"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
