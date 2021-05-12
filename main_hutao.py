@@ -76,7 +76,7 @@ def initdirs(guild_id):
 def send_voice(message, path, volume):
   while message.guild.voice_client.is_playing():
     time.sleep(0.1)
-  while os.path.exists == False:
+  while not os.path.exists(path):
     time.sleep(0.1)
   wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
   wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
