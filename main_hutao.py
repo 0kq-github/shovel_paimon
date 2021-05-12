@@ -200,7 +200,7 @@ async def on_message(message):
       datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
       make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
       make.start()
-      path_wav = f"./config/guild/{str(id)}/wav/{datime}.wav"
+      path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
       play.submit(send_voice, message, path_wav, 0.7)
   config.clear()
   await bot.process_commands(message)
