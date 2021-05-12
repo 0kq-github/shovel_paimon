@@ -89,10 +89,8 @@ def send_voice(message, path, volume):
       message.guild.voice_client.play(wav_source_half)
       failcount += 1
       time.sleep(1)
-    except InvalidData:
-      pass
     except Exception:
-      failcount = 5
+      pass
 
 @bot.event
 async def on_ready():
