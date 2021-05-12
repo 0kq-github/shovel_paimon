@@ -14,6 +14,8 @@ from shovel_module import dict
 from shovel_module import downloader
 from shovel_module import sound_controller
 import shutil
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 try:
   if sys.argv[1] == "--mode":
@@ -43,19 +45,17 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
+tpe = ThreadPoolExecutor
+play = tpe(max_workers=1)
 
 lang = {}
 with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
-def make_wav(id, word_wav, voice):
-  datime_now = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
+def make_wav(id, word_wav, voice, datime):
+  datime_now = datime
   path_wav = "./config/guild/" + str(id) + "/wav/" + datime_now
   jtalk.jtalk(word_wav,voice,path_wav)
-  while os.path.isfile(path_wav + '.wav') == False:
-    time.sleep(0.1)
-  path_wav = path_wav + '.wav'
-  return path_wav
 
 
 def truncate(string, length, ellipsis='、以下省略'):
@@ -73,6 +73,13 @@ def initdirs(guild_id):
     f.write("")
   config_path = './config/guild/' + str(guild_id) + "/" + 'config.ini'
   shutil.copy("./config/guild/default/config.ini",config_path)
+
+def send_voice(message, path, volume):
+  while not os.path.exists:
+    time.sleep(0.1)
+  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
+  wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
+  message.guild.voice_client.play(wav_source_half)
 
 @bot.event
 async def on_ready():
@@ -158,39 +165,30 @@ async def on_message(message):
       while message.guild.voice_client.is_playing():
         await asyncio.sleep(0.1)
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
-        sozai_wav = f"./global_wav/{message.content}.mp3"
-        sozai_source = discord.FFmpegPCMAudio(sozai_wav)
-        sozai_source_half = discord.PCMVolumeTransformer(sozai_source, volume=0.1)
-        message.guild.voice_client.play(sozai_source_half)
+        play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
-        sozai_wav = f"./global_wav/{message.content}.wav"
-        sozai_source = discord.FFmpegPCMAudio(sozai_wav)
-        sozai_source_half = discord.PCMVolumeTransformer(sozai_source, volume=0.1)
-        message.guild.voice_client.play(sozai_source_half)
+        play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
       if "http" in message.content:
         message.content = re.sub("(?<=http).*$","",message.content)
         message.content = message.content.replace("http","。URL省略")
-      #if "<:" in message.content:
-      #  message.content = re.sub(":..................>", "", message.content)
-      #  message.content = message.content.replace("<:","")
       if "<@" in message.content:
         mention = re.search("<@!..................>", message.content).group()
         mention = mention.replace("<@!","")
         mention = mention.replace(">","")
-        mention_user = await bot.fetch_user(int(mention))
+        mention_user = bot.fetch_user(int(mention))
         mention = mention_user.display_name
         message.content = re.sub("<@!..................>", "@" + mention, message.content)
       if "<#" in message.content:
         mention_channel = re.search("<#..................>", message.content).group()
         mention_channel = mention_channel.replace("<#","")
         mention_channel = mention_channel.replace(">","")
-        mention_channel = bot.get_channel(id=int(mention_channel)).name
+        mention_channel = await bot.get_channel(id=int(mention_channel)).name
         message.content = re.sub("<#..................>", mention_channel + "。", message.content)
       message.content = message.content.replace("\n","。")
-      if len(message.content) > 100:
-        message.content = truncate(message.content, 100)
+      if len(message.content) > 50:
+        message.content = truncate(message.content, 50)
       if message.author.nick is None:
         message_read = message.author.name + "。" + message.content
       else:
@@ -199,10 +197,11 @@ async def on_message(message):
       message_read = dict.dict(message.guild.id,message_read)
       datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
       print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
-      path_wav = make_wav(message.guild.id , message_read, voice="normal")
-      source = discord.FFmpegPCMAudio(path_wav,before_options="-guess_layout_max 0")
-      source_half = discord.PCMVolumeTransformer(source, volume=0.7)
-      message.guild.voice_client.play(source_half)
+      datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
+      make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
+      make.start()
+      path_wav = f"./config/guild/{str(id)}/wav/{datime}.wav"
+      play.submit(send_voice, message, path_wav, 0.7)
   config.clear()
   await bot.process_commands(message)
 
