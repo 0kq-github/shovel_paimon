@@ -78,6 +78,7 @@ def send_voice(message, path, volume):
     time.sleep(0.1)
   while os.path.isfile(path) == False:
     time.sleep(0.1)
+  time.sleep(1)
   wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
   wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
   message.guild.voice_client.play(wav_source_half)
@@ -196,7 +197,7 @@ async def on_message(message):
       message_read = dict.dict(message.guild.id,message_read)
       datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
       print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
-      datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
+      datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
       make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
       make.start()
       path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
