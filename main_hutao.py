@@ -87,9 +87,10 @@ def send_voice(message, path, volume):
       wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
       wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
       message.guild.voice_client.play(wav_source_half)
+      break
+    except Exception:
       failcount += 1
       time.sleep(1)
-    except Exception:
       pass
 
 @bot.event
