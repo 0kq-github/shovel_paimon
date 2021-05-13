@@ -11,7 +11,6 @@ import configparser
 import urllib.request
 import json
 
-from discord.player import FFmpegPCMAudio, PCMAudio, PCMVolumeTransformer
 from shovel_module import jtalk
 from shovel_module import dict
 from shovel_module import downloader
@@ -49,7 +48,7 @@ config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
 tpe = ThreadPoolExecutor
-play = tpe(max_workers=1)
+
 
 lang = {}
 with open(f"./{mode}.json",mode="r") as f:
@@ -169,6 +168,7 @@ async def on_message(message):
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
+      play = tpe(max_workers=1,thread_name_prefix=str(message.guild.id))
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
         play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
