@@ -167,7 +167,7 @@ async def on_message(message):
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
-      play = tpe(max_workers=1,thread_name_prefix=str(message.guild.id))
+      play = tpe(max_workers=1)
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
         play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
         return
