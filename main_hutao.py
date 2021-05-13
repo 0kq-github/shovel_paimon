@@ -5,7 +5,6 @@ import time
 import discord
 import re
 import sys
-from discord.errors import InvalidData
 from discord.ext import commands
 import configparser
 import urllib.request
