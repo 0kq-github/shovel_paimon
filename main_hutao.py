@@ -6,17 +6,19 @@ import discord
 import re
 import sys
 from discord.ext import commands
+from discord.ext import tasks
 import configparser
 import urllib.request
 import json
+import shutil
+import threading
+import queue
 
 from shovel_module import jtalk
 from shovel_module import dict
 from shovel_module import downloader
 from shovel_module import sound_controller
-import shutil
-import threading
-from concurrent.futures import ThreadPoolExecutor
+
 
 try:
   if sys.argv[1] == "--mode":
@@ -45,8 +47,8 @@ bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
+q = queue.Queue
 config.clear
-tpe = ThreadPoolExecutor
 
 
 lang = {}
@@ -167,12 +169,13 @@ async def on_message(message):
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
-      play = tpe(max_workers=1)
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
-        play.submit(send_voice, message, f"./global_wav/{message.content}.mp3", 0.1)
+        qlist = [message,f"./global_wav/{message.content}.mp3",0.1]
+        q.put(qlist)
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
-        play.submit(send_voice, message, f"./global_wav/{message.content}.wav", 0.1)
+        qlist = [message,f"./global_wav/{message.content}.wav",0.1]
+        q.put(qlist)
         return
       if "http" in message.content:
         message.content = re.sub("(?<=http).*$","",message.content)
@@ -205,9 +208,21 @@ async def on_message(message):
       make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
       make.start()
       path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
+      qlist = [message,path_wav,0.7]
+      q.put(qlist)
       play.submit(send_voice, message, path_wav, 0.7)
   config.clear()
   await bot.process_commands(message)
+
+
+@tasks.loop(seconds=0)
+async def loop():
+  if not q.empty():
+    qlist = q.get()
+    message = qlist[0]
+    path = qlist[1]
+    volume = qlist[2]
+    send_voice(message, path, volume)
 
 @bot.group()
 async def sh0(ctx):
@@ -497,6 +512,7 @@ async def init(ctx):
 
 
 try:  
+    loop.start()
     bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
 except KeyboardInterrupt: 
     print('\nClosing %s...' % bot.user.name)
