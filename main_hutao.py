@@ -210,12 +210,11 @@ async def on_message(message):
       path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
       qlist = [message,path_wav,0.7]
       q.put(qlist)
-      play.submit(send_voice, message, path_wav, 0.7)
   config.clear()
   await bot.process_commands(message)
 
 
-@tasks.loop(seconds=0)
+@tasks.loop(seconds=0.1)
 async def loop():
   if not q.empty():
     qlist = q.get()
