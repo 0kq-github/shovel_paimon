@@ -47,7 +47,7 @@ bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
-q = queue.Queue
+q = queue.Queue()
 config.clear
 
 
