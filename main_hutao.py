@@ -222,7 +222,6 @@ async def loop():
     path = qlist[1]
     volume = qlist[2]
     send_voice(message, path, volume)
-    time.sleep(10)
 
 @bot.group()
 async def sh0(ctx):
