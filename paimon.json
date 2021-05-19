@@ -1,0 +1,220 @@
+{
+  "hello":"オイラだぞ！",
+  "unknown": {
+    "title": "コマンド",
+    "description": "そのコマンドは存在しません。"
+  },
+  "help": {
+    "title": "コマンド",
+    "description": "コマンド一覧",
+    "field": {
+      "0": {
+        "name": "!sh0 s",
+        "value": "読み上げを開始します。",
+        "inline": false
+      },
+      "1": {
+        "name": "!sh0 e",
+        "value": "読み上げを終了します。",
+        "inline": false
+      },
+      "2": {
+        "name": "!sh0 fe",
+        "value": "読み上げを強制終了します。",
+        "inline": false
+      },
+      "3": {
+        "name": "!sh0 link <音量倍率>",
+        "value": "添付ファイルを登録します\n対応拡張子 mp3",
+        "inline": false
+      },
+      "4": {
+        "name": "!sh0 show",
+        "value": "登録音声一覧を表示します",
+        "inline": false
+      },
+      "5": {
+        "name": "!sh0 aw <単語> <読み>",
+        "value": "新しい単語を登録します",
+        "inline": false
+      },
+      "6": {
+        "name": "!sh0 dw <単語>",
+        "value": "単語を削除します",
+        "inline": false
+      },
+      "7": {
+        "name": "!sh0 import_word",
+        "value": "辞書をインポートします",
+        "inline": false
+      },
+      "8": {
+        "name":"!sh0 export_word",
+        "value": "辞書をエクスポートします",
+        "inline": false
+      }
+    }
+  },
+  "s.notfound": {
+    "title": "読み上げ",
+    "description": "読み上げを開始することができませんでした。ボイスチャンネルに参加して、再度`!sh0 s`を実行してください。",
+    "field": {
+      "name": "Tips",
+      "value": "ボイスチャンネルに接続せずに読み上げを開始する機能はありません",
+      "inline": false
+    }
+  },
+  "s.already": {
+    "title": "読み上げ",
+    "description": "既に読み上げを開始しています。"
+  },
+  "s.connect": {
+    "title": "ボイスチャット接続",
+    "description": "接続に成功しました。読み上げを開始します。",
+    "field": {
+      "0": {
+        "name": "読み上げ対象",
+        "value": "",
+        "inline": false
+      },
+      "1": {
+        "name": "読み上げボイスチャンネル",
+        "value": "",
+        "inline": false
+      }
+    }
+  },
+  "e.notfound": {
+    "title": "読み上げ",
+    "description": "参加しているボイスチャンネルはありません。",
+    "field": {
+      "0": {
+        "name": "Tips",
+        "value": "現在接続中のボイスチャンネルはありません。",
+        "inline": false
+      }
+    }
+  },
+  "e.disconnect": {
+    "title": "ボイスチャット終了",
+    "description": "読み上げを終了しました。",
+    "field": {
+      "0": {
+        "name": "ヒント",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
+        "inline": false
+      },
+      "1": {
+        "name": "各種リンク",
+        "value": "[作者Twitter](https://twitter.com/_0kq_/)",
+        "inline": false
+      }
+    }
+  },
+  "fe.disconnect": {
+    "title": "強制終了",
+    "description": "強制終了しました。",
+    "field": {
+      "0": {
+        "name": "ヒント",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
+        "inline": false
+      },
+      "1": {
+        "name": "各種リンク",
+        "value": "[作者Twitter](https://twitter.com/_0kq_/)",
+        "inline": false
+      }
+    }
+  },
+  "aw.unknown": {
+    "title": "ユーザー辞書",
+    "description": "登録に失敗しました。引数が不正です。"
+  },
+  "aw.success": {
+    "title": "ユーザー辞書",
+    "description": "登録に成功しました。",
+    "field": {
+      "0": {
+        "name": "単語",
+        "value": "",
+        "inline": true
+      },
+      "1": {
+        "name": "読み",
+        "value": ""
+      }
+    }
+  },
+  "dw.wrong": {
+    "title": "ユーザー辞書",
+    "description": "削除に失敗しました。引数が不正です。"
+  },
+  "dw.unknown": {
+    "title": "ユーザー辞書",
+    "description": "削除に失敗しました。不明な辞書です。"
+  },
+  "dw.success": {
+    "title": "ユーザー辞書",
+    "description": "削除に成功しました。",
+    "field": {
+      "0": {
+        "name": "単語",
+        "value": "",
+        "inline": true
+      }
+    }
+  },
+  "link.notfound": {
+    "title": "音声登録",
+    "description": "登録に失敗しました。ファイルを添付してください。"
+  },
+  "link.update": {
+    "title": "音声登録",
+    "description": "ファイルの更新に成功しました。"
+  },
+  "link.success": {
+    "title": "音声登録",
+    "description": "登録に成功しました。"
+  },
+  "show": {
+    "title": "音声一覧",
+    "description": "",
+    "field": {
+      "name": "登録数 ",
+      "value": "",
+      "inline": false
+    }
+  },
+  "import_word.notfound":{
+    "title":"ユーザー辞書",
+    "description":"インポートに失敗しました。ファイルを添付してください。"
+  },
+  "import_word.success":{
+    "title":"ユーザー辞書",
+    "description":"インポートに成功しました。"
+  },
+  "export_word": {
+    "title":"ユーザー辞書",
+    "description":"辞書を送信します。"
+  },
+  "init":{
+    "title":"初期化しました"
+  },
+  "auto.disconnect": {
+    "title":"ボイスチャット終了",
+    "description":"誰もいなくなったため、読み上げを終了しました。",
+    "field": {
+      "0": {
+        "name": "ヒント",
+        "value": "読み上げがうまくいかないときや、読み上げ終了後shovel Paimonがボイスチャンネルに残ったときは、`!sh0 fe`で退出させてください。",
+        "inline": false
+      },
+      "1": {
+        "name": "各種リンク",
+        "value": "[作者Twitter](https://twitter.com/_0kq_/)",
+        "inline": false
+      }
+    }
+  }
+}
