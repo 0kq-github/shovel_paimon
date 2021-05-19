@@ -107,6 +107,7 @@ def voice_loop(ctx):
     try:
       queue = queuelist.pop(0)
     except:
+      time.sleep(0.1)
       continue
     send_voice(queue[0],queue[1],queue[2])
 
