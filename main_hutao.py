@@ -12,7 +12,6 @@ import urllib.request
 import json
 import shutil
 import threading
-import queue
 
 from shovel_module import jtalk
 from shovel_module import dict
@@ -47,8 +46,10 @@ bot = commands.Bot(command_prefix=prefix)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
-q = queue.Queue()
 config.clear
+#messagequeue = {message.guild.id:[[message,path,volume],[message,path,volume]]}
+global messagequeue
+messagequeue = {}
 
 
 lang = {}
@@ -86,6 +87,19 @@ def send_voice(message, path, volume):
   wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0")
   wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
   message.guild.voice_client.play(wav_source_half)
+
+def voice_loop(ctx):
+  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
+  while True:
+    config.read(config_path)
+    if config[mode.upper()]['ENABLE'] == 'FALSE':
+      break
+    if ctx.guild.voice_client.is_playing():
+      time.sleep(0.1)
+      continue
+    queuelist = messagequeue[ctx.guild.id]
+    queue = queuelist.pop(0)
+    send_voice(queue[0],queue[1],queue[2])
 
 
 @bot.event
@@ -170,12 +184,14 @@ async def on_message(message):
       message.guild.voice_client is not None
       ):
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
-        qlist = [message,f"./global_wav/{message.content}.mp3",0.1]
-        q.put(qlist)
+        queuelist = messagequeue[message.guild.id]
+        queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1])
+        messagequeue[message.guild.id] = queuelist
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
-        qlist = [message,f"./global_wav/{message.content}.wav",0.1]
-        q.put(qlist)
+        queuelist = messagequeue[message.guild.id]
+        queuelist.append([message,f"./global_wav/{message.content}.wav",0.1])
+        messagequeue[message.guild.id] = queuelist
         return
       if "http" in message.content:
         message.content = re.sub("(?<=http).*$","",message.content)
@@ -208,20 +224,12 @@ async def on_message(message):
       make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
       make.start()
       path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
-      qlist = [message,path_wav,0.7]
-      q.put(qlist)
+      queuelist = messagequeue[message.guild.id]
+      queuelist.append([message,path_wav,0.7])
+      messagequeue[message.guild.id] = queuelist
   config.clear()
   await bot.process_commands(message)
 
-
-@tasks.loop(seconds=0.1)
-async def loop():
-  if not q.empty():
-    qlist = q.get()
-    message = qlist[0]
-    path = qlist[1]
-    volume = qlist[2]
-    send_voice(message, path, volume)
 
 @bot.group()
 async def sh0(ctx):
@@ -264,7 +272,7 @@ async def s(ctx,*args):
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     await ctx.channel.send(embed=embed)
     return
-  config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
+  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   config.read(config_path)
   if config[mode.upper()]['ENABLE'] == 'TRUE':
     langs = lang["s.already"]
@@ -275,13 +283,15 @@ async def s(ctx,*args):
   await ctx.author.voice.channel.connect()
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/temp",exist_ok=True)
+  messagequeue[ctx.guild.id] = []
+  msgloop = threading.Thread(target=voice_loop,args=(ctx,))
+  msgloop.start()
   langs = lang["s.connect"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + ctx.channel.mention,inline=fields["0"]["inline"])
   embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + ctx.author.voice.channel.name,inline=fields["1"]["inline"])
   await ctx.channel.send(embed=embed)
-  config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
   config.read(config_path)
   config[mode.upper()]['CHANNEL'] = str(ctx.channel.id)
   config[mode.upper()]['ENABLE'] = 'TRUE'
@@ -295,7 +305,7 @@ async def e(ctx,*args):
   '''
   読み上げ終了コマンド
   '''
-  config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
+  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   config.read(config_path, encoding='utf-8')
   if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     if ctx.guild.voice_client is None:
@@ -308,6 +318,10 @@ async def e(ctx,*args):
     await ctx.guild.voice_client.disconnect()
     shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/")
     shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/temp/")
+    try:
+      del messagequeue[ctx.guild.id]
+    except:
+      pass
     langs = lang["e.disconnect"]
     fields = langs["field"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -334,6 +348,7 @@ async def fe(ctx,*args):
     try:
       await ctx.guild.voice_client.disconnect()
       shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+      del messagequeue[ctx.guild.id]
     except:
       None
     finally:
