@@ -88,10 +88,10 @@ def send_voice(message, path, volume):
   message.guild.voice_client.play(wav_source_half)
 
 def voice_loop(ctx):
-  print("test")
   messagequeue[ctx.guild.id] = []
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   while True:
+    print("test")
     config.read(config_path)
     if config[mode.upper()]['ENABLE'] == 'FALSE':
       break
