@@ -97,8 +97,11 @@ def voice_loop(ctx):
         break
     except:
       break
-    if ctx.guild.voice_client.is_playing():
-      time.sleep(0.1)
+    try:
+      if ctx.guild.voice_client.is_playing():
+        time.sleep(0.1)
+        continue
+    except:
       continue
     queuelist = messagequeue[ctx.guild.id]
     try:
