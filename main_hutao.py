@@ -193,12 +193,15 @@ async def on_message(message):
       message.channel.id == int(read_channel) and
       message.guild.voice_client is not None
       ):
+      datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
+        print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
         queuelist = messagequeue[message.guild.id]
         queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1])
         messagequeue[message.guild.id] = queuelist
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
+        print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
         queuelist = messagequeue[message.guild.id]
         queuelist.append([message,f"./global_wav/{message.content}.wav",0.1])
         messagequeue[message.guild.id] = queuelist
@@ -228,7 +231,6 @@ async def on_message(message):
         message_read = message.author.nick + "。" + message.content
       message_read = re.sub("www+","わらわら",message_read,0)
       message_read = dict.dict(message.guild.id,message_read)
-      datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
       print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
       datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
       make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
