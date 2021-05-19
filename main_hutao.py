@@ -88,6 +88,7 @@ def send_voice(message, path, volume):
   message.guild.voice_client.play(wav_source_half)
 
 def voice_loop(ctx):
+  messagequeue[ctx.guild.id] = []
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   while True:
     config.read(config_path)
@@ -99,8 +100,6 @@ def voice_loop(ctx):
     queuelist = messagequeue[ctx.guild.id]
     queue = queuelist.pop(0)
     send_voice(queue[0],queue[1],queue[2])
-    print(f"{ctx.guild.id}:test")
-    time.sleep(1)
 
 
 @bot.event
@@ -228,6 +227,7 @@ async def on_message(message):
       queuelist = messagequeue[message.guild.id]
       queuelist.append([message,path_wav,0.7])
       messagequeue[message.guild.id] = queuelist
+      print(messagequeue)
   config.clear()
   await bot.process_commands(message)
 
@@ -284,7 +284,6 @@ async def s(ctx,*args):
   await ctx.author.voice.channel.connect()
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/temp",exist_ok=True)
-  messagequeue[ctx.guild.id] = []
   msgloop = threading.Thread(target=voice_loop,args=(ctx,))
   msgloop.start()
   langs = lang["s.connect"]
