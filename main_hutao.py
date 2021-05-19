@@ -88,6 +88,7 @@ def send_voice(message, path, volume):
   message.guild.voice_client.play(wav_source_half)
 
 def voice_loop(ctx):
+  print("test")
   messagequeue[ctx.guild.id] = []
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   while True:
@@ -99,7 +100,6 @@ def voice_loop(ctx):
       continue
     queuelist = messagequeue[ctx.guild.id]
     queue = queuelist.pop(0)
-    print("test")
     send_voice(queue[0],queue[1],queue[2])
 
 
