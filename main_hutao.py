@@ -6,7 +6,6 @@ import discord
 import re
 import sys
 from discord.ext import commands
-from discord.ext import tasks
 import configparser
 import urllib.request
 import json
@@ -526,7 +525,6 @@ async def init(ctx):
 
 
 try:  
-    loop.start()
     bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
 except KeyboardInterrupt: 
     print('\nClosing %s...' % bot.user.name)
