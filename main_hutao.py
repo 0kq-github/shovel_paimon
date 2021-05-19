@@ -96,7 +96,7 @@ def voice_loop(ctx):
       if config[mode.upper()]['ENABLE'] == 'FALSE':
         break
     except:
-      break
+      continue
     try:
       if ctx.guild.voice_client.is_playing():
         time.sleep(0.1)
