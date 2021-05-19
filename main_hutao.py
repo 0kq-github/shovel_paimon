@@ -91,7 +91,6 @@ def voice_loop(ctx):
   messagequeue[ctx.guild.id] = []
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   while True:
-    print("test")
     config.read(config_path)
     if config[mode.upper()]['ENABLE'] == 'FALSE':
       break
@@ -285,7 +284,6 @@ async def s(ctx,*args):
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/temp",exist_ok=True)
   msgloop = threading.Thread(target=voice_loop,args=(ctx,))
-  msgloop.start()
   langs = lang["s.connect"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -299,6 +297,7 @@ async def s(ctx,*args):
     config.write(f)
     config.clear
     f.close()
+  msgloop.start()
 
 @sh0.command()
 async def e(ctx,*args):
