@@ -99,6 +99,8 @@ def voice_loop(ctx):
     queuelist = messagequeue[ctx.guild.id]
     queue = queuelist.pop(0)
     send_voice(queue[0],queue[1],queue[2])
+    print(f"{ctx.guild.id}:test")
+    time.sleep(1)
 
 
 @bot.event
