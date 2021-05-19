@@ -98,7 +98,10 @@ def voice_loop(ctx):
       time.sleep(0.1)
       continue
     queuelist = messagequeue[ctx.guild.id]
-    queue = queuelist.pop(0)
+    try:
+      queue = queuelist.pop(0)
+    except:
+      continue
     send_voice(queue[0],queue[1],queue[2])
 
 
