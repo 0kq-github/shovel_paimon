@@ -92,7 +92,10 @@ def voice_loop(ctx):
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   while True:
     config.read(config_path)
-    if config[mode.upper()]['ENABLE'] == 'FALSE':
+    try:
+      if config[mode.upper()]['ENABLE'] == 'FALSE':
+        break
+    except:
       break
     if ctx.guild.voice_client.is_playing():
       time.sleep(0.1)
