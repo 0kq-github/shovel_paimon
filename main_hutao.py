@@ -228,7 +228,6 @@ async def on_message(message):
       queuelist = messagequeue[message.guild.id]
       queuelist.append([message,path_wav,0.7])
       messagequeue[message.guild.id] = queuelist
-      print(messagequeue)
   config.clear()
   await bot.process_commands(message)
 
