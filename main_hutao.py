@@ -223,6 +223,8 @@ async def on_message(message):
         mention_channel = await bot.get_channel(id=int(mention_channel)).name
         message.content = re.sub("<#..................>", mention_channel + "。", message.content)
       message.content = message.content.replace("\n","。")
+      message.content = message.content.replace("{","[")
+      message.content = message.content.replace("}","]")
       if len(message.content) > 50:
         message.content = truncate(message.content, 50)
       if message.author.nick is None:
