@@ -220,7 +220,8 @@ async def on_message(message):
         mention_channel = re.search("<#..................>", message.content).group()
         mention_channel = mention_channel.replace("<#","")
         mention_channel = mention_channel.replace(">","")
-        mention_channel = await bot.get_channel(id=int(mention_channel)).name
+        mention_channel = bot.get_channel(id=int(mention_channel))
+        mention = mention_channel.name
         message.content = re.sub("<#..................>", mention_channel + "。", message.content)
       message.content = message.content.replace("\n","。")
       message.content = message.content.replace("{","[")
