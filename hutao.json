@@ -219,5 +219,16 @@
         "inline": false
       }
     }
+  },
+  "bass": {
+    "title":"低音強化",
+    "description":"低音強化 いっくよー！！！",
+    "field": {
+      "0": {
+        "name": "現在の設定値",
+        "value": "",
+        "inline": false
+      }
+    }
   }
 }

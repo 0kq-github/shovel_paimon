@@ -78,12 +78,12 @@ def initdirs(guild_id):
   config_path = './config/guild/' + str(guild_id) + "/" + 'config.ini'
   shutil.copy("./config/guild/default/config.ini",config_path)
 
-def send_voice(message, path, volume):
+def send_voice(message, path, volume, bass):
   while message.guild.voice_client.is_playing():
     time.sleep(0.1)
   while os.path.isfile(path) == False:
     time.sleep(0.1)
-  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0",options="-af equalizer=f=100:t=h:w=100:g=20")
+  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0",options=f"-af equalizer=f=100:t=h:w=100:g={bass}")
   wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
   message.guild.voice_client.play(wav_source_half)
 
@@ -110,7 +110,7 @@ def voice_loop(ctx):
     except:
       time.sleep(0.1)
       continue
-    send_voice(queue[0],queue[1],queue[2])
+    send_voice(queue[0],queue[1],queue[2],queue[3])
     config.clear
 
 
@@ -189,6 +189,7 @@ async def on_message(message):
     initdirs(message.guild.id)
   config.read(config_path, encoding='utf-8')
   read_channel = config[mode.upper()]['CHANNEL']
+  basslevel = int(config[mode.upper()]['BASS'])
   if not message.content.startswith(f'{prefix}sh0'):
     if (
       config[mode.upper()]['ENABLE'] == 'TRUE' and
@@ -199,7 +200,7 @@ async def on_message(message):
       if os.path.exists(f"./global_wav/{message.content}.mp3"):
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
         queuelist = messagequeue[message.guild.id]
-        queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1])
+        queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1,basslevel])
         messagequeue[message.guild.id] = queuelist
         return
       if os.path.exists(f"./global_wav/{message.content}.wav"):
@@ -529,6 +530,23 @@ async def export_word(ctx,*args):
   dictpath = "./config/guild/" + str(ctx.guild.id) + "/" + "dict.csv"
   await ctx.send(file=discord.File(dictpath))
 
+@sh0.command()
+async def bass(ctx, *args):
+  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
+  config.read(config_path)
+  langs = lang["bass"]
+  fields = langs["field"]
+  if args[0]:
+    basslevel = int(args[0])
+  else:
+    basslevel = 0
+  config[mode.upper()]['BASS'] = basslevel
+  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed = embed.add_field(name=fields["0"]["name"],value=f"{basslevel}dB",inline=fields["0"]["inline"])
+  with open(config_path, 'w') as f:
+    config.write(f)
+    config.clear
+    f.close()
 
 @sh0.command()
 async def init(ctx):
