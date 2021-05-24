@@ -206,7 +206,7 @@ async def on_message(message):
       if os.path.exists(f"./global_wav/{message.content}.wav"):
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
         queuelist = messagequeue[message.guild.id]
-        queuelist.append([message,f"./global_wav/{message.content}.wav",0.1])
+        queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
         messagequeue[message.guild.id] = queuelist
         return
       if "http" in message.content:
@@ -243,7 +243,7 @@ async def on_message(message):
       make.start()
       path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
       queuelist = messagequeue[message.guild.id]
-      queuelist.append([message,path_wav,0.7])
+      queuelist.append([message,path_wav,0.7,0])
       messagequeue[message.guild.id] = queuelist
   config.clear()
   await bot.process_commands(message)
