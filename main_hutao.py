@@ -83,7 +83,7 @@ def send_voice(message, path, volume):
     time.sleep(0.1)
   while os.path.isfile(path) == False:
     time.sleep(0.1)
-  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0",options="-af equalizer=f=100:t=h:w=100:g=10")
+  wav_source = discord.FFmpegPCMAudio(path, before_options="-guess_layout_max 0",options="-af equalizer=f=100:t=h:w=100:g=20")
   wav_source_half = discord.PCMVolumeTransformer(wav_source, volume=volume)
   message.guild.voice_client.play(wav_source_half)
 
