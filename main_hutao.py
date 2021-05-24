@@ -96,6 +96,7 @@ def voice_loop(ctx):
       if config[mode.upper()]['ENABLE'] == 'FALSE':
         break
     except:
+      config.clear
       continue
     try:
       if ctx.guild.voice_client.is_playing():
@@ -110,6 +111,7 @@ def voice_loop(ctx):
       time.sleep(0.1)
       continue
     send_voice(queue[0],queue[1],queue[2])
+    config.clear
 
 
 @bot.event
