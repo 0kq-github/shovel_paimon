@@ -531,15 +531,15 @@ async def export_word(ctx,*args):
   await ctx.send(file=discord.File(dictpath))
 
 @sh0.command()
-async def bass(ctx,basslevel):
+async def bass(ctx,*args):
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   config.read(config_path)
   langs = lang["bass"]
   fields = langs["field"]
-  if basslevel:
-    basslevel = int(basslevel)
+  if args[0]:
+    basslevel = args[0]
   else:
-    basslevel = 0  
+    basslevel = 0
   config[mode.upper()]['BASS'] = basslevel
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   embed = embed.add_field(name=fields["0"]["name"],value=f"{basslevel}dB",inline=fields["0"]["inline"])
