@@ -536,8 +536,10 @@ async def bass(ctx,basslevel):
   config.read(config_path)
   langs = lang["bass"]
   fields = langs["field"]
-  if not basslevel:
-    basslevel = 0
+  if basslevel:
+    basslevel = int(basslevel)
+  else:
+    basslevel = 0  
   config[mode.upper()]['BASS'] = basslevel
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   embed = embed.add_field(name=fields["0"]["name"],value=f"{basslevel}dB",inline=fields["0"]["inline"])
