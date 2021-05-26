@@ -435,8 +435,6 @@ async def dw(ctx,*args):
 
 @sh0.command()
 async def link(ctx,*args):
-  if not ctx.author.id == 262132823895441409 and ctx.author.guild_permissions.administrator:
-    return
   '''
   音声登録コマンド
   '''
@@ -532,6 +530,9 @@ async def export_word(ctx,*args):
 
 @sh0.command()
 async def bass(ctx,*args):
+  '''
+  低音強化コマンド
+  '''
   config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
   config.read(config_path)
   langs = lang["bass"]
@@ -552,7 +553,7 @@ async def bass(ctx,*args):
 @sh0.command()
 async def init(ctx):
   '''
-  初期化コマンド
+  初期化コマンド(使用不可)
   '''
   if ctx.author.id == 262132823895441409:
     initdirs(ctx.guild.id)
