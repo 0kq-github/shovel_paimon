@@ -225,7 +225,7 @@ async def on_message(message):
         mention_channel = mention_channel.replace(">","")
         mention_channel = bot.get_channel(id=int(mention_channel))
         mention = mention_channel.name
-        message.content = re.sub("<#..................>", mention_channel + "。", message.content)
+        message.content = re.sub("<#..................>", mention + "。", message.content)
       message.content = message.content.replace("\n","。")
       message.content = message.content.replace("{","[")
       message.content = message.content.replace("}","]")
