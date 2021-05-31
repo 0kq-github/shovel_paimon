@@ -73,8 +73,6 @@ def truncate(string, length, ellipsis='、以下省略'):
 
 def initdirs(guild_id):
   os.makedirs("./config/guild/" + str(guild_id) + "/wav",exist_ok=True)
-  with open("./config/guild/" + str(guild_id) + "/" + "dict.csv","w") as f:
-    f.write("")
   config_path = './config/guild/' + str(guild_id) + "/" + 'config.ini'
   shutil.copy("./config/guild/default/config.ini",config_path)
 
@@ -129,6 +127,8 @@ async def on_guild_join(guild):
     print("joined " + str(guild.id))
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
+    with open("./config/guild/" + str(guild.id) + "/" + "dict.csv","w") as f:
+      f.write("")
 
 @bot.event
 async def on_voice_state_update(member,before,after):
@@ -187,9 +187,15 @@ async def on_message(message):
   config_path = './config/guild/' + str(message.guild.id) + "/" + 'config.ini'
   if not os.path.exists(config_path):
     initdirs(message.guild.id)
+    with open("./config/guild/" + str(message.guild.id) + "/" + "dict.csv","w") as f:
+      f.write("")
   config.read(config_path, encoding='utf-8')
-  read_channel = config[mode.upper()]['CHANNEL']
-  basslevel = int(config[mode.upper()]['BASS'])
+  try:
+    read_channel = config[mode.upper()]['CHANNEL']
+    basslevel = int(config[mode.upper()]['BASS'])
+  except Exception:
+    initdirs(message.guild.id)
+    return
   if not message.content.startswith(f'{prefix}sh0'):
     if (
       config[mode.upper()]['ENABLE'] == 'TRUE' and
