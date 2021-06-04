@@ -370,7 +370,7 @@ async def fe(ctx,*args):
   if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
     try:
       await ctx.guild.voice_client.disconnect()
-      shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/")
+      shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/",ignore_errors=True)
       del messagequeue[ctx.guild.id]
     except:
       None
