@@ -150,7 +150,7 @@ async def on_voice_state_update(member,before,after):
       return
     try:
       #VC退出ログ
-      voicech = bot.get_channel(id=before.channel.id)
+      voicech = await bot.fetch_channel(before.channel.id)
       voicemember = voicech.members
       print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {before.channel.name} から退出しました")
       #VC退出処理
