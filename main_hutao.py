@@ -365,28 +365,20 @@ async def fe(ctx,*args):
   '''
   強制終了コマンド
   '''
-  config_path = './config/guild/' + str(ctx.guild.id) + "/" + 'config.ini'
-  config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
-    try:
-      await ctx.guild.voice_client.disconnect()
-      shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/",ignore_errors=True)
-      del messagequeue[ctx.guild.id]
-    except:
-      None
-    finally:
-      langs = lang["fe.disconnect"]
-      fields = langs["field"]
-      embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
-      embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
-      embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-      await ctx.channel.send(embed=embed)
-      config.read(config_path)
-      config[mode.upper()]['ENABLE'] = 'FALSE'
-      with open(config_path, 'w') as f:
-        config.write(f)
-        config.clear
-        f.close()
+  try:
+    await ctx.guild.voice_client.disconnect()
+    shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/",ignore_errors=True)
+    del messagequeue[ctx.guild.id]
+  except:
+    None
+  finally:
+    initdirs(ctx.guild.id)
+    langs = lang["fe.disconnect"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
+    embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
+    embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
+    await ctx.channel.send(embed=embed)
     config.clear
 
 
