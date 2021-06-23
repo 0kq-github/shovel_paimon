@@ -197,60 +197,61 @@ async def on_message(message):
     initdirs(message.guild.id)
     return
   if not message.content.startswith(f'{prefix}sh0'):
-    if (
-      config[mode.upper()]['ENABLE'] == 'TRUE' and
-      message.channel.id == int(read_channel) and
-      message.guild.voice_client is not None
-      ):
-      datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
-      if os.path.exists(f"./global_wav/{message.content}.mp3"):
-        print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
+    if not message.content.startswith("!!"):
+      if (
+        config[mode.upper()]['ENABLE'] == 'TRUE' and
+        message.channel.id == int(read_channel) and
+        message.guild.voice_client is not None
+        ):
+        datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+        if os.path.exists(f"./global_wav/{message.content}.mp3"):
+          print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
+          queuelist = messagequeue[message.guild.id]
+          queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1,basslevel])
+          messagequeue[message.guild.id] = queuelist
+          return
+        if os.path.exists(f"./global_wav/{message.content}.wav"):
+          print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
+          queuelist = messagequeue[message.guild.id]
+          queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
+          messagequeue[message.guild.id] = queuelist
+          return
+        if "http" in message.content:
+          message.content = re.sub("(?<=http).*$","",message.content)
+          message.content = message.content.replace("http","。URL省略")
+        if "<@" in message.content:
+          mention = re.search("<@!..................>", message.content).group()
+          mention = mention.replace("<@!","")
+          mention = mention.replace(">","")
+          mention_user = await bot.fetch_user(int(mention))
+          mention = mention_user.display_name
+          message.content = re.sub("<@!..................>", "@" + mention, message.content)
+        if "<#" in message.content:
+          mention_channel = re.search("<#..................>", message.content).group()
+          mention_channel = mention_channel.replace("<#","")
+          mention_channel = mention_channel.replace(">","")
+          mention_channel = bot.get_channel(id=int(mention_channel))
+          mention = mention_channel.name
+          message.content = re.sub("<#..................>", mention + "。", message.content)
+        message.content = message.content.replace("\n","。")
+        message.content = message.content.replace("{","[")
+        message.content = message.content.replace("}","]")
+        if len(message.content) > 50:
+          message.content = truncate(message.content, 50)
+        if message.author.nick is None:
+          message_read = message.author.name + "。" + message.content
+        else:
+          message_read = message.author.nick + "。" + message.content
+        message_read = re.sub("www+","わらわら",message_read,0)
+        message_read = dict.dict(message.guild.id,message_read)
+        print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
+        datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
+        make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
+        make.start()
+        path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
         queuelist = messagequeue[message.guild.id]
-        queuelist.append([message,f"./global_wav/{message.content}.mp3",0.1,basslevel])
+        queuelist.append([message,path_wav,0.7,0])
         messagequeue[message.guild.id] = queuelist
-        return
-      if os.path.exists(f"./global_wav/{message.content}.wav"):
-        print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
-        queuelist = messagequeue[message.guild.id]
-        queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
-        messagequeue[message.guild.id] = queuelist
-        return
-      if "http" in message.content:
-        message.content = re.sub("(?<=http).*$","",message.content)
-        message.content = message.content.replace("http","。URL省略")
-      if "<@" in message.content:
-        mention = re.search("<@!..................>", message.content).group()
-        mention = mention.replace("<@!","")
-        mention = mention.replace(">","")
-        mention_user = await bot.fetch_user(int(mention))
-        mention = mention_user.display_name
-        message.content = re.sub("<@!..................>", "@" + mention, message.content)
-      if "<#" in message.content:
-        mention_channel = re.search("<#..................>", message.content).group()
-        mention_channel = mention_channel.replace("<#","")
-        mention_channel = mention_channel.replace(">","")
-        mention_channel = bot.get_channel(id=int(mention_channel))
-        mention = mention_channel.name
-        message.content = re.sub("<#..................>", mention + "。", message.content)
-      message.content = message.content.replace("\n","。")
-      message.content = message.content.replace("{","[")
-      message.content = message.content.replace("}","]")
-      if len(message.content) > 50:
-        message.content = truncate(message.content, 50)
-      if message.author.nick is None:
-        message_read = message.author.name + "。" + message.content
-      else:
-        message_read = message.author.nick + "。" + message.content
-      message_read = re.sub("www+","わらわら",message_read,0)
-      message_read = dict.dict(message.guild.id,message_read)
-      print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
-      datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
-      make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
-      make.start()
-      path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
-      queuelist = messagequeue[message.guild.id]
-      queuelist.append([message,path_wav,0.7,0])
-      messagequeue[message.guild.id] = queuelist
   config.clear()
   await bot.process_commands(message)
 
