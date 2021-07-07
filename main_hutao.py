@@ -536,7 +536,6 @@ except KeyboardInterrupt:
     print('\nClosing %s...' % bot.user.name)
     for i in reading:
       shutil.rmtree(f"./config/guild/{i}/wav/",ignore_errors=True)
-      del messagequeue[i]
       reading[i] = None
       initdirs(i)
     bot.loop.run_until_complete(bot.close())
