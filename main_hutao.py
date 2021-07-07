@@ -114,7 +114,7 @@ async def on_ready():
     print('------')
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     for i in bot.guilds:
-      print(i.id)
+      reading[i.id] = None
 
 @bot.event
 async def on_guild_join(guild):
