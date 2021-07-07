@@ -334,7 +334,7 @@ async def fe(ctx,*args):
   '''
   try:
     await ctx.guild.voice_client.disconnect()
-    shutil.rmtree("./config/guild/" + str(ctx.guild.id) + "/wav/",ignore_errors=True)
+    shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/",ignore_errors=True)
     del messagequeue[ctx.guild.id]
   except:
     None
@@ -530,9 +530,13 @@ async def v(ctx, *args):
     pass
 
 
-
 try:  
     bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
 except KeyboardInterrupt: 
     print('\nClosing %s...' % bot.user.name)
+    for i in reading:
+      shutil.rmtree(f"./config/guild/{i}/wav/",ignore_errors=True)
+      del messagequeue[i]
+      reading[i] = None
+      initdirs(i)
     bot.loop.run_until_complete(bot.close())
