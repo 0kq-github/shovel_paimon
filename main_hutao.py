@@ -41,7 +41,7 @@ except:
     print(" 引数が必要です")
   exit()
 
-bot = commands.Bot(command_prefix=prefix)
+bot = commands.Bot(command_prefix=prefix,help_command=None)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
@@ -522,8 +522,11 @@ async def init(ctx):
 @sh0.command()
 async def v(ctx, *args):
   if not args:
-    ctx.send("引数が足りなリよ！")
+    await ctx.send("引数が足りなリよ！")
   if args[0] == "on":
+    await ctx.send("未実装")
+  else:
+    await ctx.send("未実装")
     pass
 
 
