@@ -113,7 +113,7 @@ async def on_ready():
     print(lang["hello"])
     print('------')
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
-    for i in bot.guilds:
+    for i in bot.guilds[0]:
       print(i)
 
 @bot.event
