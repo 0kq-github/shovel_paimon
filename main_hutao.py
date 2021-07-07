@@ -113,6 +113,7 @@ async def on_ready():
     print(lang["hello"])
     print('------')
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    print(bot.guilds)
 
 @bot.event
 async def on_guild_join(guild):
