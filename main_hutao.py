@@ -47,8 +47,11 @@ config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
 #messagequeue = {message.guild.id:[[message,path,volume],[message,path,volume]]}
+#reading = {message.guild.id:読み上げチャンネルのID}
 global messagequeue
+global reading
 messagequeue = {}
+reading = {}
 
 
 lang = {}
@@ -72,9 +75,7 @@ def truncate(string, length, ellipsis='、以下省略'):
     return string[:length] + (ellipsis if string[length:] else '')
 
 def initdirs(guild_id):
-  os.makedirs("./config/guild/" + str(guild_id) + "/wav",exist_ok=True)
-  config_path = './config/guild/' + str(guild_id) + "/" + 'config.ini'
-  shutil.copy("./config/guild/default/config.ini",config_path)
+  os.makedirs(f"./config/guild/{str(guild_id)}/wav",exist_ok=True)
 
 def send_voice(message, path, volume, bass):
   while message.guild.voice_client.is_playing():
@@ -87,15 +88,7 @@ def send_voice(message, path, volume, bass):
 
 def voice_loop(ctx):
   messagequeue[ctx.guild.id] = []
-  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
-  while True:
-    config.read(config_path)
-    try:
-      if config[mode.upper()]['ENABLE'] == 'FALSE':
-        break
-    except:
-      config.clear
-      continue
+  while reading[ctx.guild.id] is not None:
     try:
       if ctx.guild.voice_client.is_playing():
         time.sleep(0.1)
@@ -109,7 +102,6 @@ def voice_loop(ctx):
       time.sleep(0.1)
       continue
     send_voice(queue[0],queue[1],queue[2],queue[3])
-    config.clear
 
 
 @bot.event
@@ -146,7 +138,7 @@ async def on_voice_state_update(member,before,after):
   except Exception:
     None
   finally:
-    if before.channel == None:
+    if before.channel is None:
       return
     try:
       #VC退出ログ
@@ -164,17 +156,10 @@ async def on_voice_state_update(member,before,after):
             embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
             embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
             embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-            config_path = './config/guild/' + str(voicech.guild.id) + "/" + 'config.ini'
-            config.read(config_path)
-            read_channel = config[mode.upper()]['CHANNEL']
+            read_channel = reading[voicech.guild.id]
             readch = bot.get_channel(id=int(read_channel))
             await readch.send(embed=embed)
-            config[mode.upper()]['ENABLE'] = 'FALSE'
-            with open(config_path, 'w') as f:
-              config.write(f)
-              config.clear
-              f.close()
-            config.clear
+            reading[voicech.guild.id] = None
     except Exception as e:
       print(e)
       return
@@ -184,23 +169,17 @@ async def on_voice_state_update(member,before,after):
 async def on_message(message):
   if message.author.bot:
     return
-  config_path = './config/guild/' + str(message.guild.id) + "/" + 'config.ini'
-  if not os.path.exists(config_path):
-    initdirs(message.guild.id)
-    with open("./config/guild/" + str(message.guild.id) + "/" + "dict.csv","w") as f:
-      f.write("")
-  config.read(config_path, encoding='utf-8')
   try:
-    read_channel = config[mode.upper()]['CHANNEL']
-    basslevel = int(config[mode.upper()]['BASS'])
+    read_channel = reading[message.guild.id]
+    basslevel = 1
   except Exception:
     initdirs(message.guild.id)
     return
   if not message.content.startswith(f'{prefix}sh0'):
     if not message.content.startswith("!!"):
       if (
-        config[mode.upper()]['ENABLE'] == 'TRUE' and
-        message.channel.id == int(read_channel) and
+        read_channel is not None and
+        message.channel.id == read_channel and
         message.guild.voice_client is not None
         ):
         datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
@@ -216,33 +195,36 @@ async def on_message(message):
           queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
           messagequeue[message.guild.id] = queuelist
           return
-        if "http" in message.content:
-          message.content = re.sub("(?<=http).*$","",message.content)
-          message.content = message.content.replace("http","。URL省略")
         if "<@" in message.content:
-          mention = re.search("<@!..................>", message.content).group()
+          mention = re.search("<@[!]?\d{18}>", message.content).group()
           mention = mention.replace("<@!","")
+          mention = mention.replace("<@","")
           mention = mention.replace(">","")
           mention_user = await bot.fetch_user(int(mention))
           mention = mention_user.display_name
-          message.content = re.sub("<@!..................>", "@" + mention, message.content)
+          message.content = re.sub("<@[!]?\d{18}>", "@" + mention, message.content)
         if "<#" in message.content:
-          mention_channel = re.search("<#..................>", message.content).group()
+          mention_channel = re.search("<#\d{18}>", message.content).group()
           mention_channel = mention_channel.replace("<#","")
           mention_channel = mention_channel.replace(">","")
           mention_channel = bot.get_channel(id=int(mention_channel))
           mention = mention_channel.name
-          message.content = re.sub("<#..................>", mention + "。", message.content)
+          message.content = re.sub("<#\d{18}>", mention + "。", message.content)
+        if "<:" in message.content:
+          emoji = re.search("<:.*:\d{18}>", message.content).group()
+          emoji = re.search(":.*:", emoji).group()
+          message.content = re.sub("<:.*:\d{18}>", emoji, message.content)
+        message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
         message.content = message.content.replace("\n","。")
         message.content = message.content.replace("{","[")
         message.content = message.content.replace("}","]")
-        if len(message.content) > 50:
+        if len(message.content) >= 60:
           message.content = truncate(message.content, 50)
         if message.author.nick is None:
           message_read = message.author.name + "。" + message.content
         else:
           message_read = message.author.nick + "。" + message.content
-        message_read = re.sub("www+","わらわら",message_read,0)
+        message_read = re.sub("ww+","わらわら",message_read,0)
         message_read = dict.dict(message.guild.id,message_read)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
         datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
@@ -252,7 +234,6 @@ async def on_message(message):
         queuelist = messagequeue[message.guild.id]
         queuelist.append([message,path_wav,0.7,0])
         messagequeue[message.guild.id] = queuelist
-  config.clear()
   await bot.process_commands(message)
 
 
@@ -297,13 +278,10 @@ async def s(ctx,*args):
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     await ctx.channel.send(embed=embed)
     return
-  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
-  config.read(config_path)
-  if config[mode.upper()]['ENABLE'] == 'TRUE':
+  if reading[ctx.guild.id] is not None:
     langs = lang["s.already"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.channel.send(embed=embed)
-    config.clear
     return
   await ctx.author.voice.channel.connect()
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
@@ -315,13 +293,7 @@ async def s(ctx,*args):
   embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + ctx.channel.mention,inline=fields["0"]["inline"])
   embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + ctx.author.voice.channel.name,inline=fields["1"]["inline"])
   await ctx.channel.send(embed=embed)
-  config.read(config_path)
-  config[mode.upper()]['CHANNEL'] = str(ctx.channel.id)
-  config[mode.upper()]['ENABLE'] = 'TRUE'
-  with open(config_path, 'w') as f:
-    config.write(f)
-    config.clear
-    f.close()
+  reading[ctx.guild.id] = ctx.channel.id
   msgloop.start()
 
 @sh0.command()
@@ -329,9 +301,7 @@ async def e(ctx,*args):
   '''
   読み上げ終了コマンド
   '''
-  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
-  config.read(config_path, encoding='utf-8')
-  if ctx.channel.id == int(config[mode.upper()]['CHANNEL']):
+  if ctx.channel.id == reading[ctx.guild.id]:
     if ctx.guild.voice_client is None:
       langs = lang["e.notfound"]
       fields = langs["field"]
@@ -352,13 +322,7 @@ async def e(ctx,*args):
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
-    config.read(config_path)
-    config[mode.upper()]['ENABLE'] = 'FALSE'
-    with open(config_path, 'w') as f:
-      config.write(f)
-      config.clear
-      f.close()
-  config.clear
+    reading[ctx.guild.id] = None
 
 
 @sh0.command()
@@ -373,6 +337,7 @@ async def fe(ctx,*args):
   except:
     None
   finally:
+    reading[ctx.guild.id] = None
     initdirs(ctx.guild.id)
     langs = lang["fe.disconnect"]
     fields = langs["field"]
@@ -380,7 +345,6 @@ async def fe(ctx,*args):
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
-    config.clear
 
 
 
@@ -532,22 +496,17 @@ async def bass(ctx,*args):
   '''
   低音強化コマンド
   '''
-  config_path = f"./config/guild/{str(ctx.guild.id)}/config.ini"
-  config.read(config_path)
   langs = lang["bass"]
   fields = langs["field"]
   if args[0]:
     basslevel = args[0]
   else:
     basslevel = 0
-  config[mode.upper()]['BASS'] = basslevel
+  basslevel = 0
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   embed = embed.add_field(name=fields["0"]["name"],value=f"{basslevel}dB",inline=fields["0"]["inline"])
-  await ctx.send(embed=embed)
-  with open(config_path, 'w') as f:
-    config.write(f)
-    config.clear
-    f.close()
+  #await ctx.send(embed=embed)
+  await ctx.send("現在低音強化機能は無効化されています")
 
 @sh0.command()
 async def init(ctx):
@@ -557,6 +516,13 @@ async def init(ctx):
   if ctx.author.id == 262132823895441409:
     initdirs(ctx.guild.id)
     await ctx.send(lang["init"]["title"])
+
+@sh0.command()
+async def v(ctx, *args):
+  if not args:
+    ctx.send("引数が足りなリよ！")
+  if args[0] == "on":
+    pass
 
 
 
