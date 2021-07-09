@@ -171,6 +171,7 @@ async def on_voice_state_update(member,before,after):
 async def on_message(message):
   if message.author.bot:
     return
+  message.content = str(message.content)
   try:
     read_channel = reading[message.guild.id]
     basslevel = 1
@@ -226,6 +227,16 @@ async def on_message(message):
           message_read = message.author.name + "。" + message.content
         else:
           message_read = message.author.nick + "。" + message.content
+        if "%" in message_read:
+          if "%time" in message_read:
+            message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
+            message_read = message_read.replace("%time", message_time)
+          if "%date" in message_read:
+            message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
+            message_read = message_read.replace("%date", message_date)
+          if "%me" in message_read:
+            message_me = message.author.name
+            message_read = message_read.replace("%me", message_me)
         message_read = re.sub("ww+","わらわら",message_read,0)
         message_read = dict.dict(message.guild.id,message_read)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
