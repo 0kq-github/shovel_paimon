@@ -232,9 +232,12 @@ async def on_message(message):
         if "%" in message_read:
           if "%time" in message_read:
             message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
+            message_time = re.sub("(?<!\d)0","")
             message_read = message_read.replace("%time", message_time)
           if "%date" in message_read:
-            message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
+            #message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
+            d = datetime.date.today()
+            message_date = f"{d.year}年{d.month}月{d.day}日"
             message_read = message_read.replace("%date", message_date)
           if "%me" in message_read:
             message_me = message.author.name
