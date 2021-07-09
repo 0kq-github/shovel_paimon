@@ -227,6 +227,8 @@ async def on_message(message):
           message_read = message.author.name + "。" + message.content
         else:
           message_read = message.author.nick + "。" + message.content
+        message_read = re.sub("ww+","わらわら",message_read,0)
+        message_read = dict.dict(message.guild.id,message_read)
         if "%" in message_read:
           if "%time" in message_read:
             message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
@@ -237,8 +239,6 @@ async def on_message(message):
           if "%me" in message_read:
             message_me = message.author.name
             message_read = message_read.replace("%me", message_me)
-        message_read = re.sub("ww+","わらわら",message_read,0)
-        message_read = dict.dict(message.guild.id,message_read)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
         datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
         make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
