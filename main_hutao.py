@@ -230,7 +230,7 @@ async def on_message(message):
         if "%" in message_read:
           if "%time" in message_read:
             message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
-            message_time = re.sub("(?<!\d)0","")
+            message_time = re.sub("(?<!\d)0","",message_time)
             message_read = message_read.replace("%time", message_time)
           if "%date" in message_read:
             #message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
