@@ -213,10 +213,9 @@ async def on_message(message):
           mention_channel = bot.get_channel(id=int(mention_channel))
           mention = mention_channel.name
           message.content = re.sub("<#\d{18}>", mention + "。", message.content)
-        if "<:" in message.content:
-          emoji = re.search("<:.*:\d{18}>", message.content).group()
-          emoji = re.search(":.*:", emoji).group()
-          message.content = re.sub("<:.*:\d{18}>", emoji, message.content)
+        emoji = re.search("<.?:.*:\d{18}>", message.content).group()
+        emoji = re.search(":.*:", emoji).group()
+        message.content = re.sub("<.?:.*:\d{18}>", emoji, message.content)
         message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
         message.content = message.content.replace("\n","。")
         message.content = message.content.replace("{","[")
