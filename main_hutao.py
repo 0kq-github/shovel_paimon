@@ -216,7 +216,7 @@ async def on_message(message):
         emoji = re.findall("<.?:[^<^>]*:\d{18}>", message.content)
         if emoji:
           for i in emoji:
-            emoji = re.search(":[^:]*:", i)
+            emoji = re.search(":[^:]*:", i).group()
             message.content = re.sub("<.?:[^<^>]*:\d{18}>", emoji, message.content)
         message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
         message.content = message.content.replace("\n","。")
