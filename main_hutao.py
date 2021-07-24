@@ -1,10 +1,15 @@
+
+import sys
+if sys.version_info.minor < 8:
+  print("Python3.8以上が必要です")
+  exit()
+
 import os
 import datetime
 import asyncio
 import time
 import discord
 import re
-import sys
 from discord.ext import commands
 import configparser
 import urllib.request
@@ -103,6 +108,56 @@ def voice_loop(ctx):
       continue
     send_voice(queue[0],queue[1],queue[2],queue[3])
 
+async def replace_message(message):
+  if "<@" in message.content:
+    mention = re.search("<@[!]?\d{18}>", message.content).group()
+    mention = mention.replace("<@!","")
+    mention = mention.replace("<@","")
+    mention = mention.replace(">","")
+    mention_user = await bot.fetch_user(int(mention))
+    mention = mention_user.display_name
+    message.content = re.sub("<@[!]?\d{18}>", "@" + mention, message.content)
+  if "<#" in message.content:
+    mention_channel = re.search("<#\d{18}>", message.content).group()
+    mention_channel = mention_channel.replace("<#","")
+    mention_channel = mention_channel.replace(">","")
+    mention_channel = bot.get_channel(id=int(mention_channel))
+    mention = mention_channel.name
+    message.content = re.sub("<#\d{18}>", mention + "。", message.content)
+  emoji = re.findall("<.?:[^<^>]*:\d{18}>", message.content)
+  if emoji:
+    for i in emoji:
+      emoji = re.search(":[^:]*:", i).group()
+      message.content = message.content.replace(i,emoji)
+  message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
+  message.content = message.content.replace("\n","。")
+  message.content = message.content.replace("{","[")
+  message.content = message.content.replace("}","]")
+  if len(message.content) >= 60:
+    message.content = truncate(message.content, 50)
+  if message.author.nick is None:
+    message_read = f"{message.author.name}。{message.content}"
+  else:
+    message_read = f"{message.author.nick}。{message.content}"
+  if "%" in message_read:
+    if "%time" in message_read:
+      message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
+      message_time = re.sub("(?<!\d)0","",message_time)
+      message_read = message_read.replace("%time", message_time)
+    if "%date" in message_read:
+      #message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
+      d = datetime.date.today()
+      message_date = f"{d.year}年{d.month}月{d.day}日"
+      message_read = message_read.replace("%date", message_date)
+    if "%me" in message_read:
+      message_me = message.author.name
+      message_read = message_read.replace("%me", message_me)
+    else:
+      message_read = message_read.replace("%","ぱーせんと")
+  message_read = re.sub("ww+","わらわら",message_read,0)
+  message_read = dict.dict(message.guild.id,message_read)
+  return message_read
+
 
 @bot.event
 async def on_ready():
@@ -198,53 +253,7 @@ async def on_message(message):
           queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
           messagequeue[message.guild.id] = queuelist
           return
-        if "<@" in message.content:
-          mention = re.search("<@[!]?\d{18}>", message.content).group()
-          mention = mention.replace("<@!","")
-          mention = mention.replace("<@","")
-          mention = mention.replace(">","")
-          mention_user = await bot.fetch_user(int(mention))
-          mention = mention_user.display_name
-          message.content = re.sub("<@[!]?\d{18}>", "@" + mention, message.content)
-        if "<#" in message.content:
-          mention_channel = re.search("<#\d{18}>", message.content).group()
-          mention_channel = mention_channel.replace("<#","")
-          mention_channel = mention_channel.replace(">","")
-          mention_channel = bot.get_channel(id=int(mention_channel))
-          mention = mention_channel.name
-          message.content = re.sub("<#\d{18}>", mention + "。", message.content)
-        emoji = re.findall("<.?:[^<^>]*:\d{18}>", message.content)
-        if emoji:
-          for i in emoji:
-            emoji = re.search(":[^:]*:", i).group()
-            message.content = message.content.replace(i,emoji)
-        message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
-        message.content = message.content.replace("\n","。")
-        message.content = message.content.replace("{","[")
-        message.content = message.content.replace("}","]")
-        if len(message.content) >= 60:
-          message.content = truncate(message.content, 50)
-        if message.author.nick is None:
-          message_read = message.author.name + "。" + message.content
-        else:
-          message_read = message.author.nick + "。" + message.content
-        if "%" in message_read:
-          if "%time" in message_read:
-            message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
-            message_time = re.sub("(?<!\d)0","",message_time)
-            message_read = message_read.replace("%time", message_time)
-          if "%date" in message_read:
-            #message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
-            d = datetime.date.today()
-            message_date = f"{d.year}年{d.month}月{d.day}日"
-            message_read = message_read.replace("%date", message_date)
-          if "%me" in message_read:
-            message_me = message.author.name
-            message_read = message_read.replace("%me", message_me)
-          else:
-            message_read = message_read.replace("%","ぱーせんと")
-        message_read = re.sub("ww+","わらわら",message_read,0)
-        message_read = dict.dict(message.guild.id,message_read)
+        message_read = await replace_message(message)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
         datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
         make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
@@ -274,15 +283,10 @@ async def help(ctx,*args):
   langs = lang["help"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
-  embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-  embed.add_field(name=fields["2"]["name"],value=fields["2"]["value"],inline=fields["2"]["inline"])
-  embed.add_field(name=fields["3"]["name"],value=fields["3"]["value"],inline=fields["3"]["inline"])
-  embed.add_field(name=fields["4"]["name"],value=fields["4"]["value"],inline=fields["4"]["inline"])
-  embed.add_field(name=fields["5"]["name"],value=fields["5"]["value"],inline=fields["5"]["inline"])
-  embed.add_field(name=fields["6"]["name"],value=fields["6"]["value"],inline=fields["6"]["inline"])
-  embed.add_field(name=fields["7"]["name"],value=fields["7"]["value"],inline=fields["7"]["inline"])
-  embed.add_field(name=fields["8"]["name"],value=fields["8"]["value"],inline=fields["8"]["inline"])
+  i = 0
+  while i <= 8:
+    embed.add_field(name=fields[i]["name"],value=fields[i]["value"],inline=fields[i]["inline"])
+    i += 1
   await ctx.send(embed=embed)
 
 @sh0.command()
