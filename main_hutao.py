@@ -57,6 +57,7 @@ global messagequeue
 global reading
 messagequeue = {}
 reading = {}
+audio = {}
 
 
 lang = {}
@@ -129,7 +130,7 @@ async def replace_message(message):
     for i in emoji:
       emoji = re.search(":[^:]*:", i).group()
       message.content = message.content.replace(i,emoji)
-  message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?","URL省略",message.content)
+  message.content = re.sub("(https?):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-\(]*[\w@?^=%&amp;\/~+#-\)])?","URL省略",message.content)
   message.content = message.content.replace("\n","。")
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
