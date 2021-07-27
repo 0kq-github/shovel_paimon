@@ -27,7 +27,7 @@ def reader(id):
 
   csv -> 辞書
   '''
-  dict_path = f"./config/guild/{str(id)}/{dict.csv}"
+  dict_path = f"./config/guild/{str(id)}/dict.csv"
   with open(dict_path,mode="r",encoding="utf-16") as f:
     u_dict = csv.reader(f)
     u_dict = {row[0]:row[1] for row in u_dict}
@@ -39,7 +39,7 @@ def writer(id, u_dict):
 
   辞書 -> csv
   '''
-  dict_path = f"./config/guild/{str(id)}/{dict.csv}"
+  dict_path = f"./config/guild/{str(id)}/dict.csv"
   with open(dict_path,mode="w",encoding="utf-16") as f:
     writer = csv.writer(f)
     for k, v in u_dict.items():
