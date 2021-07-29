@@ -2,3 +2,4 @@ __pycache__
 /config/guild/*
 !/config/guild/default/
 /config.ini
+/global_wav/*

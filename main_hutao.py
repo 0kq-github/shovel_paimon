@@ -209,7 +209,8 @@ async def on_voice_state_update(member,before,after):
         for user in voicemember:
           if user.id == bot.user.id:
             await voicech.guild.voice_client.disconnect()
-            shutil.rmtree("./config/guild/" + str(voicech.guild.id) + "/wav/")
+            shutil.rmtree(f"./config/guild/{str(voicech.guild.id)}/wav/")
+            shutil.rmtree(f"./config/guild/{str(voicech.guild.id)}/temp/")
             langs = lang["auto.disconnect"]
             fields = langs["field"]
             embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
