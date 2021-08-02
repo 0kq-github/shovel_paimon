@@ -164,7 +164,7 @@ async def replace_message(message):
 @bot.event
 async def on_ready():
     print('==========')
-    print(f"shovel 0kq v{shovel_ver}")
+    print(f"shovel paimon v{shovel_ver}")
     print(f" {bot.user.name}が起動しました")
     print(f" ID: {bot.user.id}")
     print(f' {lang["hello"]}')
