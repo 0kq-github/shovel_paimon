@@ -182,7 +182,7 @@ async def on_ready():
       voice_config = json.load(f)
     for i in bot.guilds:
       reading[i.id] = None
-      if not voice_config[i.id]:
+      if not i.id in voice_config:
         voice_config[i.id] = {"voice":False}
 
 
