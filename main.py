@@ -46,6 +46,7 @@ except:
     print(" 引数が必要です")
   exit()
 
+shovel_ver = 1.0
 bot = commands.Bot(command_prefix=prefix,help_command=None)
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -162,12 +163,12 @@ async def replace_message(message):
 
 @bot.event
 async def on_ready():
-    print('------')
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print(lang["hello"])
-    print('------')
+    print('==========')
+    print(f"shovel 0kq v{shovel_ver}")
+    print(f" {bot.user.name}が起動しました")
+    print(f" ID: {bot.user.id}")
+    print(f' {lang["hello"]}')
+    print('==========')
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
@@ -180,8 +181,7 @@ async def on_ready():
     for i in bot.guilds:
       reading[i.id] = None
       try:
-        if voice_config[i.id] == {"voice":True}:
-          continue
+        voice_config[i.id]
       except KeyError:
         voice_config[i.id] = {"voice":False}
 
