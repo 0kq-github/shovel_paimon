@@ -181,6 +181,7 @@ async def on_ready():
         f.write(json.dumps(cf))
     with open("./config/config.json","r") as f:
       voice_config = json.load(f)
+      print(voice_config)
     for i in bot.guilds:
       reading[i.id] = None
       if not i.id in voice_config:
