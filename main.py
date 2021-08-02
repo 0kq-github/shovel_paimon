@@ -177,7 +177,8 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
-        f.write("{}")
+        cf = {0:False}
+        f.write(json.dumps(cf))
     with open("./config/config.json","r") as f:
       voice_config = json.load(f)
     for i in bot.guilds:
@@ -193,7 +194,7 @@ async def on_guild_join(guild):
     print("joined " + str(guild.id))
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     initdirs(guild.id)
-    with open("./config/guild/" + str(guild.id) + "/" + "dict.csv","w") as f:
+    with open(f"./config/guild/{str(guild.id)}/dict.csv","w") as f:
       f.write("")
 
 @bot.event
