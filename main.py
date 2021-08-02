@@ -574,7 +574,6 @@ async def v(ctx, *args):
     langs = lang["voice.off"]
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
-    pass
 
 
 try:  
