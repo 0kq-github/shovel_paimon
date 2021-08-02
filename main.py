@@ -169,7 +169,7 @@ async def on_ready():
     print(f" ID: {bot.user.id}")
     print(f' {lang["hello"]}')
     print('====================')
-    print(bot.user.avatar.url)
+    print(bot.user.avatar_url)
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
@@ -305,7 +305,7 @@ async def help(ctx,*args):
   langs = lang["help"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  embed.set_thumbnail(url=bot.user.avatar.url)
+  embed.set_thumbnail(url=bot.user.avatar_url)
   i = 0
   while i <= 8:
     embed.add_field(name=fields[f"{i}"]["name"],value=fields[f"{i}"]["value"],inline=fields[f"{i}"]["inline"])
