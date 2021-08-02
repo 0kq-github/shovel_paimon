@@ -55,6 +55,7 @@ config.clear
 #reading = {message.guild.id:読み上げチャンネルのID}
 global messagequeue
 global reading
+global voice_config
 messagequeue = {}
 reading = {}
 audio = {}
@@ -176,9 +177,8 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
-        f.write("")
+        f.write("{}")
     with open("./config/config.json","r") as f:
-      global voice_config
       voice_config = json.load(f)
     for i in bot.guilds:
       reading[i.id] = None
