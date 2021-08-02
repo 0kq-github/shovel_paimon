@@ -5,8 +5,8 @@
     "description": "そんなコマンドは無いよ！"
   },
   "help": {
-    "title": "コマンド",
-    "description": "こんなコマンドがあるよ！",
+    "title": "shovel hutaoについて",
+    "description": "堂主の私に何か用かな？",
     "field": {
       "0": {
         "name": "?sh0 s",
@@ -230,5 +230,13 @@
         "inline": false
       }
     }
+  },
+  "voice.on": {
+    "title": "音声再生",
+    "description": "やーっと私の出番～？"
+  },
+  "voice.off": {
+    "title": "音声再生",
+    "description": "何もすることがないのって...死より恐ろしいことだよ"
   }
 }
