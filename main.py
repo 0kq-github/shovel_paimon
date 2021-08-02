@@ -55,10 +55,8 @@ config.clear
 #reading = {message.guild.id:読み上げチャンネルのID}
 global messagequeue
 global reading
-global voice_config
 messagequeue = {}
 reading = {}
-voice_config = {}
 
 
 lang = {}
@@ -83,10 +81,6 @@ def truncate(string, length, ellipsis='、以下省略'):
 
 def initdirs(guild_id):
   os.makedirs(f"./config/guild/{str(guild_id)}/wav",exist_ok=True)
-  if not os.path.exists("./config/config.json"):
-    with open("./config/config.json","w") as f:
-      f.write("{}")
-      f.close()
 
 def send_voice(message, path, volume, bass):
   while message.guild.voice_client.is_playing():
@@ -180,6 +174,7 @@ async def on_ready():
         cf = {0:False}
         f.write(json.dumps(cf))
     with open("./config/config.json","r") as f:
+      global voice_config
       voice_config = json.load(f)
       print(voice_config)
     for i in bot.guilds:
