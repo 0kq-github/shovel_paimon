@@ -582,6 +582,7 @@ except KeyboardInterrupt:
       initdirs(i)
     with open("./config/config.json","w") as f:
       config_json = json.dumps(voice_config)
+      print(voice_config)
       f.write(config_json)
       f.close()
     bot.loop.run_until_complete(bot.close())
