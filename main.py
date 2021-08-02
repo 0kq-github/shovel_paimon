@@ -244,6 +244,7 @@ async def on_voice_state_update(member,before,after):
 async def on_message(message):
   if message.author.bot:
     return
+  datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
   message.content = str(message.content)
   try:
     read_channel = reading[message.guild.id]
@@ -251,14 +252,15 @@ async def on_message(message):
   except Exception:
     initdirs(message.guild.id)
     return
-  if not message.content.startswith(f'{prefix}sh0'):
+  if message.content.startswith(f'{prefix}sh0'):
+    print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
+  else:
     if not message.content.startswith("!!"):
       if (
         read_channel is not None and
         message.channel.id == read_channel and
         message.guild.voice_client is not None
         ):
-        datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
         if voice_config[f"{message.guild.id}"]["voice"]:
           if os.path.exists(f"./global_wav/{message.content}.mp3"):
             print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
