@@ -180,7 +180,7 @@ async def on_ready():
     for i in bot.guilds:
       reading[i.id] = None
       try:
-        if voice_config[i.id]["voice"] == True:
+        if voice_config[i.id] == {"voice":True}:
           continue
       except KeyError:
         voice_config[i.id] = {"voice":False}
