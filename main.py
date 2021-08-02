@@ -306,7 +306,7 @@ async def help(ctx,*args):
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   i = 0
   while i <= 8:
-    embed.add_field(name=fields[i]["name"],value=fields[i]["value"],inline=fields[i]["inline"])
+    embed.add_field(name=fields[f"{i}"]["name"],value=fields[f"{i}"]["value"],inline=fields[f"{i}"]["inline"])
     i += 1
   await ctx.send(embed=embed)
 
