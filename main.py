@@ -304,11 +304,12 @@ async def help(ctx,*args):
   langs = lang["help"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+  embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/832626889335504986/871745842741145660/88129567_p0_master1200.jpg")
+  embed.add_field(name="サムネイル画像",value="[pixiv](https://i.pximg.net/img-original/img/2021/03/01/00/56/23/88129567_p0.jpg)")
   i = 0
   while i <= 8:
     embed.add_field(name=fields[f"{i}"]["name"],value=fields[f"{i}"]["value"],inline=fields[f"{i}"]["inline"])
     i += 1
-  embed.set_thumbnail(url="https://i.pximg.net/img-original/img/2021/03/01/00/56/23/88129567_p0.jpg")
   await ctx.send(embed=embed)
 
 @sh0.command()
