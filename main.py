@@ -163,7 +163,7 @@ async def replace_message(message):
 
 @bot.event
 async def on_ready():
-    print('====================')
+    print('\n====================')
     print(f" shovel paimon v{shovel_ver}")
     print(f" {bot.user.name} が起動しました")
     print(f" ID: {bot.user.id}")
@@ -177,7 +177,7 @@ async def on_ready():
     with open("./config/config.json","r") as f:
       global voice_config
       voice_config = json.load(f)
-      print(voice_config)
+      #print(voice_config)
     for i in bot.guilds:
       reading[i.id] = None
       try:
@@ -584,5 +584,5 @@ except KeyboardInterrupt:
       config_json = json.dumps(voice_config)
       f.write(config_json)
       f.close()
-    print(voice_config)
+    #print(voice_config)
     bot.loop.run_until_complete(bot.close())

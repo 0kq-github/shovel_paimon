@@ -11,47 +11,47 @@
       "0": {
         "name": "?sh0 s",
         "value": "おしゃべり開始！",
-        "inline": false
+        "inline": true
       },
       "1": {
         "name": "?sh0 e",
         "value": "さいなら～",
-        "inline": false
+        "inline": true
       },
       "2": {
         "name": "?sh0 fe",
         "value": "燎原の蝶！",
-        "inline": false
+        "inline": true
       },
       "3": {
         "name": "?sh0 link <音量倍率>",
         "value": "新しい音声を追加できるってよ！\nmp3ファイルを添付してね！",
-        "inline": false
+        "inline": true
       },
       "4": {
         "name": "?sh0 show",
         "value": "どんな音声があるか教えてあげる！",
-        "inline": false
+        "inline": true
       },
       "5": {
         "name": "?sh0 aw <単語> <読み>",
         "value": "新しい言葉だ！",
-        "inline": false
+        "inline": true
       },
       "6": {
         "name": "?sh0 dw <単語>",
         "value": "忘れちゃった～ えへへ～",
-        "inline": false
+        "inline": true
       },
       "7":{
         "name":"?sh0 import_word",
         "value":"言葉がたくさん！",
-        "inline": false
+        "inline": true
       },
       "8":{
         "name":"?sh0 export_word",
         "value":"辞書を送るよ！",
-        "inline": false
+        "inline": true
       }
     }
   },
