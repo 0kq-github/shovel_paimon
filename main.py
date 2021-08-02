@@ -181,9 +181,9 @@ async def on_ready():
     for i in bot.guilds:
       reading[i.id] = None
       try:
-        voice_config[i.id]
+        voice_config[f"{i.id}"]
       except KeyError:
-        voice_config[i.id] = {"voice":False}
+        voice_config[f"{i.id}"] = {"voice":False}
 
 
 
@@ -259,7 +259,7 @@ async def on_message(message):
         message.guild.voice_client is not None
         ):
         datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
-        if voice_config[message.guild.id]["voice"]:
+        if voice_config[f"{message.guild.id}"]["voice"]:
           if os.path.exists(f"./global_wav/{message.content}.mp3"):
             print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
             queuelist = messagequeue[message.guild.id]
@@ -561,12 +561,12 @@ async def v(ctx, *args):
   if not args:
     await ctx.send("引数が足りなリよ！")
   if args[0] == "on":
-    voice_config[ctx.guild.id]["voice"] = True
+    voice_config[f"{ctx.guild.id}"]["voice"] = True
     langs = lang["voice.on"]
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
   else:
-    voice_config[ctx.guild.id]["voice"] = False
+    voice_config[f"{ctx.guild.id}"]["voice"] = False
     langs = lang["voice.off"]
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
