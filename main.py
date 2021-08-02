@@ -58,7 +58,7 @@ global reading
 global voice_config
 messagequeue = {}
 reading = {}
-audio = {}
+voice_config = {}
 
 
 lang = {}
