@@ -84,12 +84,7 @@ def initdirs(guild_id):
   os.makedirs(f"./config/guild/{str(guild_id)}/wav",exist_ok=True)
   if not os.path.exists("./config/config.json"):
     with open("./config/config.json","w") as f:
-      default_config = {
-        guild_id: {
-          "voice":False
-        }}
-      default_json = json.dumps(default_config)
-      f.write(default_json)
+      f.write("{}")
       f.close()
 
 def send_voice(message, path, volume, bass):
@@ -179,6 +174,9 @@ async def on_ready():
     print(lang["hello"])
     print('------')
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+    if not os.path.exists("./config/config.json"):
+      with open("./config/config.json","w") as f:
+        f.write("")
     with open("./config/config.json","r") as f:
       global voice_config
       voice_config = json.load(f)
