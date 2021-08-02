@@ -561,12 +561,12 @@ async def v(ctx, *args):
   if not args:
     await ctx.send("引数が足りなリよ！")
   if args[0] == "on":
-    voice_config[ctx.guild.id] = {"voice":True}
+    voice_config[ctx.guild.id]["voice"] = True
     langs = lang["voice.on"]
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
   else:
-    voice_config[ctx.guild.id] = {"voice":False}
+    voice_config[ctx.guild.id]["voice"] = False
     langs = lang["voice.off"]
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
