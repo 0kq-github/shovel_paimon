@@ -575,14 +575,14 @@ async def v(ctx, *args):
 try:  
     bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
 except KeyboardInterrupt: 
-    print('\nClosing %s...' % bot.user.name)
+    print(f"\n {bot.user.name}を終了中...")
     for i in reading:
       shutil.rmtree(f"./config/guild/{i}/wav/",ignore_errors=True)
       reading[i] = None
       initdirs(i)
     with open("./config/config.json","w") as f:
       config_json = json.dumps(voice_config)
-      print(voice_config)
       f.write(config_json)
       f.close()
+    print(voice_config)
     bot.loop.run_until_complete(bot.close())
