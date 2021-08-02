@@ -177,7 +177,10 @@ async def on_ready():
         f.write(json.dumps(cf))
     with open("./config/config.json","r") as f:
       global voice_config
-      voice_config = json.load(f)
+      try:
+        voice_config = json.load(f)
+      except:
+        voice_config = {}
       #print(voice_config)
     for i in bot.guilds:
       reading[i.id] = None
