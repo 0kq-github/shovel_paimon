@@ -169,7 +169,7 @@ async def on_ready():
     print(f" ID: {bot.user.id}")
     print(f' {lang["hello"]}')
     print('====================')
-    print(bot.user.avatar)
+    print(bot.user.avatar.url)
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
