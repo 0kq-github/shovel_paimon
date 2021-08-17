@@ -199,6 +199,8 @@ async def on_guild_join(guild):
     initdirs(guild.id)
     with open(f"./config/guild/{str(guild.id)}/dict.csv","w") as f:
       f.write("")
+    voice_config[f"{guild.id}"] = {"voice":False}
+    reading[guild.id] = None
 
 @bot.event
 async def on_voice_state_update(member,before,after):
