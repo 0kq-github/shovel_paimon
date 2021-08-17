@@ -52,6 +52,11 @@
         "name":"?sh0 export_word",
         "value":"辞書を送るよ！",
         "inline": true
+      },
+      "9":{
+        "name":"?sh0 v on/off",
+        "value":"音声の読み上げを切り替えるよ！",
+        "inline": true
       }
     }
   },
