@@ -169,7 +169,7 @@ async def on_ready():
     print(f" ID: {bot.user.id}")
     print(f' {lang["hello"]}')
     print('====================')
-    print(bot.user.avatar_url)
+    #print(bot.user.avatar_url)
     await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
     if not os.path.exists("./config/config.json"):
       with open("./config/config.json","w") as f:
@@ -194,13 +194,14 @@ async def on_ready():
 
 @bot.event
 async def on_guild_join(guild):
-    print("joined " + str(guild.id))
-    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
-    initdirs(guild.id)
-    with open(f"./config/guild/{str(guild.id)}/dict.csv","w") as f:
-      f.write("")
-    voice_config[f"{guild.id}"] = {"voice":False}
-    reading[guild.id] = None
+  datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+  print(f"[{datime_now}][{guild.name}] サーバーに参加しました {guild.name}")
+  await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+  initdirs(guild.id)
+  with open(f"./config/guild/{str(guild.id)}/dict.csv","w") as f:
+    f.write("")
+  voice_config[f"{guild.id}"] = {"voice":False}
+  reading[guild.id] = None
 
 @bot.event
 async def on_voice_state_update(member,before,after):
