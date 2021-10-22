@@ -46,14 +46,21 @@ except:
     print(" 引数が必要です")
   exit()
 
+'''変数一覧
+shovel_ver : BOTのバージョン
+bot : commands.Bot
+BOT_TOKEN : BOTトークン
+messagequeue : {message.guild.id:[[message,path,volume],[message,path,volume]]}
+reading : {message.guild.id:読み上げチャンネルのID}
+lang : hutao/paimonのメッセージ(辞書型)
+'''
+
 shovel_ver = 1.0
 bot = commands.Bot(command_prefix=prefix,help_command=None)
 config = configparser.ConfigParser()
 config.read('./config.ini')
 BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
 config.clear
-#messagequeue = {message.guild.id:[[message,path,volume],[message,path,volume]]}
-#reading = {message.guild.id:読み上げチャンネルのID}
 global messagequeue
 global reading
 messagequeue = {}
@@ -65,8 +72,18 @@ with open(f"./{mode}.json",mode="r") as f:
   lang = json.load(f)
 
 def make_wav(id, word_wav, voice, datime):
+  '''jtalk,jtalkでwav生成
+
+   id : サーバーID(ディレクトリ名)
+   datime : ファイル日付
+   voice : 音声タイプ(未使用)
+   word_wav : 文字列
+  '''
+  
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
+  #jatlk wav生成
   jtalk.jtalk(word_wav,voice,path_wav)
+  #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
 
 
@@ -81,9 +98,19 @@ def truncate(string, length, ellipsis='、以下省略'):
     return string[:length] + (ellipsis if string[length:] else '')
 
 def initdirs(guild_id):
+  '''
+  指定IDのディレクトリ初期化
+  '''
   os.makedirs(f"./config/guild/{str(guild_id)}/wav",exist_ok=True)
 
 def send_voice(message, path, volume, bass):
+  '''音声送信
+
+  message : 文字列
+  path : 送信するファイルのパス
+  volume : 音量
+  bass : 低音強化倍率
+  '''
   while message.guild.voice_client.is_playing():
     time.sleep(0.1)
   while os.path.isfile(path) == False:
@@ -93,6 +120,8 @@ def send_voice(message, path, volume, bass):
   message.guild.voice_client.play(wav_source_half)
 
 def voice_loop(ctx):
+  '''読み上げ中にループする関数
+  '''
   messagequeue[ctx.guild.id] = []
   while reading[ctx.guild.id] is not None:
     try:
@@ -110,6 +139,8 @@ def voice_loop(ctx):
     send_voice(queue[0],queue[1],queue[2],queue[3])
 
 async def replace_message(message):
+  '''特定メッセージの置き換え処理
+  '''
   if "<@" in message.content:
     mention = re.search("<@[!]?\d{18}>", message.content).group()
     mention = mention.replace("<@!","")
@@ -142,18 +173,18 @@ async def replace_message(message):
   else:
     message_read = f"{message.author.nick}。{message.content}"
   if "%" in message_read:
-    if "%time" in message_read:
+    if "%time%" in message_read:
       message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
       message_time = re.sub("(?<!\d)0","",message_time)
-      message_read = message_read.replace("%time", message_time)
-    if "%date" in message_read:
+      message_read = message_read.replace("%time%", message_time)
+    if "%date%" in message_read:
       #message_date = datetime.datetime.now().strftime('%Y年%m月%d日')
       d = datetime.date.today()
       message_date = f"{d.year}年{d.month}月{d.day}日"
-      message_read = message_read.replace("%date", message_date)
-    if "%me" in message_read:
+      message_read = message_read.replace("%date%", message_date)
+    if "%me%" in message_read:
       message_me = message.author.name
-      message_read = message_read.replace("%me", message_me)
+      message_read = message_read.replace("%me%", message_me)
     else:
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
@@ -194,6 +225,8 @@ async def on_ready():
 
 @bot.event
 async def on_guild_join(guild):
+  '''サーバー参加時の処理
+  '''
   datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
   print(f"[{datime_now}][{guild.name}] サーバーに参加しました {guild.name}")
   await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
@@ -249,6 +282,8 @@ async def on_voice_state_update(member,before,after):
 
 @bot.event
 async def on_message(message):
+  '''メッセージ受信時の処理
+  '''
   if message.author.bot:
     return
   datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
