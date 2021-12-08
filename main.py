@@ -175,9 +175,15 @@ async def replace_message(message):
   if len(message.content) >= 60:
     message.content = truncate(message.content, 50)
   if message.author.nick is None:
-    message_read = f"{message.author.name}。{message.content}"
+    if message.content.startswith("*"):
+      message_read = f"*{message.author.name}。{message.content}"
+    else:
+      message_read = f"{message.author.name}。{message.content}"
   else:
-    message_read = f"{message.author.nick}。{message.content}"
+    if message.content.startswith("*"):
+      message_read = f"*{message.author.nick}。{message.content}"
+    else:
+      message_read = f"{message.author.nick}。{message.content}"
   if "%" in message_read:
     if "%time%" in message_read:
       message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
