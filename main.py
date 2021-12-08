@@ -16,6 +16,7 @@ import urllib.request
 import json
 import shutil
 import threading
+from gtts import gTTS
 
 from shovel_module import jtalk
 from shovel_module import dict
@@ -81,8 +82,13 @@ def make_wav(id, word_wav, voice, datime):
   '''
   
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
+  if word_wav.startswith("*"):
+    output = gTTS(text=word_wav,lang="ja",slow=False)
+    output.save(f"{path_wav}.mp3")
+    sound_controller.mp3_to_wav(path_wav)
+  else:
   #jatlk wav生成
-  jtalk.jtalk(word_wav,voice,path_wav)
+    jtalk.jtalk(word_wav,voice,path_wav)
   #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
 
