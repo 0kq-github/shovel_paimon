@@ -85,6 +85,7 @@ def make_wav(id, word_wav, voice, datime):
   if word_wav.startswith("*"):
     output = gTTS(text=word_wav,lang="ja",slow=False)
     output.save(f"{path_wav}.mp3")
+    sound_controller.convert_volume(f"{path_wav}.mp3",0.1)
     sound_controller.mp3_to_wav(path_wav)
   else:
   #jatlk wav生成
