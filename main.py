@@ -84,7 +84,7 @@ def make_wav(id, word_wav, voice, datime):
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
   if word_wav.startswith("*"):
     word_wav = word_wav.replace("*","")
-    output = gTTS(text=word_wav,lang="ja",slow=False)
+    output = gTTS(text=word_wav,lang="en",slow=False)
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
