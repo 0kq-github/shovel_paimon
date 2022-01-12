@@ -19,7 +19,7 @@ import threading
 from gtts import gTTS
 
 from shovel_module import jtalk
-from shovel_module import dict
+from shovel_module import dic
 from shovel_module import downloader
 from shovel_module import sound_controller
 
@@ -51,9 +51,9 @@ except:
 shovel_ver : BOTのバージョン
 bot : commands.Bot
 BOT_TOKEN : BOTトークン
-messagequeue : {message.guild.id:[[message,path,volume],[message,path,volume]]}
+messagequeue : {message.guild.id:[[message,path,volume],[message,path,volume],...]}
 reading : {message.guild.id:読み上げチャンネルのID}
-lang : hutao/paimonのメッセージ(辞書型)
+lang : hutao/paimonの言語ファイル(辞書型)
 '''
 
 shovel_ver = 1.0
@@ -69,8 +69,8 @@ reading = {}
 
 
 lang = {}
-with open(f"./{mode}.json",mode="r") as f:
-  lang = json.load(f)
+with open(f"./lang/{mode}.json",mode="r") as f:
+  lang:dict = json.load(f)
 
 def make_wav(id, word_wav, voice, datime):
   '''jtalk,jtalkでwav生成
@@ -203,7 +203,7 @@ async def replace_message(message):
     else:
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
-  message_read = dict.dict(message.guild.id,message_read)
+  message_read = dic.dict(message.guild.id,message_read)
   return message_read
 
 
@@ -461,9 +461,9 @@ async def aw(ctx,*args):
     await ctx.send(embed=embed)
     return
   u_dict = {}
-  u_dict = dict.reader(ctx.guild.id)
+  u_dict = dic.reader(ctx.guild.id)
   u_dict[args[0]] = args[1]
-  dict.writer(ctx.guild.id,u_dict)
+  dic.writer(ctx.guild.id,u_dict)
   langs = lang["aw.success"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
@@ -482,7 +482,7 @@ async def dw(ctx,*args):
     await ctx.send(embed=embed)
     return
   u_dict = {}
-  u_dict = dict.reader(ctx.guild.id)
+  u_dict = dic.reader(ctx.guild.id)
   try:
     u_dict.pop(args[0])
   except:
@@ -490,7 +490,7 @@ async def dw(ctx,*args):
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
     await ctx.send(embed=embed)
     return
-  dict.writer(ctx.guild.id, u_dict)
+  dic.writer(ctx.guild.id, u_dict)
   langs = lang["dw.success"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
