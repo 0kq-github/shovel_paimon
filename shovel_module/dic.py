@@ -42,7 +42,7 @@ def dict(id, read_text:str):
     u_dict = csv.reader(f)
     u_dict = {row[0]:row[1] for row in u_dict}
   read_text = repdict(read_text,u_dict)
-  read_text = repdict(read_text,d_dict)
+  #read_text = repdict(read_text,d_dict)
   return read_text
 
 def reader(id):
