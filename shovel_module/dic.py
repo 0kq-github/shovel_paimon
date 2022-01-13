@@ -32,7 +32,7 @@ def repdict(read_text:str,dic:dict):
     read_text = read_text.format(*read_list) #読み仮名リストを引数にとる
   except Exception as e:
     print(e)
-    return "例外 "+e
+    return f"例外 {e}"
   return read_text
 
 
