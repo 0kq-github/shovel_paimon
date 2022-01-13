@@ -32,7 +32,7 @@ def repdict(read_text:str,dic:dict):
     read_text = read_text.format(*read_list) #読み仮名リストを引数にとる
   except Exception as e:
     print(e)
-    return f"例外 {e}"
+    return f"例外が発生しました {e}"
   return read_text
 
 
@@ -46,7 +46,7 @@ def dict(id, read_text:str):
     u_dict = csv.reader(f)
     u_dict = {row[0]:row[1] for row in u_dict}
   read_text = repdict(read_text,u_dict)
-  read_text = repdict(read_text,d_dict)
+  #read_text = repdict(read_text,d_dict)
   return read_text
 
 def reader(id):
