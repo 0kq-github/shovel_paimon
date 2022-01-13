@@ -28,7 +28,11 @@ def repdict(read_text:str,dic:dict):
   for i, one_dic in enumerate(dic.items()): # one_dicは単語と読みのタプル。添字はそれぞれ0と1。
       read_text = read_text.replace(one_dic[0], '{'+str(i)+'}')
       read_list.append(one_dic[1]) # 変換が発生した順に読みがなリストに追加
-  read_text = read_text.format(*read_list) #読み仮名リストを引数にとる
+  try:
+    read_text = read_text.format(*read_list) #読み仮名リストを引数にとる
+  except Exception as e:
+    print(e)
+    return "例外 "+e
   return read_text
 
 
@@ -42,7 +46,7 @@ def dict(id, read_text:str):
     u_dict = csv.reader(f)
     u_dict = {row[0]:row[1] for row in u_dict}
   read_text = repdict(read_text,u_dict)
-  #read_text = repdict(read_text,d_dict)
+  read_text = repdict(read_text,d_dict)
   return read_text
 
 def reader(id):

@@ -1,4 +1,5 @@
 import os
+import re
 
 def stk2dic(stk:str):
   '''
@@ -6,10 +7,10 @@ def stk2dic(stk:str):
   dictlist = []
   with open(stk,mode="r",encoding="utf-16") as f:
     for i in f.readlines():
-      i = i.replace(",","")
-      _in = i.split(" ")
-      _in = [_in[0],_in[1]]
-      dictlist.append(_in)
+      if not ("," and "{" and "}") in i:
+        _in = i.split(" ")
+        _in = [_in[0],_in[1]]
+        dictlist.append(_in)
   return dictlist
 
 def dic2csv(dic:list,path:str):
