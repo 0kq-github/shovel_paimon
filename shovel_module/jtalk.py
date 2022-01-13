@@ -18,8 +18,8 @@ if not os.path.exists("./jtalk_dic/open_jtalk_dic_utf_8-1.07"):
 def jtalk(t,voice,n):
     open_jtalk=['open_jtalk']
     mech=['-x','./jtalk_dic/open_jtalk_dic_utf_8-1.07']
-    #htsvoice=['-m','/usr/share/hts-voice/mei/mei_'+voice+'.htsvoice']
-    htsvoice=['-m','./voice/miku.htsvoice']
+    htsvoice=['-m','/usr/share/hts-voice/mei/mei_'+voice+'.htsvoice']
+    #htsvoice=['-m','./voice/miku.htsvoice']
     speed=['-r','1.5']
     jm=['-jm','1.0']
     outwav=['-ow',n+'.wav']
