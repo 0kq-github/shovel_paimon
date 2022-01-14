@@ -251,6 +251,7 @@ async def on_guild_join(guild):
   voice_config[f"{guild.id}"] = {"voice":False}
   reading[guild.id] = None
 
+
 @bot.event
 async def on_voice_state_update(member,before,after):
   try:
@@ -262,7 +263,7 @@ async def on_voice_state_update(member,before,after):
   #自動切断
   try:
     #VC入室ログ
-    voicech = bot.get_channel(id=after.channel.id)
+    voicech = await bot.fetch_channel(id=after.channel.id)
     print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {after.channel.name} に参加しました")
   except Exception:
     None
