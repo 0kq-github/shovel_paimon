@@ -251,6 +251,7 @@ async def on_guild_join(guild):
   voice_config[f"{guild.id}"] = {"voice":False}
   reading[guild.id] = None
 
+
 @bot.event
 async def on_voice_state_update(member,before,after):
   try:
@@ -262,7 +263,7 @@ async def on_voice_state_update(member,before,after):
   #自動切断
   try:
     #VC入室ログ
-    voicech = bot.get_channel(id=after.channel.id)
+    voicech = await bot.fetch_channel(after.channel.id)
     print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {after.channel.name} に参加しました")
   except Exception:
     None
@@ -271,7 +272,7 @@ async def on_voice_state_update(member,before,after):
       return
     try:
       #VC退出ログ
-      voicech = bot.get_channel(id=before.channel.id)
+      voicech = await bot.fetch_channel(before.channel.id)
       voicemember = voicech.members
       print(f"[{datime_now}][{voicech.guild.name}] {str(member)} が {before.channel.name} から退出しました")
       #VC退出処理
@@ -287,7 +288,7 @@ async def on_voice_state_update(member,before,after):
             embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
             embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
             read_channel = reading[voicech.guild.id]
-            readch = bot.get_channel(id=int(read_channel))
+            readch = await bot.fetch_channel(int(read_channel))
             await readch.send(embed=embed)
             reading[voicech.guild.id] = None
     except Exception as e:
