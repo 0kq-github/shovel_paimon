@@ -288,7 +288,7 @@ async def on_voice_state_update(member,before,after):
             embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
             embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
             read_channel = reading[voicech.guild.id]
-            readch = bot.get_channel(id=int(read_channel))
+            readch = await bot.fetch_channel(id=int(read_channel))
             await readch.send(embed=embed)
             reading[voicech.guild.id] = None
     except Exception as e:
