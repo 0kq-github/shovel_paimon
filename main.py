@@ -91,13 +91,13 @@ def make_wav(id, word_wav:str, voice, datime):
   
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
   if word_wav.startswith("$google"):
-    word_wav = word_wav.rstrip("$google")
+    word_wav = word_wav.replace("$google","")
     output = gTTS(text=word_wav,lang="en",slow=False)
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
   elif word_wav.startswith("$tsukuyomi"):
-    word_wav = word_wav.rstrip("$tsukuyomi")
+    word_wav = word_wav.replace("$tsukuyomi","")
     wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
     soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
   else:
