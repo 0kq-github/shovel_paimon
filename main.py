@@ -1,7 +1,7 @@
 
 import sys
-if sys.version_info.minor < 8:
-  print("Python3.8以上が必要です")
+if sys.version_info.minor < 7:
+  print("Python3.7以上が必要です")
   exit()
 
 import os
@@ -16,7 +16,14 @@ import urllib.request
 import json
 import shutil
 import threading
+import soundfile
 from gtts import gTTS
+from tsukuyomichan_talksoft import TsukuyomichanTalksoft
+
+#開発環境用(ごり押し)
+#from tsukuyomichan_talksoft.tsukuyomichan_talksoft import TsukuyomichanTalksoft
+
+tsukuyomichan_talksoft = TsukuyomichanTalksoft(model_version="v.1.2.0")
 
 from shovel_module import jtalk
 from shovel_module import dic
@@ -66,13 +73,14 @@ global messagequeue
 global reading
 messagequeue = {}
 reading = {}
+fs = 24000
 
 
 lang = {}
 with open(f"./lang/{mode}.json",mode="r") as f:
   lang:dict = json.load(f)
 
-def make_wav(id, word_wav, voice, datime):
+def make_wav(id, word_wav:str, voice, datime):
   '''jtalk,jtalkでwav生成
 
    id : サーバーID(ディレクトリ名)
@@ -82,12 +90,16 @@ def make_wav(id, word_wav, voice, datime):
   '''
   
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
-  if word_wav.startswith("*"):
-    word_wav = word_wav.replace("*","")
+  if word_wav.startswith("$google"):
+    word_wav = word_wav.rstrip("$google")
     output = gTTS(text=word_wav,lang="en",slow=False)
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
+  elif word_wav.startswith("$tsukuyomi"):
+    word_wav = word_wav.rstrip("$tsukuyomi")
+    wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
+    soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)
@@ -178,14 +190,8 @@ async def replace_message(message):
   if len(message.content) >= 60:
     message.content = truncate(message.content, 50)
   if message.author.nick is None:
-    if message.content.startswith("*"):
-      message_read = f"*{message.author.name}。{message.content}"
-    else:
       message_read = f"{message.author.name}。{message.content}"
   else:
-    if message.content.startswith("*"):
-      message_read = f"*{message.author.nick}。{message.content}"
-    else:
       message_read = f"{message.author.nick}。{message.content}"
   if "%" in message_read:
     if "%time%" in message_read:
@@ -204,6 +210,12 @@ async def replace_message(message):
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
   message_read = dic.dict(message.guild.id,message_read)
+
+  if message.content.startswith("$google"):
+    message_read = "$google" + message_read
+  if message.content.startswith("$tsukuyomi"):
+    message_read = "$tsukuyomi" + message_read
+
   return message_read
 
 
