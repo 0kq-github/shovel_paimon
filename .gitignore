@@ -3,5 +3,7 @@ __pycache__
 !/config/guild/default/
 /config.ini
 /global_wav/*
-/jtalk_dic/open_jtalk_dic_utf_8-1.07
+/stk/*
+/dict/*
+/shovel_module/config.py
 /tsukuyomichan_talksoft
