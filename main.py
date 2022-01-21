@@ -97,13 +97,16 @@ def make_wav(id, word_wav:str, voice, datime):
     sound_controller.mp3_to_wav(path_wav)
   elif word_wav.startswith("$tsukuyomi"):
     #つくよみちゃん
+    '''
     word_wav = word_wav.replace("$tsukuyomi","")
     wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
     soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
+    '''
+    coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="b0655711-b398-438f-83e3-4c3c3ed746dd",text=word_wav,path=path_wav)
   elif word_wav.startswith("$coefont"):
     #coefont
     word_wav = word_wav.replace("$coefont","")
-    coefont.generate(config.COEFONT_TOKEN["accesskey"],config.COEFONT_TOKEN["secret"],word_wav,path_wav)
+    coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="c28adf78-d67d-4588-a9a5-970a76ca6b07",text=word_wav,path=path_wav)
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)

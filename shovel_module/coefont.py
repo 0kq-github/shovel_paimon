@@ -4,10 +4,10 @@ import hashlib
 import json
 from datetime import datetime, timezone
 
-def generate(accesskey,access_secret,text,path):
+def generate(accesskey,access_secret,coefont,text,path):
   date: str = str(int(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()))
   data: str = json.dumps({
-    'coefont': 'c28adf78-d67d-4588-a9a5-970a76ca6b07',
+    'coefont': coefont,
     'text': text
   })
   signature = hmac.new(bytes(access_secret, 'utf-8'), (date+data).encode('utf-8'), hashlib.sha256).hexdigest()
