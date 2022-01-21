@@ -102,6 +102,7 @@ def make_wav(id, word_wav:str, voice, datime):
     soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
   elif word_wav.startswith("$coefont"):
     #coefont
+    word_wav = word_wav.replace("$coefont","")
     coefont.generate(config.COEFONT_TOKEN["accesskey"],config.COEFONT_TOKEN["secret"],word_wav,path_wav)
   else:
   #jatlk wav生成
