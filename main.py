@@ -29,7 +29,8 @@ from shovel_module import jtalk
 from shovel_module import dic
 from shovel_module import downloader
 from shovel_module import sound_controller
-
+from shovel_module import coefont
+from shovel_module import config
 
 try:
   if sys.argv[1] == "--mode":
@@ -65,10 +66,7 @@ lang : hutao/paimonの言語ファイル(辞書型)
 
 shovel_ver = 1.0
 bot = commands.Bot(command_prefix=prefix,help_command=None)
-config = configparser.ConfigParser()
-config.read('./config.ini')
-BOT_TOKEN = config.get(mode.upper(),'BOT_TOKEN')
-config.clear
+BOT_TOKEN = config.DISCORD_TOKEN[mode]
 global messagequeue
 global reading
 messagequeue = {}
@@ -91,15 +89,20 @@ def make_wav(id, word_wav:str, voice, datime):
   
   path_wav = f"./config/guild/{str(id)}/temp/{datime}"
   if word_wav.startswith("$google"):
+    #google先生
     word_wav = word_wav.replace("$google","")
     output = gTTS(text=word_wav,lang="en",slow=False)
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
   elif word_wav.startswith("$tsukuyomi"):
+    #つくよみちゃん
     word_wav = word_wav.replace("$tsukuyomi","")
     wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
     soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
+  elif word_wav.startswith("$coefont"):
+    #coefont
+    coefont.generate(config.COEFONT_TOKEN["accesskey"],config.COEFONT_TOKEN["secret"],word_wav,path_wav)
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)
