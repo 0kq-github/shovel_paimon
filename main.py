@@ -165,6 +165,10 @@ def voice_loop(ctx):
 async def replace_message(message):
   '''特定メッセージの置き換え処理
   '''
+  spoiler = re.findall("\|\|.*\|\|",message.content)
+  if spoiler:
+    for i in spoiler:
+      message.content = message.content.replace(i,"伏せ字")
   if "<@" in message.content:
     mention = re.search("<@[!]?\d{18}>", message.content).group()
     mention = mention.replace("<@!","")
