@@ -5,7 +5,6 @@ import json
 from datetime import datetime, timezone
 
 def generate(accesskey,access_secret,text,path):
-  text = '初めまして。今日から新たに読み上げを担当させていただくミリアルと申します。よろしくお願いします。'
   date: str = str(int(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()))
   data: str = json.dumps({
     'coefont': 'c28adf78-d67d-4588-a9a5-970a76ca6b07',
