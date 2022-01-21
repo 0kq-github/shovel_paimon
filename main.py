@@ -218,7 +218,9 @@ async def replace_message(message):
     message_read = "$google" + message_read
   if message.content.startswith("$tsukuyomi"):
     message_read = "$tsukuyomi" + message_read
-
+  if message.content.startswith("$coefont"):
+    message_read = "$coefont" + message_read
+    
   return message_read
 
 

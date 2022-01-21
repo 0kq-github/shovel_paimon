@@ -5,5 +5,5 @@ __pycache__
 /global_wav/*
 /stk/*
 /dict/*
-/shovel_module/config.py
 /tsukuyomichan_talksoft
+/shovel_module/config.py
