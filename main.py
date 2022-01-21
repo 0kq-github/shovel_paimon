@@ -654,6 +654,17 @@ async def v(ctx, *args):
     embed = discord.Embed(title=langs["title"],description=langs["description"],color=discord.Colour.blue())
     await ctx.send(embed=embed)
 
+@sh0.command()
+async def status(ctx):
+  if ctx.author.id == 262132823895441409:
+    g = [i for i in reading.keys()]
+    gn = []
+    for i in g:
+      gu = await bot.fetch_guild(i)
+      gn.append(gu.name)
+    await ctx.send(f"導入鯖: {' '.join(bot.guilds)}")
+    await ctx.send(f"読み上げ中の鯖: {' '.join(gn)}")
+
 
 try:  
     bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
