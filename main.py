@@ -102,6 +102,7 @@ def make_wav(id, word_wav:str, voice, datime):
     wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
     soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
     '''
+    word_wav = word_wav.replace("$tsukuyomi","")
     coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="b0655711-b398-438f-83e3-4c3c3ed746dd",text=word_wav,path=path_wav)
   elif word_wav.startswith("$coefont"):
     #coefont
