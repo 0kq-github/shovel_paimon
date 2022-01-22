@@ -467,11 +467,11 @@ async def fe(ctx,*args):
     await ctx.guild.voice_client.disconnect()
     shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/",ignore_errors=True)
     del messagequeue[ctx.guild.id]
+    enable.pop(ctx.guild.id)
   except:
     None
   finally:
     reading[ctx.guild.id] = None
-    enable.pop(ctx.guild.id)
     initdirs(ctx.guild.id)
     langs = lang["fe.disconnect"]
     fields = langs["field"]
