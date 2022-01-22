@@ -72,6 +72,7 @@ global reading
 messagequeue = {}
 reading = {}
 fs = 24000
+enable = []
 
 
 lang = {}
@@ -317,6 +318,7 @@ async def on_voice_state_update(member,before,after):
             readch = await bot.fetch_channel(int(read_channel))
             await readch.send(embed=embed)
             reading[voicech.guild.id] = None
+            enable.pop(voicech.guild.id)
     except Exception as e:
       print(e)
       return
@@ -423,6 +425,7 @@ async def s(ctx,*args):
   embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + ctx.author.voice.channel.name,inline=fields["1"]["inline"])
   await ctx.channel.send(embed=embed)
   reading[ctx.guild.id] = ctx.channel.id
+  enable.append(ctx.guild.id)
   msgloop.start()
 
 @sh0.command()
@@ -452,6 +455,7 @@ async def e(ctx,*args):
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     reading[ctx.guild.id] = None
+    enable.pop(ctx.guild.id)
 
 
 @sh0.command()
@@ -467,6 +471,7 @@ async def fe(ctx,*args):
     None
   finally:
     reading[ctx.guild.id] = None
+    enable.pop(ctx.guild.id)
     initdirs(ctx.guild.id)
     langs = lang["fe.disconnect"]
     fields = langs["field"]
@@ -661,13 +666,12 @@ async def v(ctx, *args):
 @sh0.command()
 async def status(ctx):
   if ctx.author.id == 262132823895441409:
-    g = [i for i in reading.keys()]
     gn = []
-    for i in g:
+    for i in enable:
       gu = await bot.fetch_guild(i)
       gn.append(gu.name)
-    await ctx.send(f"導入鯖: {' '.join([i for i in map(lambda x:x.name,bot.guilds)])}")
-    await ctx.send(f"読み上げ中の鯖: {' '.join(gn)}")
+    await ctx.send(f"導入鯖: {'\n'.join([i for i in map(lambda x:x.name,bot.guilds)])}")
+    await ctx.send(f"読み上げ中の鯖: {'\n'.join(gn)}")
 
 
 try:  
