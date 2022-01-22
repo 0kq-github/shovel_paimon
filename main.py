@@ -671,7 +671,7 @@ async def status(ctx):
       gu = await bot.fetch_guild(i)
       gn.append(gu.name)
     await ctx.send(f"導入鯖: {'\n'.join([i for i in map(lambda x:x.name,bot.guilds)])}")
-    await ctx.send(f"読み上げ中の鯖: {'\n'.join(gn)}")
+    await ctx.send("読み上げ中の鯖: " + '\n'.join(gn))
 
 
 try:  
