@@ -318,7 +318,7 @@ async def on_voice_state_update(member,before,after):
             readch = await bot.fetch_channel(int(read_channel))
             await readch.send(embed=embed)
             reading[voicech.guild.id] = None
-            enable.pop(voicech.guild.name)
+            enable.remove(voicech.guild.name)
     except Exception as e:
       print(e)
       return
@@ -455,7 +455,7 @@ async def e(ctx,*args):
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
     await ctx.channel.send(embed=embed)
     reading[ctx.guild.id] = None
-    enable.pop(ctx.guild.name)
+    enable.remove(ctx.guild.name)
 
 
 @sh0.command()
@@ -467,7 +467,7 @@ async def fe(ctx,*args):
     await ctx.guild.voice_client.disconnect()
     shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/",ignore_errors=True)
     del messagequeue[ctx.guild.id]
-    enable.pop(ctx.guild.name)
+    enable.remove(ctx.guild.name)
   except:
     None
   finally:
