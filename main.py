@@ -69,6 +69,7 @@ bot = commands.Bot(command_prefix=prefix,help_command=None)
 BOT_TOKEN = config.DISCORD_TOKEN[mode]
 global messagequeue
 global reading
+global enable
 messagequeue = {}
 reading = {}
 fs = 24000
