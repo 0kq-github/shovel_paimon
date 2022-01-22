@@ -69,7 +69,6 @@ bot = commands.Bot(command_prefix=prefix,help_command=None)
 BOT_TOKEN = config.DISCORD_TOKEN[mode]
 global messagequeue
 global reading
-global enable
 messagequeue = {}
 reading = {}
 fs = 24000
@@ -668,6 +667,7 @@ async def v(ctx, *args):
 async def status(ctx):
   if ctx.author.id == 262132823895441409:
     gn = []
+    global enable
     for i in enable:
       gu = await bot.fetch_guild(i)
       gn.append(gu.name)
