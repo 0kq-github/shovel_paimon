@@ -244,7 +244,7 @@ async def on_ready():
   except:
     pass
 
-  print('\n\n====================')
+  print('\n====================')
   print(f" shovel paimon v{shovel_ver}")
   print(f" {bot.user.name} が起動しました")
   print(f" 起動時間 {time_ready - time_start}")
