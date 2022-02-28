@@ -563,6 +563,8 @@ async def show(ctx):
   '''
   音声一覧表示コマンド
   '''
+
+  """
   path = "./global_wav/"
   filelist = os.listdir(path=path)
   filecount = len(filelist)
@@ -587,7 +589,9 @@ async def show(ctx):
     fields = langs["field"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue())
     embed.add_field(name=fields["name"] + str(filecount),value=fields["value"] + files)
-    await ctx.send(embed=embed)
+    """
+  embed = discord.Embed(title="音声一覧",color=discord.Colour.blue(),description="一覧は[こちら](http://0kqnet.work:8008/)")
+  await ctx.send(embed=embed)
 
 @sh0.command()
 async def import_word(ctx,*args):
