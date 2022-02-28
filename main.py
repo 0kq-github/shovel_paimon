@@ -73,7 +73,7 @@ messagequeue = {}
 reading = {}
 fs = 24000
 enable = []
-
+time_start = time.perf_counter()
 
 lang = {}
 with open(f"./lang/{mode}.json",mode="r") as f:
@@ -236,31 +236,40 @@ async def replace_message(message):
 
 @bot.event
 async def on_ready():
-    print('\n====================')
-    print(f" shovel paimon v{shovel_ver}")
-    print(f" {bot.user.name} が起動しました")
-    print(f" ID: {bot.user.id}")
-    print(f' {lang["hello"]}')
-    print('====================')
-    #print(bot.user.avatar_url)
-    await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
-    if not os.path.exists("./config/config.json"):
-      with open("./config/config.json","w") as f:
-        cf = {0:False}
-        f.write(json.dumps(cf))
-    with open("./config/config.json","r") as f:
-      global voice_config
-      try:
-        voice_config = json.load(f)
-      except:
-        voice_config = {}
-      #print(voice_config)
-    for i in bot.guilds:
-      reading[i.id] = None
-      try:
-        voice_config[f"{i.id}"]
-      except KeyError:
-        voice_config[f"{i.id}"] = {"voice":False}
+  time_ready = time.perf_counter()
+
+  try:
+    with open(lang["ascii_art"],mode="r",encoding="utf-8") as f:
+      print(f.read())
+  except:
+    pass
+
+  print('\n\n====================')
+  print(f" shovel paimon v{shovel_ver}")
+  print(f" {bot.user.name} が起動しました")
+  print(f" 起動時間 {time_ready - time_start}")
+  print(f" ID: {bot.user.id}")
+  print(f' {lang["hello"]}')
+  print('====================')
+  #print(bot.user.avatar_url)
+  await bot.change_presence(activity=discord.Game(name=f"{prefix}sh0 help | {len(bot.guilds)}サーバーで稼働中"))
+  if not os.path.exists("./config/config.json"):
+    with open("./config/config.json","w") as f:
+      cf = {0:False}
+      f.write(json.dumps(cf))
+  with open("./config/config.json","r") as f:
+    global voice_config
+    try:
+      voice_config = json.load(f)
+    except:
+      voice_config = {}
+    #print(voice_config)
+  for i in bot.guilds:
+    reading[i.id] = None
+    try:
+      voice_config[f"{i.id}"]
+    except KeyError:
+      voice_config[f"{i.id}"] = {"voice":False}
 
 
 

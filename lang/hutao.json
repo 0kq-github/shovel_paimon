@@ -1,5 +1,6 @@
 {
   "hello": "胡桃だよ！",
+  "ascii_art": "hutao_ascii.txt",
   "unknown": {
     "title": "コマンド",
     "description": "そんなコマンドは無いよ！"
