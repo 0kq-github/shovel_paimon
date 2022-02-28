@@ -155,7 +155,7 @@ def voice_loop(ctx):
   while reading[ctx.guild.id] is not None:
     try:
       if ctx.guild.voice_client.is_playing():
-        time.sleep(0.1)
+        time.sleep(0.01)
         continue
     except:
       continue
@@ -163,7 +163,7 @@ def voice_loop(ctx):
     try:
       queue = queuelist.pop(0)
     except:
-      time.sleep(0.1)
+      time.sleep(0.01)
       continue
     send_voice(queue[0],queue[1],queue[2],queue[3])
 
