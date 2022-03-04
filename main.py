@@ -97,7 +97,7 @@ def make_wav(id, word_wav:str, voice, datime):
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
-  elif word_wav.startswith("$voicevox"):
+  elif word_wav.startswith("$vox"):
     #voicevox
     word_wav = word_wav.replace("$voicevox","")
     voicevox.generate(text=word_wav,path=path_wav)
@@ -235,6 +235,8 @@ async def replace_message(message):
     message_read = "$tsukuyomi" + message_read
   if message.content.startswith("$coefont"):
     message_read = "$coefont" + message_read
+  if message.content.startswith("$vox"):
+    message_read = "$vox" + message_read
     
   return message_read
 
