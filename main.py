@@ -369,6 +369,12 @@ async def on_message(message):
             queuelist.append([message,f"./global_wav/{message.content}.wav",0.1,basslevel])
             messagequeue[message.guild.id] = queuelist
             return
+          if os.path.exists(f"./global_wav/minecraft/{message.content}.mp3"):
+            print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content}")
+            queuelist = messagequeue[message.guild.id]
+            queuelist.append([message,f"./global_wav/minecraft/{message.content}.mp3",0.1,basslevel])
+            messagequeue[message.guild.id] = queuelist
+            return
         message_read = await replace_message(message)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
         datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
