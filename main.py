@@ -31,6 +31,7 @@ from shovel_module import downloader
 from shovel_module import sound_controller
 from shovel_module import coefont
 from shovel_module import config
+from shovel_module import voicevox
 
 try:
   if sys.argv[1] == "--mode":
@@ -109,6 +110,10 @@ def make_wav(id, word_wav:str, voice, datime):
     #coefont
     word_wav = word_wav.replace("$coefont","")
     coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="c28adf78-d67d-4588-a9a5-970a76ca6b07",text=word_wav,path=path_wav)
+  elif word_wav.startswith("$vox"):
+    #coefont
+    word_wav = word_wav.replace("$vox","")
+    voicevox.generate(text=word_wav,path=path_wav)
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)
