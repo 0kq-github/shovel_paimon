@@ -111,7 +111,7 @@ def make_wav(id, word_wav:str, voice, datime):
     word_wav = word_wav.replace("$coefont","")
     coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="c28adf78-d67d-4588-a9a5-970a76ca6b07",text=word_wav,path=path_wav)
   elif word_wav.startswith("$vox"):
-    #coefont
+    #voicevox
     word_wav = word_wav.replace("$vox","")
     voicevox.generate(text=word_wav,path=path_wav)
   else:
