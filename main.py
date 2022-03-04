@@ -97,9 +97,9 @@ def make_wav(id, word_wav:str, voice, datime):
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
-  elif word_wav.startswith("$vox"):
+  elif word_wav.startswith("$voicevox"):
     #voicevox
-    word_wav = word_wav.replace("$vox","")
+    word_wav = word_wav.replace("$voicevox","")
     voicevox.generate(text=word_wav,path=path_wav)
   elif word_wav.startswith("$tsukuyomi"):
     #つくよみちゃん
