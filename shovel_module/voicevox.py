@@ -33,6 +33,5 @@ def synthesis(text, filename, speaker=1, max_retry=20):
     else:
         raise ConnectionError("リトライ回数が上限に到達しました。 synthesis : ", filename, "/", text[:30], r,text)
 
-def generate(texts:list,path:str,speaker=14):
-    for i, t in enumerate(texts):
-        synthesis(t, f"'{path}.wav'",speaker=speaker)
+def generate(text:list,path:str,speaker=14):
+        synthesis(text, f"'{path}.wav'",speaker=speaker)
