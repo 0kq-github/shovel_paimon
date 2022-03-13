@@ -56,7 +56,8 @@ except:
     print(" 引数が必要です")
   exit()
 
-'''変数一覧
+'''
+変数一覧
 shovel_ver : BOTのバージョン
 bot : commands.Bot
 BOT_TOKEN : BOTトークン
@@ -98,9 +99,13 @@ def make_wav(id, word_wav:str, voice, datime):
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
   elif word_wav.startswith("$vox"):
-    #voicevox
+    #voicevox 冥鳴ひまり
     word_wav = word_wav.replace("$vox","")
     voicevox.generate(text=word_wav,path=path_wav)
+  elif word_wav.startswith("$zunda"):
+    #voicevox ずんだもん
+    word_wav = word_wav.replace("$zunda","")
+    voicevox.generate(text=word_wav,path=path_wav,speaker=2)
   elif word_wav.startswith("$tsukuyomi"):
     #つくよみちゃん
     '''
@@ -237,6 +242,8 @@ async def replace_message(message):
     message_read = "$coefont" + message_read
   if message.content.startswith("$vox"):
     message_read = "$vox" + message_read
+  if message.content.startswith("$zunda"):
+    message_read = "$zunda" + message_read
     
   return message_read
 
@@ -690,7 +697,16 @@ async def v(ctx, *args):
     await ctx.send(embed=embed)
 
 @sh0.command()
-async def status(ctx):
+async def voice(ctx:commands.Context,*args):
+  if not args:
+    await ctx.send("引数が足りなリよ！")
+  
+
+
+
+
+@sh0.command()
+async def status(ctx:commands.Context):
   if ctx.author.id == 262132823895441409:
     gn = []
     #for i in enable:
