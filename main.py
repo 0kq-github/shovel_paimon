@@ -427,7 +427,7 @@ async def help(ctx,*args):
   await ctx.send(embed=embed)
 
 @sh0.command()
-async def s(ctx,*args):
+async def s(ctx:commands.Context,*args):
   '''
   読み上げ開始コマンド
   '''
@@ -436,12 +436,12 @@ async def s(ctx,*args):
     fields = langs["field"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
     return
   if reading[ctx.guild.id] is not None:
     langs = lang["s.already"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
     return
   await ctx.author.voice.channel.connect()
   os.makedirs(f"./config/guild/{str(ctx.guild.id)}/wav",exist_ok=True)
@@ -452,7 +452,7 @@ async def s(ctx,*args):
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
   embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + ctx.channel.mention,inline=fields["0"]["inline"])
   embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + ctx.author.voice.channel.name,inline=fields["1"]["inline"])
-  await ctx.channel.send(embed=embed)
+  await ctx.send(embed=embed)
   reading[ctx.guild.id] = ctx.channel.id
   enable.append(ctx.guild.name)
   msgloop.start()
@@ -468,7 +468,7 @@ async def e(ctx,*args):
       fields = langs["field"]
       embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
       embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
-      await ctx.channel.send(embed=embed)
+      await ctx.send(embed=embed)
       return
     await ctx.guild.voice_client.disconnect()
     shutil.rmtree(f"./config/guild/{str(ctx.guild.id)}/wav/")
@@ -482,7 +482,7 @@ async def e(ctx,*args):
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
     reading[ctx.guild.id] = None
     enable.remove(ctx.guild.name)
 
@@ -507,7 +507,7 @@ async def fe(ctx,*args):
     embed = discord.Embed(title=langs["title"],color=discord.Colour.orange(),description=langs["description"])
     embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"],inline=fields["0"]["inline"])
     embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"],inline=fields["1"]["inline"])
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
 
 
 
