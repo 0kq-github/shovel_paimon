@@ -18,12 +18,12 @@ import shutil
 import threading
 import soundfile
 from gtts import gTTS
-from tsukuyomichan_talksoft import TsukuyomichanTalksoft
+#from tsukuyomichan_talksoft import TsukuyomichanTalksoft
 
 #開発環境用(ごり押し)
 #from tsukuyomichan_talksoft.tsukuyomichan_talksoft import TsukuyomichanTalksoft
 
-tsukuyomichan_talksoft = TsukuyomichanTalksoft(model_version="v.1.2.0")
+#tsukuyomichan_talksoft = TsukuyomichanTalksoft(model_version="v.1.2.0")
 
 from shovel_module import jtalk
 from shovel_module import dic
@@ -177,28 +177,35 @@ def voice_loop(ctx):
       continue
     send_voice(queue[0],queue[1],queue[2],queue[3])
 
-async def replace_message(message):
+async def replace_message(message:discord.Message):
   '''特定メッセージの置き換え処理
   '''
   spoiler = re.findall("\|\|.*\|\|",message.content)
   if spoiler:
     for i in spoiler:
       message.content = message.content.replace(i,"伏せ字")
-  if "<@" in message.content:
-    mention = re.search("<@[!]?\d{18}>", message.content).group()
-    mention = mention.replace("<@!","")
-    mention = mention.replace("<@","")
-    mention = mention.replace(">","")
-    mention_user = await bot.fetch_user(int(mention))
-    mention = mention_user.display_name
-    message.content = re.sub("<@[!]?\d{18}>", "@" + mention, message.content)
-  if "<#" in message.content:
-    mention_channel = re.search("<#\d{18}>", message.content).group()
-    mention_channel = mention_channel.replace("<#","")
-    mention_channel = mention_channel.replace(">","")
-    mention_channel = bot.get_channel(id=int(mention_channel))
-    mention = mention_channel.name
-    message.content = re.sub("<#\d{18}>", mention + "。", message.content)
+  #メンション(メンバー)置き換え
+  mention_member = re.findall("<@[!]?\d{18}>", message.content)
+  for m in mention_member:
+    m = m.replace("<","").replace(">","").replace("@","").replace("!","")
+    for i in message.mentions:
+      if not str(i.id) == m:
+        continue
+      if i.nick:
+        mentioned_name = i.nick
+      else:
+        mentioned_name = i.name
+      message.content = message.content.replace(f"<@{m}>","@"+mentioned_name)
+      message.content = message.content.replace(f"<@!{m}>","@"+mentioned_name)
+  #メンション(チャンネル)置き換え
+  mention_channel = re.findall("<#\d{18}>", message.content)
+  for m in mention_channel:
+    m = m.replace("<","").replace(">","").replace("#","").replace("!","")
+    for i in message.channel_mentions:
+      if not str(i.id) == m:
+        continue
+      mentioned_channel = i.name
+      message.content = message.content.replace(f"<#{m}>","#"+mentioned_channel)
   emoji = re.findall("<.?:[^<^>]*:\d{18}>", message.content)
   if emoji:
     for i in emoji:
