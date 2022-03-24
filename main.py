@@ -18,6 +18,7 @@ import shutil
 import threading
 import soundfile
 from gtts import gTTS
+import art
 #from tsukuyomichan_talksoft import TsukuyomichanTalksoft
 
 #開発環境用(ごり押し)
@@ -258,13 +259,14 @@ async def replace_message(message:discord.Message):
 @bot.event
 async def on_ready():
   time_ready = time.perf_counter()
-
+  """
   try:
     with open(lang["ascii_art"],mode="r",encoding="utf-8") as f:
       print(f.read())
   except:
     pass
-
+  """
+  art.tprint(mode)
   print('\n====================')
   print(f" shovel paimon v{shovel_ver}")
   print(f" {bot.user.name} が起動しました")
@@ -523,47 +525,53 @@ async def aw(ctx,*args):
   '''
   辞書追加コマンド
   '''
-  if len(args) != 2:
-    langs = lang["aw.unknown"]
-    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+  try:
+    if len(args) != 2:
+      langs = lang["aw.unknown"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    u_dict = {}
+    u_dict = dic.reader(ctx.guild.id)
+    u_dict[args[0]] = args[1]
+    dic.writer(ctx.guild.id,u_dict)
+    langs = lang["aw.success"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+    embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
+    embed = embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + args[1],inline=fields["1"]["inline"])
     await ctx.send(embed=embed)
-    return
-  u_dict = {}
-  u_dict = dic.reader(ctx.guild.id)
-  u_dict[args[0]] = args[1]
-  dic.writer(ctx.guild.id,u_dict)
-  langs = lang["aw.success"]
-  fields = langs["field"]
-  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
-  embed = embed.add_field(name=fields["1"]["name"],value=fields["1"]["value"] + args[1],inline=fields["1"]["inline"])
-  await ctx.send(embed=embed)
+  except Exception as e:
+    await ctx.send("例外: "+e)
 
 @sh0.command()
 async def dw(ctx,*args):
   '''
   辞書削除コマンド
   '''
-  if len(args) != 1:
-    langs = lang["dw.wrong"]
-    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
-    await ctx.send(embed=embed)
-    return
-  u_dict = {}
-  u_dict = dic.reader(ctx.guild.id)
   try:
-    u_dict.pop(args[0])
-  except:
-    langs = lang["dw.unknown"]
-    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+    if len(args) != 1:
+      langs = lang["dw.wrong"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    u_dict = {}
+    u_dict = dic.reader(ctx.guild.id)
+    try:
+      u_dict.pop(args[0])
+    except:
+      langs = lang["dw.unknown"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    dic.writer(ctx.guild.id, u_dict)
+    langs = lang["dw.success"]
+    fields = langs["field"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+    embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
     await ctx.send(embed=embed)
-    return
-  dic.writer(ctx.guild.id, u_dict)
-  langs = lang["dw.success"]
-  fields = langs["field"]
-  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  embed = embed.add_field(name=fields["0"]["name"],value=fields["0"]["value"] + args[0],inline=fields["0"]["inline"])
-  await ctx.send(embed=embed)
+  except Exception as e:
+    await ctx.send("例外: "+e)
 
 
 @sh0.command()
@@ -571,28 +579,34 @@ async def link(ctx,*args):
   '''
   音声登録コマンド
   '''
-  volume = args[0] or 1.0
-  if not ctx.message.attachments:
-    langs = lang["link.notfound"]
-    embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
-    await ctx.send(embed=embed)
-    return
-  url = ctx.message.attachments[0].url
-  filename = ctx.message.attachments[0].filename
-  path = "./global_wav/" + filename
-  if os.path.exists(path):
+  try:
+    volume = args[0]
+  except:
+    volume = 1.0
+  try:
+    if not ctx.message.attachments:
+      langs = lang["link.notfound"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    url = ctx.message.attachments[0].url
+    filename = ctx.message.attachments[0].filename
+    path = "./global_wav/" + filename
+    if os.path.exists(path):
+      downloader.download(url,path)
+      sound_controller.convert_volume(path,volume)
+      langs = lang["link.update"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    await asyncio.sleep(0.1)
     downloader.download(url,path)
     sound_controller.convert_volume(path,volume)
-    langs = lang["link.update"]
+    langs = lang["link.success"]
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
     await ctx.send(embed=embed)
-    return
-  await asyncio.sleep(0.1)
-  downloader.download(url,path)
-  sound_controller.convert_volume(path,volume)
-  langs = lang["link.success"]
-  embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  await ctx.send(embed=embed)
+  except Exception as e:
+    await ctx.send("例外: "+e)
 
 @sh0.command()
 async def show(ctx):
