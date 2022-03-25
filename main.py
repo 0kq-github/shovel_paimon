@@ -608,7 +608,7 @@ async def link(ctx,*args):
   except Exception as e:
     await ctx.send("例外: "+e)
 
-@sh0.command()
+@sh0.command(aliases=["list"])
 async def show(ctx):
   '''
   音声一覧表示コマンド
