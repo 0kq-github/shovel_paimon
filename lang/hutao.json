@@ -55,6 +55,11 @@
         "inline": true
       },
       "9":{
+        "name":"?sh0 sw <単語>",
+        "value":"こんな言葉あったかな？",
+        "inline": true
+      },
+      "10":{
         "name":"?sh0 v on/off",
         "value":"音声の読み上げを切り替えるよ！",
         "inline": true
