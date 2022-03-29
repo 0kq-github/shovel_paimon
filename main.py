@@ -585,7 +585,7 @@ async def sw(ctx,*args):
     u_dict = {}
     u_dict = dic.reader(ctx.guild.id)
     try:
-      match = u_dict.get(args[0])
+      match = u_dict[args[0]]
     except:
       langs = lang["dw.unknown"]
       embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])

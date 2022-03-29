@@ -251,11 +251,11 @@
     "field": {
       "0": {
         "name": "単語",
-        "inline": false
+        "inline": true
       },
       "1": {
         "name": "意味",
-        "inline": false
+        "inline": true
       }
     }
   }
