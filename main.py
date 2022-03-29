@@ -11,12 +11,10 @@ import time
 import discord
 import re
 from discord.ext import commands
-import configparser
 import urllib.request
 import json
 import shutil
 import threading
-import soundfile
 from gtts import gTTS
 import art
 #from tsukuyomichan_talksoft import TsukuyomichanTalksoft
@@ -435,7 +433,7 @@ async def help(ctx,*args):
     i += 1
   await ctx.send(embed=embed)
 
-@sh0.command()
+@sh0.command(aliases=["start"])
 async def s(ctx:commands.Context,*args):
   '''
   読み上げ開始コマンド
@@ -466,7 +464,7 @@ async def s(ctx:commands.Context,*args):
   enable.append(ctx.guild.name)
   msgloop.start()
 
-@sh0.command()
+@sh0.command(aliases=["end"])
 async def e(ctx,*args):
   '''
   読み上げ終了コマンド
@@ -520,7 +518,7 @@ async def fe(ctx,*args):
 
 
 
-@sh0.command()
+@sh0.command(aliases=["add_word"])
 async def aw(ctx,*args):
   '''
   辞書追加コマンド
@@ -544,7 +542,7 @@ async def aw(ctx,*args):
   except Exception as e:
     await ctx.send("例外: "+e)
 
-@sh0.command()
+@sh0.command(aliases=["delete_word"])
 async def dw(ctx,*args):
   '''
   辞書削除コマンド
@@ -572,6 +570,36 @@ async def dw(ctx,*args):
     await ctx.send(embed=embed)
   except Exception as e:
     await ctx.send("例外: "+e)
+
+@sh0.command()
+async def sw(ctx,*args):
+  '''
+  辞書確認コマンド
+  '''
+  try:
+    if len(args) != 1:
+      langs = lang["dw.wrong"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    u_dict = {}
+    u_dict = dic.reader(ctx.guild.id)
+    try:
+      match = u_dict.get(args[0])
+    except:
+      langs = lang["dw.unknown"]
+      embed = discord.Embed(title=langs["title"],color=discord.Colour.red(),description=langs["description"])
+      await ctx.send(embed=embed)
+      return
+    langs = lang["sw"]
+    embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
+    embed = embed.add_field(name=langs["field"]["0"]["name"],value=args[0],inline=langs["field"]["0"]["inline"])
+    embed = embed.add_field(name=langs["field"]["1"]["name"],value=match,inline=langs["field"]["1"]["inline"])
+    await ctx.send(embed=embed)
+  except Exception as e:
+    await ctx.send("例外: "+e)
+
+
 
 
 @sh0.command()

@@ -244,5 +244,19 @@
   "voice.off": {
     "title": "音声再生",
     "description": "何もすることがないのって...死より恐ろしいことだよ"
+  },
+  "sw":{
+    "title": "辞書確認",
+    "description": "こんな言葉あったかな？",
+    "field": {
+      "0": {
+        "name": "単語",
+        "inline": false
+      },
+      "1": {
+        "name": "意味",
+        "inline": false
+      }
+    }
   }
 }
