@@ -124,7 +124,6 @@ def make_wav(id, word_wav:str, voice, datime):
   #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
 
-
 def initdirs(guild_id):
   '''
   指定IDのディレクトリ初期化
@@ -241,7 +240,6 @@ async def replace_message(message:discord.Message):
     
   return message_read
 
-
 @bot.event
 async def on_ready():
   time_ready = time.perf_counter()
@@ -280,9 +278,6 @@ async def on_ready():
     except KeyError:
       voice_config[f"{i.id}"] = {"voice":False}
 
-
-
-
 @bot.event
 async def on_guild_join(guild):
   '''サーバー参加時の処理
@@ -295,7 +290,6 @@ async def on_guild_join(guild):
     f.write("")
   voice_config[f"{guild.id}"] = {"voice":False}
   reading[guild.id] = None
-
 
 @bot.event
 async def on_voice_state_update(member,before,after):
@@ -341,15 +335,15 @@ async def on_voice_state_update(member,before,after):
       print(e)
       return
 
-
 @bot.event
-async def on_message(message):
+async def on_message(message:discord.Message):
   '''メッセージ受信時の処理
   '''
+  message.content = message.content.replace("「","[")
+  message.content = message.content.replace("」","]")
   if message.author.bot:
     return
   datime_now = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
-  message.content = str(message.content)
   try:
     read_channel = reading[message.guild.id]
     basslevel = 1
@@ -397,7 +391,7 @@ async def on_message(message):
 
 
 @bot.group()
-async def sh0(ctx):
+async def sh0(ctx:commands.Context):
   '''
   メイン
   '''
