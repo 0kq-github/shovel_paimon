@@ -125,16 +125,6 @@ def make_wav(id, word_wav:str, voice, datime):
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
 
 
-
-def truncate(string, length, ellipsis='、以下省略'):
-    '''文字列を切り詰める
-
-    string: 対象の文字列
-    length: 切り詰め後の長さ
-    ellipsis: 省略記号
-    '''
-    return string[:length] + (ellipsis if string[length:] else '')
-
 def initdirs(guild_id):
   '''
   指定IDのディレクトリ初期化
@@ -216,8 +206,6 @@ async def replace_message(message:discord.Message):
   message.content = message.content.replace("\n","。")
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
-  if len(message.content) >= 60:
-    message.content = truncate(message.content, 50)
   if message.author.nick is None:
       message_read = f"{message.author.name}。{message.content}"
   else:

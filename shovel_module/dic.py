@@ -21,9 +21,19 @@ for i in dictlist:
     r_dict = csv.reader(f)
     d_dict = {row[0]:row[1] for row in r_dict}
 
+def truncate(string, length, ellipsis='、以下省略'):
+    '''文字列を切り詰める
+
+    string: 対象の文字列
+    length: 切り詰め後の長さ
+    ellipsis: 省略記号
+    '''
+    return string[:length] + (ellipsis if string[length:] else '')
+
 def repdict(read_text:str,dic:dict):
   '''
   '''
+  """
   read_list = [] # あとでまとめて変換するときの読み仮名リスト
   for i, one_dic in enumerate(dic.items()): # one_dicは単語と読みのタプル。添字はそれぞれ0と1。
       read_text = read_text.replace(one_dic[0], '{'+str(i)+'}')
@@ -33,6 +43,12 @@ def repdict(read_text:str,dic:dict):
   except Exception as e:
     print(e)
     return f"例外が発生しました {e}"
+  return read_text
+  """
+  for i in dic:
+    read_text = read_text.replace(i,dic[i])
+  if len(read_text) >= 60:
+    read_text = truncate(read_text,50)
   return read_text
 
 
