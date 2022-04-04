@@ -207,9 +207,9 @@ async def replace_message(message:discord.Message):
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
   if message.author.nick is None:
-      message_read = f"{message.author.name}。{message.content}"
+      message_read = f"{message.author.name} {message.content}"
   else:
-      message_read = f"{message.author.nick}。{message.content}"
+      message_read = f"{message.author.nick} {message.content}"
   if "%" in message_read:
     if "%time%" in message_read:
       message_time = datetime.datetime.now().strftime('%H時%M分%S秒')
