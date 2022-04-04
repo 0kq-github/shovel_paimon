@@ -1,5 +1,5 @@
 
-def morse_to_str(text:list):
+def morse_to_str(text:str):
     morse_en_dict = {
     "・ー":"A",
     "－・・・":"B",
@@ -103,8 +103,5 @@ def morse_to_str(text:list):
     "－・－－・－":"(",
     "・－・・－・":")"}
 
-    result = ""
 
-    for i in text:
-        result += morse_ja_dict[i]
-    return result
+    return morse_ja_dict[text]

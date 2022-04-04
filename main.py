@@ -226,16 +226,10 @@ async def replace_message(message:discord.Message):
     else:
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
-  matched_morse = re.search("[・－ 　]*",message_read)
+  matched_morse = re.findall("[・－]*",message_read)
   if matched_morse:
-    matched_morse = matched_morse.group()
-    if " " in matched_morse:
-        match_line = matched_morse.split(" ")
-    elif "　" in matched_morse:
-        match_line = matched_morse.split("　")
-    else:
-        match_line = [matched_morse]
-    message_read = message_read.replace(matched_morse,morse.morse_to_str(match_line))
+    for i in matched_morse:
+      message_read = message_read.replace(i,morse.morse_to_str(i))
   message_read = dic.dict(message.guild.id,message_read)
 
   if message.content.startswith("$google"):
