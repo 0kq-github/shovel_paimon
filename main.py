@@ -207,7 +207,7 @@ async def replace_message(message:discord.Message):
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
 
-  matched_morse = re.fullmatch("[・－ 　\n]*",message.content)
+  matched_morse = re.fullmatch("[・－ 　]*",message.content)
   if matched_morse:
     matched_morse = matched_morse.group()
     if " " in matched_morse:
