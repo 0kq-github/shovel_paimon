@@ -206,6 +206,18 @@ async def replace_message(message:discord.Message):
   message.content = message.content.replace("\n","。")
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
+
+  matched_morse = re.fullmatch("[・－ 　]*",message.content)
+  if matched_morse:
+    matched_morse = matched_morse.group()
+    if " " in matched_morse:
+      match_line = matched_morse.split(" ")
+    elif "　" in matched_morse:
+      match_line = matched_morse.split("　")
+    else:
+      match_line = [matched_morse]
+    message.content = morse.morse_to_str(match_line)
+    
   if message.author.nick is None:
       message_read = f"{message.author.name} {message.content}"
   else:
@@ -226,10 +238,6 @@ async def replace_message(message:discord.Message):
     else:
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
-  matched_morse = re.findall("[・－]*",message_read)
-  if matched_morse:
-    for i in matched_morse:
-      message_read = message_read.replace(i,morse.morse_to_str(i))
   message_read = dic.dict(message.guild.id,message_read)
 
   if message.content.startswith("$google"):

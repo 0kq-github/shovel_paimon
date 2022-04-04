@@ -103,7 +103,11 @@ def morse_to_str(text:str):
     "－・－－・－":"(",
     "・－・・－・":")"}
 
-    try:
-        return morse_ja_dict[text]
-    except:
-        return text
+    result = ""
+
+    for i in text:
+        try:
+            result += morse_ja_dict[i]
+        except:
+            result += i
+    return result
