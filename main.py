@@ -207,7 +207,7 @@ async def replace_message(message:discord.Message):
   message.content = message.content.replace("{","[")
   message.content = message.content.replace("}","]")
 
-  matched_morse = re.fullmatch("[・－ 　]*",message.content)
+  matched_morse = re.fullmatch("[・－ 　\n]*",message.content)
   if matched_morse:
     matched_morse = matched_morse.group()
     if " " in matched_morse:
@@ -217,7 +217,7 @@ async def replace_message(message:discord.Message):
     else:
       match_line = [matched_morse]
     message.content = morse.morse_to_str(match_line)
-    
+
   if message.author.nick is None:
       message_read = f"{message.author.name} {message.content}"
   else:
