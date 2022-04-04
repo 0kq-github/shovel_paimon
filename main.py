@@ -31,6 +31,7 @@ from shovel_module import sound_controller
 from shovel_module import coefont
 from shovel_module import config
 from shovel_module import voicevox
+from shovel_module import morse
 
 try:
   if sys.argv[1] == "--mode":
@@ -225,6 +226,7 @@ async def replace_message(message:discord.Message):
     else:
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
+  message_read = morse.morse_to_str(message_read)
   message_read = dic.dict(message.guild.id,message_read)
 
   if message.content.startswith("$google"):
