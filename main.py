@@ -663,7 +663,7 @@ async def show(ctx):
     embed = discord.Embed(title=langs["title"],color=discord.Colour.blue())
     embed.add_field(name=fields["name"] + str(filecount),value=fields["value"] + files)
     """
-  embed = discord.Embed(title="音声一覧",color=discord.Colour.blue(),description="一覧は[こちら](http://0kqnet.work:8008/)")
+  embed = discord.Embed(title="音声一覧",color=discord.Colour.blue(),description="一覧は[こちら](https://0kqnet.work/hutao/)")
   await ctx.send(embed=embed)
 
 @sh0.command()
