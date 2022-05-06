@@ -121,7 +121,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   path_wav = f"./config/guild/{str(guild_id)}/temp/{datime}"
   conn = sqlite3.connect(dbname)
   cur = conn.cursor()
-  c = cur.execute("SELECT id FROM data WHERE user_id = ?",(user_id,))
+  c = cur.execute("SELECT user_id FROM data WHERE user_id = ?",(user_id,))
   data =  c.fetchall()
   if not data:
     cur.execute("INSERT INTO data VALUES (?,?,?,?)",(user_id,"OpenJtalk","Mei","normal",1.5,0.0,))
@@ -818,7 +818,7 @@ async def voice(ctx:commands.Context,*args):
   cur = conn.cursor()
   cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?. pitch = ? WHERE user_id = ?",(speak_type,actor,speed,pitch,ctx.author.id))
   conn.commit()
-  
+
   await ctx.send("設定しました！")
 
 
