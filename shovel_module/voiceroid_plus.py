@@ -11,4 +11,4 @@ class vroid:
       with open(path+".wav",mode="wb") as f:
         f.write(s.content)
     sound_controller.convert_volume(path+".wav",0.5)
-    sound_controller.mp3_to_wav(path+".mp3")
+    sound_controller.mp3_to_wav(path)
