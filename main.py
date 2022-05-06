@@ -767,10 +767,19 @@ async def voice(ctx:commands.Context,*args):
         modes = []
         for m in actors[k][v].keys():
           modes.append(m)
-        _actors.append(f"{v} ({' '.join(modes)})")
+        _actors.append(f"**{v}** \n({' / '.join(modes)})")
       embed.add_field(name=k,value="\n".join(_actors))
     await ctx.send(embed=embed)
     return
+  
+  conn = sqlite3.connect(dbname)
+  cur = conn.cursor()
+  c = cur.execute("SELECT user_id FROM data WHERE user_id = ?",(ctx.author.id,))
+  data =  c.fetchall()
+  if not data:
+    cur.execute("INSERT INTO data VALUES (?,?,?,?,?,?)",(ctx.author.id,"OPENJTALK","Mei","normal",1.5,0.0,))
+    conn.commit()
+
 
   if args[0].upper() in actors.keys():
     speak_type = args[0].upper()
@@ -797,8 +806,7 @@ async def voice(ctx:commands.Context,*args):
     await ctx.send("引数がおかしいよ！")
     return
 
-  conn = sqlite3.connect(dbname)
-  cur = conn.cursor()
+
   cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id,))
   conn.commit()
 
