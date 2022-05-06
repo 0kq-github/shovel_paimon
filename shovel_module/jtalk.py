@@ -15,7 +15,7 @@ if not os.path.exists("./jtalk_dic/open_jtalk_dic_utf_8-1.07"):
     with tarfile.open("./jtalk_dic/open_jtalk_dic.tar.gz",mode="r") as t:
         t.extractall("./jtalk_dic/")
 
-def jtalk(t,voice,n):
+def jtalk(t,voice,speed,pitch,path):
     open_jtalk=['open_jtalk']
     #mech=['-x','./jtalk_dic/open_jtalk_dic_utf_8-1.07']
     mech=['-x','/var/lib/mecab/dic/open-jtalk/naist-jdic']
@@ -23,9 +23,10 @@ def jtalk(t,voice,n):
         htsvoice=['-m','./voice/miku.htsvoice']
     else:
         htsvoice=['-m','/usr/share/hts-voice/mei/mei_'+voice+'.htsvoice']
-    speed=['-r','1.5']
+    speed=['-r',str(speed)]
+    pitch=["-fm",str(pitch)]
     jm=['-jm','1.0']
-    outwav=['-ow',n+'.wav']
+    outwav=['-ow',path+'.wav']
     cmd=open_jtalk+mech+htsvoice+speed+jm+outwav
     c = subprocess.Popen(cmd,stdin=subprocess.PIPE)
     c.stdin.write(t.encode())

@@ -3,7 +3,7 @@ import json
 import time
 
 # VoicevoxでText to Speechするやつ
-def synthesis(text, filename, speaker=1, max_retry=20):
+def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
     # Internal Server Error(500)が出ることがあるのでリトライする
     # （HTTPAdapterのretryはうまくいかなかったので独自実装）
     # connect timeoutは10秒、read timeoutは300秒に設定（処理が重いので長めにとっておく）
@@ -21,6 +21,8 @@ def synthesis(text, filename, speaker=1, max_retry=20):
 
     # synthesis
     synth_payload = {"speaker": speaker}    
+    query_data["speedScale"] = speed
+    query_data["pitchScale"] = pitch
     for synth_i in range(max_retry):
         r = requests.post("http://192.168.100.36:50021/synthesis", params=synth_payload, 
                           data=json.dumps(query_data), timeout=(10.0, 300.0))
@@ -33,5 +35,5 @@ def synthesis(text, filename, speaker=1, max_retry=20):
     else:
         raise ConnectionError("リトライ回数が上限に到達しました。 synthesis : ", filename, "/", text[:30], r,text)
 
-def generate(text,path:str,speaker=14):
-    synthesis(text, f"{path}.wav",speaker=speaker)
+def generate(text,path:str, speaker, speed, pitch):
+    synthesis(text, f"{path}.wav", speaker=speaker, speed=speed, pitch=pitch)

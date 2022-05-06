@@ -7,3 +7,6 @@ __pycache__
 /dict/*
 /tsukuyomichan_talksoft
 /shovel_module/config.py
+test.db
+testdb.py
+testvoicevox.py

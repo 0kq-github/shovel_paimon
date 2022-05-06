@@ -1,8 +1,8 @@
 import requests
 
-class vroid():
-  def __init__(self):
-    ...
+class vroid:
+  def __init__(self,actor):
+    self.actor = actor
   
   def generate(self,text,speed,pitch,vrange,path):
     with requests.Session() as session:

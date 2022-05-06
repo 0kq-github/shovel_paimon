@@ -12,11 +12,13 @@ import discord
 import re
 from discord.ext import commands
 import urllib.request
+import requests
 import json
 import shutil
 import threading
 from gtts import gTTS
 import art
+import sqlite3
 #from tsukuyomichan_talksoft import TsukuyomichanTalksoft
 
 #開発環境用(ごり押し)
@@ -72,17 +74,42 @@ bot = commands.Bot(command_prefix=prefix,help_command=None)
 BOT_TOKEN = config.DISCORD_TOKEN[mode]
 global messagequeue
 global reading
+global dbname
+global actors
 messagequeue = {}
 reading = {}
 fs = 24000
 enable = []
+dbname = "./config/user.db"
+speakers = {}
+with requests.Session() as session:
+  resp = session.get("http://192.168.100.36:50021/speakers")
+  resp_dict = resp.json()
+  for i in resp_dict:
+    #print(i["name"])
+    speakers[i["name"]] = {}
+    for s in i["styles"]:
+      #print(s["id"],s["name"])
+      speakers[i["name"]][s["name"]] = s["id"]
+#話者一覧
+#"ソフト名:{"話者名":{"モード":"ID"}}"
+actors = {
+  "OPENJTALK":{"Mei": {"normal":"normal","happy":"happy","angry":"angry","sad":"sad","bashful":"bashful"}},
+  "VOICEVOX":speakers,
+  "VOICEROID":{"東北きりたん":{"normal":""}}
+  }
+actor_names = []
+for v in actors.values():
+  for k in v.keys():
+    actor_names.append(k)
+
 time_start = time.perf_counter()
 
 lang = {}
 with open(f"./lang/{mode}.json",mode="r") as f:
   lang:dict = json.load(f)
 
-def make_wav(id, word_wav:str, voice, datime):
+def make_wav(guild_id, user_id, word_wav:str, datime):
   '''jtalk,jtalkでwav生成
 
    id : サーバーID(ディレクトリ名)
@@ -91,7 +118,30 @@ def make_wav(id, word_wav:str, voice, datime):
    word_wav : 文字列
   '''
   
-  path_wav = f"./config/guild/{str(id)}/temp/{datime}"
+  path_wav = f"./config/guild/{str(guild_id)}/temp/{datime}"
+  conn = sqlite3.connect(dbname)
+  cur = conn.cursor()
+  c = cur.execute("SELECT id FROM data WHERE user_id = ?",(user_id,))
+  data =  c.fetchall()
+  if not data:
+    cur.execute("INSERT INTO data VALUES (?,?,?,?)",(user_id,"OpenJtalk","Mei","normal",1.5,0.0,))
+    conn.commit()
+  c = cur.execute("SELECT type,actor,mode,speed,pitch FROM data WHERE user_id = ?",(user_id,))
+  data = c.fetchall()
+  speak_type = data[0][0]
+  actor = data[0][1]
+  speak_mode = data[0][2]
+  speed = data[0][3]
+  pitch = data[0][4]
+
+  if speak_type == "OpenJtalk":
+    jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode],path_wav)
+  elif speak_type == "VOICEVOX":
+    voicevox.generate(text=word_wav, path=path_wav, speaker=actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch)
+  elif speak_type == "VOICEROID":
+    voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
+
+  """
   if word_wav.startswith("$google"):
     #google先生
     word_wav = word_wav.replace("$google","")
@@ -99,7 +149,8 @@ def make_wav(id, word_wav:str, voice, datime):
     output.save(f"{path_wav}.mp3")
     sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
     sound_controller.mp3_to_wav(path_wav)
-  elif word_wav.startswith("$vox"):
+
+  if word_wav.startswith("$vox"):
     #voicevox 冥鳴ひまり
     word_wav = word_wav.replace("$vox","")
     voicevox.generate(text=word_wav,path=path_wav)
@@ -109,11 +160,6 @@ def make_wav(id, word_wav:str, voice, datime):
     voicevox.generate(text=word_wav,path=path_wav,speaker=2)
   elif word_wav.startswith("$tsukuyomi"):
     #つくよみちゃん
-    '''
-    word_wav = word_wav.replace("$tsukuyomi","")
-    wav = tsukuyomichan_talksoft.generate_voice(word_wav,0)
-    soundfile.write(f"{path_wav}.wav",wav,fs,"PCM_16")
-    '''
     word_wav = word_wav.replace("$tsukuyomi","")
     coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="b0655711-b398-438f-83e3-4c3c3ed746dd",text=word_wav,path=path_wav)
   elif word_wav.startswith("$coefont"):
@@ -127,8 +173,10 @@ def make_wav(id, word_wav:str, voice, datime):
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)
+  """
+
   #生成後tempからwavにコピー
-  shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(id)}/wav/")
+  shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(guild_id)}/wav/")
 
 def initdirs(guild_id):
   '''
@@ -244,19 +292,6 @@ async def replace_message(message:discord.Message):
       message_read = message_read.replace("%","ぱーせんと")
   message_read = re.sub("ww+","わらわら",message_read,0)
   message_read = dic.dict(message.guild.id,message_read)
-
-  if message.content.startswith("$google"):
-    message_read = "$google" + message_read
-  if message.content.startswith("$tsukuyomi"):
-    message_read = "$tsukuyomi" + message_read
-  if message.content.startswith("$coefont"):
-    message_read = "$coefont" + message_read
-  if message.content.startswith("$vox"):
-    message_read = "$vox" + message_read
-  if message.content.startswith("$zunda"):
-    message_read = "$zunda" + message_read
-  if message.content.startswith("$kiritan"):
-    message_read = "$kiritan" + message_read
     
   return message_read
 
@@ -297,6 +332,14 @@ async def on_ready():
       voice_config[f"{i.id}"]
     except KeyError:
       voice_config[f"{i.id}"] = {"voice":False}
+  try:
+    conn = sqlite3.connect(dbname)
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE data (user_id int, type text, actor text, mode text, speed float, pitch float)")
+    conn.commit()
+    conn.close()
+  except:
+    pass
 
 @bot.event
 async def on_guild_join(guild):
@@ -401,7 +444,7 @@ async def on_message(message:discord.Message):
         message_read = await replace_message(message)
         print(f"[{datime_now}][{message.guild.name}] {message.author.name}: {message.content} -> {message_read}")
         datime = datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S_%f')
-        make = threading.Thread(target=make_wav,args=(message.guild.id, message_read, "normal", datime,))
+        make = threading.Thread(target=make_wav,args=(message.guild.id, message.author.id, message_read, datime,))
         make.start()
         path_wav = f"./config/guild/{str(message.guild.id)}/wav/{datime}.wav"
         queuelist = messagequeue[message.guild.id]
@@ -603,7 +646,6 @@ async def sw(ctx,*args):
 
 
 
-
 @sh0.command()
 async def link(ctx,*args):
   '''
@@ -749,8 +791,38 @@ async def v(ctx, *args):
 
 @sh0.command()
 async def voice(ctx:commands.Context,*args):
-  if not args:
-    await ctx.send("引数が足りなリよ！")
+  if len(args) != 4:
+    await ctx.send("引数がおかしいよ！")
+    return
+
+  if args[0].upper() in actors.keys():
+    speak_type = args[0].upper()
+  else:
+    await ctx.send("引数がおかしいよ！")
+    return
+  
+  if args[1] in actor_names:
+    actor = args[1]
+  else:
+    await ctx.send("引数がおかしいよ！")
+    return
+
+  try:
+    speed = float(args[2])
+    pitch = float(args[3])
+  except:
+    await ctx.send("引数がおかしいよ！")
+    return
+
+  conn = sqlite3.connect(dbname)
+  cur = conn.cursor()
+  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?. pitch = ? WHERE user_id = ?",(speak_type,actor,speed,pitch,ctx.author.id))
+  conn.commit()
+  
+  await ctx.send("設定しました！")
+
+
+
   
 
 
