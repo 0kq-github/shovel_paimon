@@ -32,6 +32,7 @@ from shovel_module import coefont
 from shovel_module import config
 from shovel_module import voicevox
 from shovel_module import morse
+from shovel_module import voiceroid_plus
 
 try:
   if sys.argv[1] == "--mode":
@@ -119,6 +120,10 @@ def make_wav(id, word_wav:str, voice, datime):
     #coefont
     word_wav = word_wav.replace("$coefont","")
     coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="c28adf78-d67d-4588-a9a5-970a76ca6b07",text=word_wav,path=path_wav)
+  elif word_wav.startswith("$kiritan"):
+    #きりたん
+    word_wav = word_wav.replace("$kiritan","")
+    voiceroid_plus.vroid().generate(text=word_wav,path=path_wav,speed=1.0,pitch=1.0,vrange=1.0)
   else:
   #jatlk wav生成
     jtalk.jtalk(word_wav,voice,path_wav)
@@ -250,6 +255,8 @@ async def replace_message(message:discord.Message):
     message_read = "$vox" + message_read
   if message.content.startswith("$zunda"):
     message_read = "$zunda" + message_read
+  if message.content.startswith("$kiritan"):
+    message_read = "$kiritan" + message_read
     
   return message_read
 
