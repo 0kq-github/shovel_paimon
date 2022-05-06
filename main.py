@@ -135,7 +135,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   pitch = data[0][4]
 
   if speak_type == "OPENJTALK":
-    jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode],path_wav)
+    jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch, path=path_wav)
   elif speak_type == "VOICEVOX":
     voicevox.generate(text=word_wav, path=path_wav, speaker=actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch)
   elif speak_type == "VOICEROID":
