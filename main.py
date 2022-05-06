@@ -816,7 +816,7 @@ async def voice(ctx:commands.Context,*args):
 
   conn = sqlite3.connect(dbname)
   cur = conn.cursor()
-  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?. pitch = ? WHERE user_id = ?",(speak_type,actor,speed,pitch,ctx.author.id))
+  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speed,pitch,ctx.author.id))
   conn.commit()
 
   await ctx.send("設定しました！")
