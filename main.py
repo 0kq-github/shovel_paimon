@@ -807,16 +807,22 @@ async def voice(ctx:commands.Context,*args):
     await ctx.send("引数がおかしいよ！")
     return
 
+  if args[2] in actors[speak_type][actor].keys():
+    speak_mode = args[2]
+  else:
+    await ctx.send("引数がおかしいよ！")
+    return
+
   try:
-    speed = float(args[2])
-    pitch = float(args[3])
+    speed = float(args[3])
+    pitch = float(args[4])
   except:
     await ctx.send("引数がおかしいよ！")
     return
 
   conn = sqlite3.connect(dbname)
   cur = conn.cursor()
-  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speed,pitch,ctx.author.id))
+  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id))
   conn.commit()
 
   await ctx.send("設定しました！")
