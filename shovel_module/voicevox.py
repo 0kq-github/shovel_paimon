@@ -31,7 +31,7 @@ def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
         if r.status_code == 200:
             with open(filename, "wb") as fp:
                 fp.write(r.content)
-            print(f"{filename} は query={query_i+1}回, synthesis={synth_i+1}回のリトライで正常に保存されました")
+            #print(f"{filename} は query={query_i+1}回, synthesis={synth_i+1}回のリトライで正常に保存されました")
             break
         time.sleep(0.01)
     else:
