@@ -141,40 +141,6 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   elif speak_type == "VOICEROID":
     voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
 
-  """
-  if word_wav.startswith("$google"):
-    #google先生
-    word_wav = word_wav.replace("$google","")
-    output = gTTS(text=word_wav,lang="en",slow=False)
-    output.save(f"{path_wav}.mp3")
-    sound_controller.convert_volume(f"{path_wav}.mp3",0.5)
-    sound_controller.mp3_to_wav(path_wav)
-
-  if word_wav.startswith("$vox"):
-    #voicevox 冥鳴ひまり
-    word_wav = word_wav.replace("$vox","")
-    voicevox.generate(text=word_wav,path=path_wav)
-  elif word_wav.startswith("$zunda"):
-    #voicevox ずんだもん
-    word_wav = word_wav.replace("$zunda","")
-    voicevox.generate(text=word_wav,path=path_wav,speaker=2)
-  elif word_wav.startswith("$tsukuyomi"):
-    #つくよみちゃん
-    word_wav = word_wav.replace("$tsukuyomi","")
-    coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="b0655711-b398-438f-83e3-4c3c3ed746dd",text=word_wav,path=path_wav)
-  elif word_wav.startswith("$coefont"):
-    #coefont
-    word_wav = word_wav.replace("$coefont","")
-    coefont.generate(accesskey=config.COEFONT_TOKEN["accesskey"],access_secret=config.COEFONT_TOKEN["secret"],coefont="c28adf78-d67d-4588-a9a5-970a76ca6b07",text=word_wav,path=path_wav)
-  elif word_wav.startswith("$kiritan"):
-    #きりたん
-    word_wav = word_wav.replace("$kiritan","")
-    voiceroid_plus.vroid().generate(text=word_wav,path=path_wav,speed=1.0,pitch=1.0,vrange=1.0)
-  else:
-  #jatlk wav生成
-    jtalk.jtalk(word_wav,voice,path_wav)
-  """
-
   #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(guild_id)}/wav/")
 
@@ -792,6 +758,15 @@ async def v(ctx, *args):
 @sh0.command()
 async def voice(ctx:commands.Context,*args):
   if len(args) != 5:
+    embed = discord.Embed(title="話者一覧",color=discord.Colour.blue())
+    for k in actors.keys():
+      _actors = []
+      for v in actors[k].keys(): 
+        modes = []
+        for m in actors[k][v].keys():
+          modes.append(m)
+        _actors.append(f"{v} ({' '.join(modes)})")
+      embed.add_field(name=i,value=f"{_actors}\n")
     await ctx.send("引数がおかしいよ！")
     return
 
@@ -824,12 +799,11 @@ async def voice(ctx:commands.Context,*args):
   cur = conn.cursor()
   cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id))
   conn.commit()
+  conn.close()
 
   await ctx.send("設定しました！")
 
 
-
-  
 
 
 
