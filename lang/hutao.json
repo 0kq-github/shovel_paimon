@@ -63,6 +63,11 @@
         "name":"?sh0 v on/off",
         "value":"音声の読み上げを切り替えるよ！",
         "inline": true
+      },
+      "11":{
+        "name":"?sh0 voice",
+        "value":"読み上げる声の設定ができるよ！",
+        "inline":true
       }
     }
   },
