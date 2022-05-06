@@ -809,8 +809,8 @@ async def voice(ctx:commands.Context,*args):
   speed = data[0][3]
   pitch = data[0][4]
   conn.close()
-  
-  embed = discord.Embed(title="話者設定",description=f"**{speak_type} {actor} {speak_mode}**", color=discord.Colour.blue())
+
+  embed = discord.Embed(title="話者設定",description=f"**{speak_type}**\n{actor}\n{speak_mode}", color=discord.Colour.blue())
   embed.add_field(name="速度",value=speed)
   embed.add_field(name="ピッチ",value=pitch)
   await ctx.send(embed=embed)
