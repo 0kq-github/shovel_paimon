@@ -47,8 +47,8 @@ def repdict(read_text:str,dic:dict):
   """
   for i in dic:
     read_text = read_text.replace(i,dic[i])
-  if len(read_text) >= 60:
-    read_text = truncate(read_text,50)
+  if len(read_text) >= 70:
+    read_text = truncate(read_text,65)
   return read_text
 
 

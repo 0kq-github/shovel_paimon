@@ -97,7 +97,7 @@ with requests.Session() as session:
 actors = {
   "OPENJTALK":{"Mei": {"normal":"normal","happy":"happy","angry":"angry","sad":"sad","bashful":"bashful"}},
   "VOICEVOX":speakers,
-  "VOICEROID":{"東北きりたん":{"normal":""}}
+  "VOICEROID":{"東北きりたん":{"ノーマル":""}}
   }
 actor_names = []
 for v in actors.values():
