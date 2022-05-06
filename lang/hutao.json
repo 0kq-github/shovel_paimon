@@ -65,7 +65,7 @@
         "inline": true
       },
       "11":{
-        "name":"?sh0 voice",
+        "name":"?sh0 voice タイプ 話者 モード 読み上げ速度 ピッチ",
         "value":"読み上げる声の設定ができるよ！",
         "inline":true
       }
