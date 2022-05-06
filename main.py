@@ -133,6 +133,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   speak_mode = data[0][2]
   speed = data[0][3]
   pitch = data[0][4]
+  conn.close()
 
   if speak_type == "OPENJTALK":
     jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch, path=path_wav)
@@ -797,11 +798,21 @@ async def voice(ctx:commands.Context,*args):
 
   conn = sqlite3.connect(dbname)
   cur = conn.cursor()
-  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id))
+  cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id,))
   conn.commit()
   conn.close()
 
-  await ctx.send("設定しました！")
+  c = cur.execute("SELECT type,actor,mode,speed,pitch FROM data WHERE user_id = ?",(ctx.author.id,))
+  data = c.fetchall()
+  speak_type = data[0][0]
+  actor = data[0][1]
+  speak_mode = data[0][2]
+  speed = data[0][3]
+  pitch = data[0][4]
+  embed = discord.Embed(title="話者設定",description=f"**{speak_type} {actor} {speak_mode}**", color=discord.Colour.blue())
+  embed.add_field(name="速度",value=speed)
+  embed.add_field(name="ピッチ",value=pitch)
+  await ctx.send(embed=embed)
 
 
 
