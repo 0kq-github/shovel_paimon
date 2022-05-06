@@ -124,7 +124,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   c = cur.execute("SELECT user_id FROM data WHERE user_id = ?",(user_id,))
   data =  c.fetchall()
   if not data:
-    cur.execute("INSERT INTO data VALUES (?,?,?,?)",(user_id,"OpenJtalk","Mei","normal",1.5,0.0,))
+    cur.execute("INSERT INTO data VALUES (?,?,?,?,?,?)",(user_id,"OpenJtalk","Mei","normal",1.5,0.0,))
     conn.commit()
   c = cur.execute("SELECT type,actor,mode,speed,pitch FROM data WHERE user_id = ?",(user_id,))
   data = c.fetchall()
