@@ -1,5 +1,5 @@
 import requests
-import sound_controller
+from . import sound_controller
 
 class vroid:
   def __init__(self,actor):
