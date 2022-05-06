@@ -767,7 +767,7 @@ async def voice(ctx:commands.Context,*args):
           modes.append(m)
         _actors.append(f"{v} ({' '.join(modes)})")
       embed.add_field(name=i,value=f"{_actors}\n")
-    await ctx.send("引数がおかしいよ！")
+    await ctx.send(embed=embed)
     return
 
   if args[0].upper() in actors.keys():
