@@ -766,7 +766,7 @@ async def voice(ctx:commands.Context,*args):
         for m in actors[k][v].keys():
           modes.append(m)
         _actors.append(f"{v} ({' '.join(modes)})")
-      embed.add_field(name=k,value=f"{_actors}\n")
+      embed.add_field(name=k,value="\n".join(_actors))
     await ctx.send(embed=embed)
     return
 
