@@ -800,7 +800,6 @@ async def voice(ctx:commands.Context,*args):
   cur = conn.cursor()
   cur.execute("UPDATE data SET type = ?, actor = ?, mode = ?, speed = ?, pitch = ? WHERE user_id = ?",(speak_type,actor,speak_mode,speed,pitch,ctx.author.id,))
   conn.commit()
-  conn.close()
 
   c = cur.execute("SELECT type,actor,mode,speed,pitch FROM data WHERE user_id = ?",(ctx.author.id,))
   data = c.fetchall()
@@ -809,6 +808,8 @@ async def voice(ctx:commands.Context,*args):
   speak_mode = data[0][2]
   speed = data[0][3]
   pitch = data[0][4]
+  conn.close()
+  
   embed = discord.Embed(title="話者設定",description=f"**{speak_type} {actor} {speak_mode}**", color=discord.Colour.blue())
   embed.add_field(name="速度",value=speed)
   embed.add_field(name="ピッチ",value=pitch)
