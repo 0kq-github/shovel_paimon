@@ -81,9 +81,10 @@ reading = {}
 fs = 24000
 enable = []
 dbname = "./config/user.db"
+voicevox_server = "http://192.168.100.3:50021/"
 speakers = {}
 with requests.Session() as session:
-  resp = session.get("http://192.168.100.36:50021/speakers")
+  resp = session.get(voicevox_server+"speakers")
   resp_dict = resp.json()
   for i in resp_dict:
     #print(i["name"])

@@ -1,6 +1,8 @@
 import requests
 import json
 import time
+address = "http://192.168.100.3:50021/"
+
 
 # VoicevoxでText to Speechするやつ
 def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
@@ -10,7 +12,7 @@ def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
     # audio_query
     query_payload = {"text": text, "speaker": speaker}
     for query_i in range(max_retry):
-        r = requests.post("http://192.168.100.36:50021/audio_query", 
+        r = requests.post(address+"audio_query", 
                         params=query_payload, timeout=(10.0, 300.0))
         if r.status_code == 200:
             query_data = r.json()
@@ -24,7 +26,7 @@ def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
     query_data["speedScale"] = speed
     query_data["pitchScale"] = pitch
     for synth_i in range(max_retry):
-        r = requests.post("http://192.168.100.36:50021/synthesis", params=synth_payload, 
+        r = requests.post(address+"synthesis", params=synth_payload, 
                           data=json.dumps(query_data), timeout=(10.0, 300.0))
         if r.status_code == 200:
             with open(filename, "wb") as fp:
