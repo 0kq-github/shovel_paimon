@@ -791,7 +791,7 @@ async def v(ctx, *args):
 
 @sh0.command()
 async def voice(ctx:commands.Context,*args):
-  if len(args) != 4:
+  if len(args) != 5:
     await ctx.send("引数がおかしいよ！")
     return
 
