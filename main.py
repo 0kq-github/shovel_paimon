@@ -136,15 +136,18 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   pitch = data[0][4]
   conn.close()
 
-  if speak_type == "OPENJTALK":
-    jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch, path=path_wav)
-  elif speak_type == "VOICEVOX":
-    voicevox.generate(text=word_wav, path=path_wav, speaker=actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch)
-  elif speak_type == "VOICEROID":
-    voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
-    
-  if not os.path.exists(f"{path_wav}.wav"):
-    jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.5,pitch=1,path=path_wav)
+
+  try:
+    if speak_type == "OPENJTALK":
+      jtalk.jtalk(word_wav,actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch, path=path_wav)
+    elif speak_type == "VOICEVOX":
+      voicevox.generate(text=word_wav, path=path_wav, speaker=actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch)
+    elif speak_type == "VOICEROID":
+      voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
+  except:
+    if not os.path.exists(f"{path_wav}.wav"):
+      jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.5,pitch=1,path=path_wav)
+  
   #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(guild_id)}/wav/")
 
