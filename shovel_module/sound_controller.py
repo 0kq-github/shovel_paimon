@@ -12,9 +12,9 @@ def convert_volume(path:str,volume:int):
   path: ファイルのパス
   volume: 音量の倍率
   '''
-  base_sound = AudioSegment.from_file(path,format="mp3")
+  base_sound = AudioSegment.from_file(path,format="wav")
   new_sound = base_sound + ratio_to_db(float(volume))
-  new_sound.export(path,format="mp3")
+  new_sound.export(path,format="wav")
 
 def mp3_to_wav(path:str):
   '''mp3 → wav変換
