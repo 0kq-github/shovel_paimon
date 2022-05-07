@@ -6,7 +6,7 @@ address = config.SERVER["voicevox"]
 
 
 # VoicevoxでText to Speechするやつ
-def synthesis(text, filename, speaker=1, max_retry=20, speed=0, pitch=0):
+def synthesis(text, filename, speaker=1, max_retry=3, speed=0, pitch=0):
     # Internal Server Error(500)が出ることがあるのでリトライする
     # （HTTPAdapterのretryはうまくいかなかったので独自実装）
     # connect timeoutは10秒、read timeoutは300秒に設定（処理が重いので長めにとっておく）
