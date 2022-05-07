@@ -4,7 +4,6 @@ __pycache__
 /config.ini
 /global_wav/*
 /stk/*
-/dict/*
 /tsukuyomichan_talksoft
 /shovel_module/config.py
 test.db

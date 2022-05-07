@@ -18,11 +18,8 @@ if not os.path.exists("./jtalk_dic/open_jtalk_dic_utf_8-1.07"):
 def jtalk(t,voice,speed,pitch,path):
     open_jtalk=['open_jtalk']
     #mech=['-x','./jtalk_dic/open_jtalk_dic_utf_8-1.07']
-    mech=['-x','/var/lib/mecab/dic/open-jtalk/naist-jdic']
-    if voice == "miku":
-        htsvoice=['-m','./voice/miku.htsvoice']
-    else:
-        htsvoice=['-m','/usr/share/hts-voice/mei/mei_'+voice+'.htsvoice']
+    mech=['-x','./dict/naist-jdic']
+    htsvoice=['-m','./mei_'+voice+'.htsvoice']
     speed=['-r',str(speed)]
     pitch=["-fm",str(pitch)]
     jm=['-jm','1.0']
