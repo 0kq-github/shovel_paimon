@@ -142,8 +142,9 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
       voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch)
     elif speak_type == "OTHER":
       tsukuyomi.tsukuyomi(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch)
-  except:
+  except Exception as e:
     if not os.path.exists(f"{path_wav}.wav"):
+      print("生成エラー",e)
       jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.3,pitch=0,path=path_wav)
   
   #生成後tempからwavにコピー
