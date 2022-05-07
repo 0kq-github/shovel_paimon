@@ -846,8 +846,13 @@ async def status(ctx:commands.Context):
     await ctx.send("読み上げ中の鯖:\n" + '\n'.join(enable))
 
 
+async def main():
+  async with bot:
+    await bot.start(BOT_TOKEN)
+
+
 try:  
-  bot.run(BOT_TOKEN)
+  asyncio.run(main())
   #bot.loop.run_until_complete(bot.start(BOT_TOKEN))
 except KeyboardInterrupt: 
     print(f"\n {bot.user.name}を終了中...")
