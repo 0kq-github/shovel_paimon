@@ -4,7 +4,7 @@ import soundfile
 from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse
 import io
-from pitchshifter import pitchshifter
+#from pitchshifter import pitchshifter
 
 class tsukuyomi:
   def __init__(self):

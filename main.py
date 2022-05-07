@@ -23,7 +23,7 @@ from shovel_module import jtalk
 from shovel_module import dic
 from shovel_module import downloader
 from shovel_module import sound_controller
-from shovel_module import coefont
+#from shovel_module import coefont
 from shovel_module import config
 from shovel_module import voicevox
 from shovel_module import morse
@@ -847,7 +847,8 @@ async def status(ctx:commands.Context):
 
 
 try:  
-    asyncio.run(bot.start(BOT_TOKEN))
+  bot.run(BOT_TOKEN)
+  #bot.loop.run_until_complete(bot.start(BOT_TOKEN))
 except KeyboardInterrupt: 
     print(f"\n {bot.user.name}を終了中...")
     for c in bot.voice_clients:
