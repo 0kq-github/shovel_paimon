@@ -19,7 +19,7 @@ def jtalk(t,voice,speed,pitch,path):
     open_jtalk=['open_jtalk']
     #mech=['-x','./jtalk_dic/open_jtalk_dic_utf_8-1.07']
     mech=['-x','./dict/naist-jdic']
-    htsvoice=['-m','./mei_'+voice+'.htsvoice']
+    htsvoice=['-m','./voice/mei_'+voice+'.htsvoice']
     speed=['-r',str(speed)]
     pitch=["-fm",str(pitch)]
     jm=['-jm','1.0']
