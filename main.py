@@ -70,7 +70,8 @@ lang : hutao/paimonの言語ファイル(辞書型)
 '''
 
 shovel_ver = 1.0
-bot = commands.Bot(command_prefix=prefix,help_command=None)
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix=prefix,help_command=None,intents=intents)
 BOT_TOKEN = config.DISCORD_TOKEN[mode]
 global messagequeue
 global reading
@@ -81,7 +82,7 @@ reading = {}
 fs = 24000
 enable = []
 dbname = "./config/user.db"
-voicevox_server = "http://192.168.100.3:50021/"
+voicevox_server = config.SERVER["voicevox"]
 speakers = {}
 with requests.Session() as session:
   resp = session.get(voicevox_server+"speakers")
