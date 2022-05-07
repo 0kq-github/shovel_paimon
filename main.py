@@ -28,6 +28,7 @@ from shovel_module import config
 from shovel_module import voicevox
 from shovel_module import morse
 from shovel_module import voiceroid_plus
+from shovel_module import tsukuyomi
 
 try:
   if sys.argv[1] == "--mode":
@@ -138,7 +139,9 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
     elif speak_type == "VOICEVOX":
       voicevox.generate(text=word_wav, path=path_wav, speaker=actors[speak_type][actor][speak_mode], speed=speed, pitch=pitch)
     elif speak_type == "VOICEROID":
-      voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
+      voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch)
+    elif speak_type == "OTHER":
+      tsukuyomi.tsukuyomi(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch)
   except:
     if not os.path.exists(f"{path_wav}.wav"):
       jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.3,pitch=0,path=path_wav)

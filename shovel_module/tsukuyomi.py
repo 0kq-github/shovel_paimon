@@ -4,7 +4,7 @@ from . import config
 
 address = config.SERVER["tsukuyomi"]
 
-class vroid:
+class tsukuyomi:
   def __init__(self,actor):
     self.actor = actor
   
