@@ -10,3 +10,4 @@ __pycache__
 test.db
 testdb.py
 testvoicevox.py
+.python-version

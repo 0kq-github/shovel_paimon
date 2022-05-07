@@ -16,7 +16,7 @@ import requests
 import json
 import shutil
 import threading
-from gtts import gTTS
+#from gtts import gTTS
 import art
 import sqlite3
 #from tsukuyomichan_talksoft import TsukuyomichanTalksoft
