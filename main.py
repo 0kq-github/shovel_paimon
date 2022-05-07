@@ -784,7 +784,6 @@ async def voice(ctx:commands.Context,*args):
   if not data:
     cur.execute("INSERT INTO data VALUES (?,?,?,?,?,?)",(ctx.author.id,"OPENJTALK","Mei","normal",1.5,0.0,))
     conn.commit()
-  conn.close()
 
 
   if args[0].upper() in actors.keys():
