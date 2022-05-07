@@ -1,7 +1,8 @@
 import requests
 import json
 import time
-address = "http://192.168.100.3:50021/"
+from . import config
+address = config.SERVER["voicevox"]
 
 
 # VoicevoxでText to Speechするやつ
