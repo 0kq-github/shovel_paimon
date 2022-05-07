@@ -13,4 +13,4 @@ class tsukuyomi:
       s = session.get(f"{address}generate?text={text}&speed={speed}&pitch={pitch}")
       with open(path+".wav",mode="wb") as f:
         f.write(s.content)
-    #sound_controller.convert_volume(path+".wav",0.7)
+    sound_controller.convert_volume(path+".wav",0.7)
