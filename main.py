@@ -16,15 +16,8 @@ import requests
 import json
 import shutil
 import threading
-#from gtts import gTTS
 import art
 import sqlite3
-#from tsukuyomichan_talksoft import TsukuyomichanTalksoft
-
-#開発環境用(ごり押し)
-#from tsukuyomichan_talksoft.tsukuyomichan_talksoft import TsukuyomichanTalksoft
-
-#tsukuyomichan_talksoft = TsukuyomichanTalksoft(model_version="v.1.2.0")
 
 from shovel_module import jtalk
 from shovel_module import dic
@@ -98,7 +91,8 @@ with requests.Session() as session:
 actors = {
   "OPENJTALK":{"Mei": {"normal":"normal","happy":"happy","angry":"angry","sad":"sad","bashful":"bashful"}},
   "VOICEVOX":speakers,
-  "VOICEROID":{"東北きりたん":{"ノーマル":""}}
+  "VOICEROID":{"東北きりたん":{"ノーマル":""}},
+  "OTHER":{"つくよみちゃん":{"ノーマル":""}}
   }
 actor_names = []
 for v in actors.values():
@@ -279,6 +273,7 @@ async def on_ready():
   except:
     pass
   """
+  print()
   art.tprint(mode)
   print('\n====================')
   print(f" shovel paimon v{shovel_ver}")
