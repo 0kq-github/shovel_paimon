@@ -1,7 +1,7 @@
 
 import sys
-if sys.version_info.minor < 7:
-  print("Python3.7以上が必要です")
+if sys.version_info.minor < 8:
+  print("Python3.8以上が必要です")
   exit()
 
 import os
@@ -445,7 +445,7 @@ async def help(ctx,*args):
   langs = lang["help"]
   fields = langs["field"]
   embed = discord.Embed(title=langs["title"],color=discord.Colour.blue(),description=langs["description"])
-  embed.set_thumbnail(url=bot.user.avatar_url)
+  embed.set_thumbnail(url=bot.user.avatar.url)
   i = 0
   while i <= 11:
     embed.add_field(name=fields[f"{i}"]["name"],value=fields[f"{i}"]["value"],inline=fields[f"{i}"]["inline"])
@@ -848,7 +848,7 @@ async def status(ctx:commands.Context):
 
 
 try:  
-    bot.loop.run_until_complete(bot.start(BOT_TOKEN)) 
+    asyncio.run(bot.start(BOT_TOKEN))
 except KeyboardInterrupt: 
     print(f"\n {bot.user.name}を終了中...")
     for i in reading:
@@ -860,4 +860,4 @@ except KeyboardInterrupt:
       f.write(config_json)
       f.close()
     #print(voice_config)
-    bot.loop.run_until_complete(bot.close())
+    asyncio.run(bot.close())
