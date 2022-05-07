@@ -851,6 +851,8 @@ try:
     asyncio.run(bot.start(BOT_TOKEN))
 except KeyboardInterrupt: 
     print(f"\n {bot.user.name}を終了中...")
+    for c in bot.voice_clients:
+      asyncio.run(c.disconnect())
     asyncio.run(bot.close())
     for i in reading:
       shutil.rmtree(f"./config/guild/{i}/wav/",ignore_errors=True)
