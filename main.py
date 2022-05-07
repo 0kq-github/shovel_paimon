@@ -860,4 +860,4 @@ except KeyboardInterrupt:
       f.write(config_json)
       f.close()
     #print(voice_config)
-    bot.close()
+    #asyncio.run(bot.close())
