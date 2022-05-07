@@ -125,7 +125,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
   c = cur.execute("SELECT user_id FROM data WHERE user_id = ?",(user_id,))
   data =  c.fetchall()
   if not data:
-    cur.execute("INSERT INTO data VALUES (?,?,?,?,?,?)",(user_id,"OPENJTALK","Mei","normal",1.5,1.0,))
+    cur.execute("INSERT INTO data VALUES (?,?,?,?,?,?)",(user_id,"OPENJTALK","Mei","normal",1.5,0.0,))
     conn.commit()
   c = cur.execute("SELECT type,actor,mode,speed,pitch FROM data WHERE user_id = ?",(user_id,))
   data = c.fetchall()
@@ -146,7 +146,7 @@ def make_wav(guild_id, user_id, word_wav:str, datime):
       voiceroid_plus.vroid(actors[speak_type][actor]).generate(text=word_wav, path=path_wav, speed=speed, pitch=pitch, vrange=1.0)
   except:
     if not os.path.exists(f"{path_wav}.wav"):
-      jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.5,pitch=1,path=path_wav)
+      jtalk.jtalk("音声生成に失敗しました。","normal",speed=1.3,pitch=0,path=path_wav)
   
   #生成後tempからwavにコピー
   shutil.copy(f"{path_wav}.wav",f"./config/guild/{str(guild_id)}/wav/")
