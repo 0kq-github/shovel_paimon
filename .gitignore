@@ -1,3 +1,12 @@
-config/
-global_wav/
-config.ini
+__pycache__
+/config/guild/*
+!/config/guild/default/
+/config.ini
+/global_wav/*
+/stk/*
+/tsukuyomichan_talksoft
+/shovel_module/config.py
+test.db
+testdb.py
+testvoicevox.py
+.python-version
